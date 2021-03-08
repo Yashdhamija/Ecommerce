@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" 
+		  xmlns:c="http://java.sun.com/jsp/jstl/core"
+		  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+		  xmlns:f="http://java.sun.com/jsp/jstl/fmt"
+		  version="2.0">
+	<jsp:directive.page contentType="text/html; charset=ISO-8859-1" 
+		pageEncoding="ISO-8859-1" session="true"/>
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+<html xmlns="http://www.w3.org/1999/xhtml">
+<script type="text/javascript"
+src="${pageContext.request.contextPath}/style/Validation.js">;</script>
+<head>
+<title>Hello</title>
+
+
+
+
+
+</head>
+<body>
+
+
+<fieldset>
+	     <legend>Sign Up</legend>
+	       <section>
+	    
+			 
+			 
+			 <form action="" method="GET" class="loginForm" onsubmit="return validate();" >	    	
+
+					
+						
+						
+						   <label for="firstName"> <b>First Name</b> </label>
+					    <input type="text" id="firstName" name="firstName" required="true" ></input><BR/>
+					    
+					       <label for="LastName"> <b>Last Name</b> </label>
+					    <input type="text" id="lastName" name="lastName" required="true"></input><BR/>
+
+					   <label for="Email"> <b>Email Address</b> </label>
+					    <input type="email" id="email" name="email"  required="true"></input><BR/>
+					  
+			 	
+			          		
+					    <label for="password"><b> Password</b> </label>
+					   	<input type="password"  id="password" name="password" required="true" ></input><BR/>
+
+
+
+					
+
+						<button  name="ajax" value="true"  
+						onclick="SignUpAjax('/E-commerceoriginal/BookStore/Ajax');return false;">Sign Up</button>
+						
+						
+
+			 </form>
+			 
+		
+		
+	
+		  </section>
+		  
+		  <span id="result"></span>
+</fieldset>
+
+
+
+
+</body>
+</html>
+</jsp:root>
