@@ -20,6 +20,10 @@
 	integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
 	crossorigin="anonymous" />
 
+<c:import url="nav.html"></c:import>
+
+
+
 </head>
 <body>
 
@@ -41,22 +45,65 @@
 					<li class="contact"><a class="nav-link" href="#">Contact
 							Us</a></li>
 
+					<div class="dropdown">
+						<button class="btn btn-secondary dropdown-toggle" type="button"
+							id="dropdownMenuButton" data-toggle="dropdown"
+							aria-haspopup="true" aria-expanded="false">Books</button>
+						<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+							<li><a class="dropdown-item"
+								href="BookStore?category=Fiction">Fiction</a></li>
+							<li><a class="dropdown-item"
+								href="BookStore?category=Science">Science</a></li>
+							<li><a class="dropdown-item"
+								href="BookStore?category=Engineering">Engineering</a></li>
+						</ul>
+					</div>
+
+
+
+
 				</ul>
 				<form action="BookStore" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
-						type="search" placeholder="Search" aria-label="Search"></input>
+						type="search" placeholder="Search" aria-label="Search" required="true" oninvalid="return false;"></input>
 					<button class="btn btn-outline-success" id="btnsubmit"
 						action="submit" value="true">Search</button>
 
 				</form>
 
-				<form action="BookStore" class="d-flex" method="POST">
-					<button class="btn btn-outline-success" id="logout" name="logout"
-						value="true">Logout</button>
-				</form>
+				<c:choose>
+					<c:when test="${sessionScope.name ne null}">
+
+						<form action="BookStore" class="d-flex" method="POST">
+							<button class="btn btn-outline-success" id="logout" name="logout"
+								value="true">LogOut</button>
+						</form>
+					</c:when>
+
+					<c:otherwise>
+
+						<form action="BookStore" class="d-flex" method="POST">
+							<button class="btn btn-outline-success" id="login" name="login"
+								value="true">LogIn/Register</button>
+						</form>
+					</c:otherwise>
+
+				</c:choose>
+
+
 			</div>
 		</div>
 	</nav>
+
+
+
+	<c:choose>
+		<c:when test="${name ne null}">
+			
+			Welcome  ${name}
+			
+	</c:when>
+	</c:choose>
 
 
 
@@ -67,13 +114,23 @@
 		<c:when test="${found eq 'true'}">
 			<label id="label1">${numberofresults}</label>
 			<div class="container">
-
+			
+				
+					
+					
+				
+				
 				<c:forEach var="result" items="${bookfound}">
 
-
+					
 					<div class="item" id="${result.getBid()}">
-
-						<img src="images/${result.getUrl()}"></img>
+						 <img id="images" src="images/${result.getUrl()}"></img>  
+						
+						
+						<form action="BookStore" class="d-flex" method="POST">
+							<Button id="bookinfo" name="bookinfo" value="${result.getBid()}">${result.getTitle()}</Button>
+						</form>
+						
 						<p>$${result.getPrice()}</p>
 						<button type="button" class="btn btn-outline-primary btn-sm">Add
 							to Cart</button>
@@ -84,6 +141,27 @@
 			</div>
 		</c:when>
 
+		<c:when test="${category ne null}">
+			<div class="container">
+				<c:forEach var="books" items="${category}">
+					<div class="item" id="${books.getBid()}">
+
+						<img id="images" src="images/${books.getUrl()}"></img>
+
+						<form action="BookStore" class="d-flex" method="POST">
+							<Button id="bookinfo" name="bookinfo" value="${books.getBid()}">${books.getTitle()}</Button>
+						</form>
+
+						<p>$${books.getPrice()}</p>
+						<button type="button" class="btn btn-outline-primary btn-sm">Add
+							to Cart</button>
+					</div>
+
+				</c:forEach>
+			</div>
+		</c:when>
+
+
 		<c:otherwise>
 			<div class="container">
 
@@ -92,13 +170,13 @@
 
 					<div class="item" id="${book.getBid()}">
 
-						<img src="images/${book.getUrl()}"></img>
-						
-						<form action="BookStore" class="d-flex" method="POST">
-						<Button id="bookinfo" name="bookinfo" value="${book.getBid()}" >${book.getTitle()}</Button>
+						<img id="images" src="images/${book.getUrl()}"></img>
+
+						<form action="BookStore" class="d-flex" method="GET">
+							<Button id="bookinfo" name="bookinfo" value="${book.getBid()}">${book.getTitle()}</Button>
 						</form>
-						
-						<p> $${book.getPrice()}</p>
+
+						<p>$${book.getPrice()}</p>
 						<button type="button" class="btn btn-outline-primary btn-sm">Add
 							to Cart</button>
 					</div>

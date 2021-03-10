@@ -7,6 +7,7 @@ import java.util.Map;
 
 import DAO.DAO;
 import bean.BookBean;
+import bean.ReviewBean;
 
 public class BookStoreModel {
 
@@ -29,6 +30,10 @@ public class BookStoreModel {
 		this.dao.insertPartnerDB(uid, password);
 
 	}
+	
+	public void insertAReview(String fname, String lname, String bid, String review) throws SQLException{
+		this.dao.insertReview(fname, lname, bid, review);
+	}
 
 	public String getPartnerPassword(String password) {
 		return this.dao.retrievePartnerPassword(password);
@@ -47,6 +52,11 @@ public class BookStoreModel {
 		return this.dao.retrieveUID(uid);
 	}
 	
+	public String getFullName(String email) {
+		
+		return this.dao.getFullName(email);
+	}
+	
 	public List<BookBean> retrieveBookRecords(String bid) throws SQLException {
 		return this.dao.retreivebookrecord(bid);
 	}
@@ -54,6 +64,16 @@ public class BookStoreModel {
 	public List<BookBean> retrieveInfoOfBook(String bid) throws SQLException{
 		return this.dao.retrievebookinfo(bid);
 	}
+	
+	public List<BookBean> retrieveBooksUsingCategory(String category) throws SQLException{
+		return this.dao.retriveBookFromCategory(category);
+	}
+	
+	public List<ReviewBean> retrieveLastTwoReviews(String bid) throws SQLException{
+		return this.dao.retriveReviews(bid);
+	}
+	
+
 	
 	public List<BookBean> getSearchedBook(String title) throws SQLException{
 		return this.dao.retreivebook(title);

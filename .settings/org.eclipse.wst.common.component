@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-        
-    <wb-module deploy-name="E-commerceoriginal-0.0.1-SNAPSHOT">
-        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-                
+    <wb-module deploy-name="E-commerceoriginal">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
-                
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-                
-        <property name="java-output-path" value="/E-commerceoriginal/build/classes"/>
+        <dependent-module archiveName="jstl-1.2.jar" deploy-path="/WEB-INF/lib/" handle="module:/resource/jstl-1.2/jstl-1.2">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="protobuf-java-3.11.4.jar" deploy-path="/WEB-INF/lib/" handle="module:/resource/protobuf-java-3.11.4/protobuf-java-3.11.4">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="aspectjweaver-1.7.2.jar" deploy-path="/WEB-INF/lib/" handle="module:/resource/aspectjweaver-1.7.2/aspectjweaver-1.7.2">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mysql-connector-java-8.0.23.jar" deploy-path="/WEB-INF/lib/" handle="module:/resource/mysql-connector-java-8.0.23/mysql-connector-java-8.0.23">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="spring-aspects-3.2.7.RELEASE.jar" deploy-path="/WEB-INF/lib/" handle="module:/resource/spring-aspects-3.2.7.RELEASE/spring-aspects-3.2.7.RELEASE">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="E-commerceoriginal"/>
-            
+        <property name="java-output-path" value="/E-commerceoriginal/build/classes"/>
     </wb-module>
-    
 </project-modules>

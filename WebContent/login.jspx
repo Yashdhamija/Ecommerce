@@ -46,6 +46,8 @@
 
 						<button name="loginButton" value="true" id="loginButton" >Login</button>
 						
+						
+						
 						<button name="partnersignup" value="true" id="partnersignup" >Partner Register</button>
 						
 

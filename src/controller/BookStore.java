@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.BookBean;
+import bean.ReviewBean;
 
 /**
  * Servlet implementation class BookStoreModel
@@ -53,17 +54,48 @@ public class BookStore extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-	
 
 //		
+		
 		ServletContext context = getServletContext();
 		BookStoreModel book = (BookStoreModel) context.getAttribute("BookStore");
 
 		if (request.getParameter("signup") != null) {
 
 			this.target = "/register.jspx";
+			
 			request.getRequestDispatcher(target).forward(request, response);
 
+		}
+		
+		else if(request.getParameter("submitreview") != null) {
+			String fname = request.getParameter("fname");
+			String lname = request.getParameter("lname");
+			String bid = (String) request.getSession().getAttribute("bookid");
+			String review = (String) request.getParameter("writereview");
+			System.out.println(review);
+			try {
+				book.insertAReview(fname, lname, bid, review);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		else if(request.getParameter("reviewform") != null) {
+			
+            try {
+            	request.setAttribute("review", "true");
+    			String bid = (String) request.getSession().getAttribute("bookid");
+    			System.out.println("Bid is " + bid);
+                request.setAttribute("bookinfo", book.retrieveInfoOfBook(bid));
+                //System.out.println("Price issssssssssssssss " + book.retrieveInfoOfBook(bid).get(1).getPrice());
+                request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
+
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }	
 		}
 
 		else if (request.getPathInfo() != null && request.getPathInfo().indexOf("Ajax") >= 0) {
@@ -87,6 +119,20 @@ public class BookStore extends HttpServlet {
 			}
 
 		}
+		
+		else if(request.getParameter("category") != null) {
+			String category = request.getParameter("category");
+			List<BookBean> books = null;
+			try {
+				books = book.retrieveBooksUsingCategory(category);
+				request.setAttribute("category", books);
+				request.getRequestDispatcher("/bookstore.jspx").forward(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 
 		else if (request.getParameter("partnersignup") != null) {
 
@@ -95,17 +141,42 @@ public class BookStore extends HttpServlet {
 
 		}
 
-		else if (request.getParameter("uidregister") != null) {
+		else if (request.getParameter("uidregister") != null) { // Partner signup
 
 			int uid = Integer.parseInt(request.getParameter("uid"));
 			String partnerPassword = request.getParameter("uidpassword");
-			book.insertPartnerLogin(uid, partnerPassword);
-			System.out.println("Testing purpose");
+			if (book.getUID(request.getParameter("uid")).equals("uid exists")) {
 
-		} else if (request.getParameter("logout") != null) {
-			request.getSession().setAttribute("userloginname", null);
-			request.getRequestDispatcher("/login.jspx").forward(request, response);
+				System.out.println("This UID exists");
+
+			}
+
+			else {
+				book.insertPartnerLogin(uid, partnerPassword);
+
+			}
+
+		}
+
+		else if (request.getParameter("logout") != null) {
+			try {
+				l = book.retrieveBookRecords("");
+				request.setAttribute("books", l);
+				request.getSession().setAttribute("name", null);
+				request.getRequestDispatcher("/bookstore.jspx").forward(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			System.out.println("i am Logged out");
+		}
+
+		else if (request.getParameter("login") != null) { // Going into user logins
+
+			this.target = "/login.jspx";
+			request.getRequestDispatcher(target).forward(request, response);
+
 		}
 
 		else if (request.getParameter("search") != null) {
@@ -122,47 +193,63 @@ public class BookStore extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		
-		else if(request.getSession().getAttribute("userloginname") != null && request.getParameter("bookinfo") != null) {
+
+		else if (request.getSession().getAttribute("userloginname") != null
+				&& request.getParameter("bookinfo") != null) {
 			String bid = request.getParameter("bookinfo");
 			try {
 				request.setAttribute("bookinfo", book.retrieveInfoOfBook(bid));
 				request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
-				
+
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		
+		
+		else if( request.getParameter("bookinfo") != null) {
+			System.out.println("This page");
+            String bid = request.getParameter("bookinfo");
+            List<ReviewBean> list = null;
+          
+            try {
+            	request.getSession().setAttribute("bookid", bid);
+                request.setAttribute("bookinfo", book.retrieveInfoOfBook(bid));
+                list = book.retrieveLastTwoReviews(bid);
+                request.setAttribute("reviews", list);             //This
+                request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
 
-		else if (request.getSession().getAttribute("userloginname") != null) {
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+		else if (request.getParameter("loginButton") == null) { // Login button on main bookstore
+			System.out.println("This is the first page");
 			try {
-
 				l = book.retrieveBookRecords("");
 				request.setAttribute("books", l);
-
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			request.getRequestDispatcher("/bookstore.jspx").forward(request, response);
-		}
 
-		else if (request.getParameter("loginButton") == null) {
-
-			this.target = "/login.jspx";
+			this.target = "/bookstore.jspx";
 			request.getRequestDispatcher(target).forward(request, response);
-
 		}
 
-		else if (request.getParameter("loginButton") != null) {
-
+		else if (request.getParameter("loginButton") != null) { // Actual login button inside the login.jspx
+			System.out.println("I pressed the login button");
 			String userName = request.getParameter("Username"); // This is from login page
 			String password = request.getParameter("signinpassword");
 			String visitorpwd = book.getPassword(password);
 			String visitorUsername = book.getEmail(userName); // Visitor login information from db
 			String partnerpwd = book.getPartnerPassword(password); // Password from partner information in db
+			String firstname = book.getFullName(userName);
 
+			System.out.println("My name is" + request.getSession().getAttribute("name"));
 			try { // Partner login
 
 				// int uid = Integer.parseInt(userName);
@@ -193,8 +280,9 @@ public class BookStore extends HttpServlet {
 					&& visitorUsername.equals("email exists")) {
 
 				System.out.println("System success");
-				request.getSession().setAttribute("userloginname", visitorUsername);
+				// request.getSession().setAttribute("userloginname", visitorUsername);
 				request.setAttribute("found", "false");
+				request.getSession().setAttribute("name", firstname);
 				try {
 
 					l = book.retrieveBookRecords("");
@@ -204,26 +292,18 @@ public class BookStore extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 
 				if (request.getParameter("search") == null) {
+
 					System.out.println("On main page of book store");
 					request.getRequestDispatcher("/bookstore.jspx").forward(request, response);
-					// request.getSession().setAttribute("hi", "hi");
+					request.getSession().setAttribute("hi", "hi");
 					// response.sendRedirect("main");
 
 				}
-				
-				
-				
-				
 
-			} 
-			
-			
-			
-			
-			
+			}
+
 			else {
 				System.out.println("System not success");
 				request.setAttribute("loginfailed", "failed");

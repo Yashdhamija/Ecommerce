@@ -26,6 +26,7 @@ function validate() {
 }
 
 
+
 function partnerValidation() { //For uid validation to be exactly 8 numbers
 
  var uid = document.getElementById("uid").value
