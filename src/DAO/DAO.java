@@ -231,6 +231,27 @@ public class DAO { // DB class
 		return s;
 
 	}
+	
+	// Retrieves the price of individual book using bid as a parameter
+	
+	public int retrievePriceofSingleBook(String bid) throws SQLException {
+		getRemoteConnection();
+		int price = 0;
+		
+		String query = "SELECT price FROM Book WHERE bid='" + bid + "'";
+
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			price = rs.getInt("price");
+		}
+
+		rs.close();
+		ps.close();
+		con.close();
+		return price;
+	}
 
 	public String retrievePartnerPassword(String password) {
 
@@ -322,7 +343,26 @@ public class DAO { // DB class
 		System.out.println(l.get(0).getBid());
 		return l;
 	}
+	
+	public String retrieveSingleBookTitle(String bid) throws SQLException {
+		String btitle = null;
+		getRemoteConnection();
 
+		String query = "SELECT title FROM Book WHERE bid='" + bid + "'";
+
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			btitle = rs.getString("title");
+		}
+
+		rs.close();
+		ps.close();
+		con.close();
+		return btitle;
+	}
+	
 	public List<BookBean> retrievebookinfo(String bid) throws SQLException {
 
 		getRemoteConnection();

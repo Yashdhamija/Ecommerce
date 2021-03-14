@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.BookBean;
+import bean.CartBean;
 import bean.ReviewBean;
 
 /**
@@ -28,7 +29,11 @@ public class BookStore extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
 	String login = "";
+	String path;
 	List<BookBean> l = null;
+	List<CartBean> cart;
+
+	int id = 0;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -54,21 +59,121 @@ public class BookStore extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
-//		
-		
+		System.out.println(request.getParameter("quantity"));
+		System.out.println("The quantity is " + request.getParameter("quantity"));
+		System.out.println("Remove book" + request.getParameter("removebook"));
 		ServletContext context = getServletContext();
 		BookStoreModel book = (BookStoreModel) context.getAttribute("BookStore");
 
 		if (request.getParameter("signup") != null) {
 
 			this.target = "/register.jspx";
-			
+
 			request.getRequestDispatcher(target).forward(request, response);
 
 		}
-		
-		else if(request.getParameter("submitreview") != null) {
+
+		else if (request.getParameter("removebook") != null) {
+
+			List<CartBean> l = (ArrayList) request.getSession().getAttribute("shoppingcart");
+			request.getSession().setAttribute("shoppingcart", book.remove(request.getParameter("removebook"), l));
+			request.getSession().setAttribute("carttotal",
+					book.cartTotal(book.remove(request.getParameter("removebook"), l)));
+			request.getSession().setAttribute("cartsize", book.remove(request.getParameter("removebook"), l).size());
+			request.getRequestDispatcher("/Cart.jspx").forward(request, response);
+		}
+
+		else if (request.getParameter("viewcart") != null) {
+			System.out.println("The shopping cart is " + request.getSession().getAttribute("shoppingcart"));
+			request.getRequestDispatcher("/Cart.jspx").forward(request, response);
+		}
+
+		else if (request.getParameter("quantity") != null) {
+			int quantity = Integer.parseInt(request.getParameter("quantity"));
+			request.getSession().setAttribute("quantity", quantity);
+			List<CartBean> l = (List<CartBean>) request.getSession().getAttribute("shoppingcart");
+
+			// retuns a list
+			request.getSession().setAttribute("shoppingcart",
+					book.quantityUpdate(l, quantity, request.getParameter("btnid")));
+			request.getSession().setAttribute("carttotal",
+					book.cartTotal(book.quantityUpdate(l, quantity, request.getParameter("btnid"))));
+			request.getRequestDispatcher("/Cart.jspx").forward(request, response);
+
+		}
+
+		else if (request.getParameter("addtocart") != null) {
+			int price;
+			int total;
+			int flag = 0;
+//			if (!(path != null && path.equals(request.getQueryString()))) {
+
+			path = request.getQueryString();
+			System.out.println("The path is " + path);
+
+			if (request.getSession().getAttribute("shoppingcart") == null) {
+				// System.out.println("Cart is cleared");
+				// book.cart.clear();
+				cart = new ArrayList<CartBean>();
+				request.getSession().setAttribute("shoppingcart", cart);
+				request.getSession().setAttribute("carttotal", 0);
+			} else {
+				cart = (ArrayList) request.getSession().getAttribute("shoppingcart");
+			}
+			id++;
+			String bid = request.getParameter("addtocart");
+
+			try {
+				String btitle = book.retrieveBookTitle(bid);
+				price = book.retrievePriceofABook(bid);
+				System.out.println("The price of book is " + price);
+
+				CartBean b = new CartBean(id, bid, price, btitle, 1);
+				System.out.println(b.getBookid() + " " + b.getId() + " " + b.getPrice() + " " + b.getQuantity() + " "
+						+ b.getTitle());
+				System.out.println("b is " + b);
+				System.out.println("cart is " + cart);
+
+				for (int i = 0; i < cart.size(); i++) {
+					if (cart.get(i).getBookid().equals(bid)) {
+						flag = 1;
+						cart.get(i).setQuantity(cart.get(i).getQuantity() + 1);
+						total = book.cartTotal(cart);
+						request.getSession().setAttribute("carttotal", total);
+						request.getSession().setAttribute("quantity", cart.get(i).getQuantity() + 1);
+						request.getSession().setAttribute("shoppingcart", cart);
+					}
+				}
+
+				if (flag != 1) {
+					cart.add(b);
+					System.out.println("cart items are " + cart);
+					total = book.cartTotal(cart);
+					request.getSession().setAttribute("cartsize", cart.size());
+					request.getSession().setAttribute("carttotal", total);
+					request.getSession().setAttribute("shoppingcart", cart);
+
+					request.getSession().setAttribute("iscart", "clicked");
+
+				}
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// }
+			try {
+				l = book.retrieveBookRecords("");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			request.setAttribute("books", l);
+			request.getRequestDispatcher("bookstore.jspx").forward(request, response);
+		}
+
+		else if (request.getParameter("submitreview") != null) {
 			String fname = request.getParameter("fname");
 			String lname = request.getParameter("lname");
 			String bid = (String) request.getSession().getAttribute("bookid");
@@ -81,21 +186,20 @@ public class BookStore extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		
-		else if(request.getParameter("reviewform") != null) {
-			
-            try {
-            	request.setAttribute("review", "true");
-    			String bid = (String) request.getSession().getAttribute("bookid");
-    			System.out.println("Bid is " + bid);
-                request.setAttribute("bookinfo", book.retrieveInfoOfBook(bid));
-                //System.out.println("Price issssssssssssssss " + book.retrieveInfoOfBook(bid).get(1).getPrice());
-                request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
 
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }	
+		else if (request.getParameter("reviewform") != null) {
+
+			try {
+				request.setAttribute("review", "true");
+				String bid = (String) request.getSession().getAttribute("bookid");
+				System.out.println("Bid is " + bid);
+				request.setAttribute("bookinfo", book.retrieveInfoOfBook(bid));
+				request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		else if (request.getPathInfo() != null && request.getPathInfo().indexOf("Ajax") >= 0) {
@@ -119,8 +223,8 @@ public class BookStore extends HttpServlet {
 			}
 
 		}
-		
-		else if(request.getParameter("category") != null) {
+
+		else if (request.getParameter("category") != null) {
 			String category = request.getParameter("category");
 			List<BookBean> books = null;
 			try {
@@ -131,7 +235,7 @@ public class BookStore extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 
 		else if (request.getParameter("partnersignup") != null) {
@@ -206,31 +310,38 @@ public class BookStore extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		
-		
-		else if( request.getParameter("bookinfo") != null) {
-			System.out.println("This page");
-            String bid = request.getParameter("bookinfo");
-            List<ReviewBean> list = null;
-          
-            try {
-            	request.getSession().setAttribute("bookid", bid);
-                request.setAttribute("bookinfo", book.retrieveInfoOfBook(bid));
-                list = book.retrieveLastTwoReviews(bid);
-                request.setAttribute("reviews", list);             //This
-                request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
 
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+		else if (request.getParameter("bookinfo") != null) {
+			System.out.println("This page");
+			String bid = request.getParameter("bookinfo");
+			List<ReviewBean> list = null;
+
+			try {
+				request.getSession().setAttribute("bookid", bid);
+				request.setAttribute("bookinfo", book.retrieveInfoOfBook(bid));
+				list = book.retrieveLastTwoReviews(bid);
+				request.setAttribute("reviews", list); // This
+				request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
 		else if (request.getParameter("loginButton") == null) { // Login button on main bookstore
 			System.out.println("This is the first page");
 			try {
 				l = book.retrieveBookRecords("");
 				request.setAttribute("books", l);
+
+//				if (request.getSession().getAttribute("shoppingcart") == null) {
+//					System.out.println("Cart is cleared");
+//					cart.clear();
+//					request.getSession().setAttribute("shoppingcart", 0);
+//					request.getSession().setAttribute("carttotal", 0);
+//				}
+
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -298,7 +409,6 @@ public class BookStore extends HttpServlet {
 					System.out.println("On main page of book store");
 					request.getRequestDispatcher("/bookstore.jspx").forward(request, response);
 					request.getSession().setAttribute("hi", "hi");
-					// response.sendRedirect("main");
 
 				}
 

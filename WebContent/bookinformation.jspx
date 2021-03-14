@@ -12,6 +12,7 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Insert title here</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
 <link rel="StyleSheet" href="style/ui.css" type="text/css"
 	title="cse4413" media="screen, print" />
 <link
@@ -63,6 +64,8 @@
 							<button class="btn btn-outline-success" id="login" name="login"
 								value="true">Login/Register</button>
 						</form>
+						
+						<a href="BookStore?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 					
 					</c:otherwise>
 
@@ -87,8 +90,9 @@
 				<p id="pprice">Price: $ ${book.getPrice()}</p>
 
 
-				<button type="button" class="btn btn-outline-primary btn-sm">Add
-					to Cart</button>
+				<form action="BookStore" class="d-flex" method="GET">
+					<button class="btn btn-outline-primary btn-sm" id="addtocart" name="addtocart" value="${book.getBid()}" >Add to Cart</button>
+				</form>
 
 
 
