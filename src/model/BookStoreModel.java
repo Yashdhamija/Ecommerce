@@ -1,8 +1,12 @@
 package model;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +32,9 @@ public class BookStoreModel {
 
 	}
 
-	public void insertPartnerLogin(int uid, String password) throws SQLException {
+	public void insertPartnerLogin(int uid, String password, String fname, String lname) throws SQLException {
 
-		this.dao.insertPartnerDB(uid, password);
+		this.dao.insertPartnerDB(uid, password, fname, lname);
 
 	}
 
@@ -95,6 +99,20 @@ public class BookStoreModel {
 	public String searchResultsCount(String title) throws SQLException {
 		return this.dao.numberOfSearchResults(title);
 	}
+	
+	
+	
+	public String encryptPassword(String password) throws NoSuchAlgorithmException {
+		
+		MessageDigest digest = MessageDigest.getInstance("SHA-256");
+		byte[] hashed = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+		String encryptedpassword = Base64.getEncoder().encodeToString(hashed);
+		
+		return encryptedpassword;
+	}
+	
+	
+	
 
 	
 	//Cart methods

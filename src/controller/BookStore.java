@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,12 +68,10 @@ public class BookStore extends HttpServlet {
 		BookStoreModel book = (BookStoreModel) context.getAttribute("BookStore");
 
 		if (request.getParameter("registerbtn") != null) {
-			System.out.println("Hi i am an ajax call");
 			System.out.println("Street value is " + request.getParameter("street"));
 			String fname = request.getParameter("firstName");
 			String lname = request.getParameter("lastName");
 			String emailAddresss = request.getParameter("email");
-			String password = request.getParameter("password");
 			String street = request.getParameter("street");
 			String province = request.getParameter("province");
 			String city = request.getParameter("city");
@@ -92,10 +91,11 @@ public class BookStore extends HttpServlet {
 
 			} else {
 				try {
+					String password =  book.encryptPassword(request.getParameter("password"));
 					book.insertIntoAddress(street, province, country, zip, phone, city);
 					book.insertUserLogin(fname, lname, emailAddresss, password);
 
-				} catch (SQLException e) {
+				} catch (SQLException | NoSuchAlgorithmException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -144,14 +144,17 @@ public class BookStore extends HttpServlet {
 			System.out.println("I pressed the login button");
 			String userName = request.getParameter("Username"); // This is from login page
 			String password = request.getParameter("signinpassword");
-			String visitorpwd = book.getPassword(password);
+
 			String visitorUsername = book.getEmail(userName); // Visitor login information from db
-			String partnerpwd = book.getPartnerPassword(password); // Password from partner information in db
+			
 			String firstname = book.getFullName(userName);
 
 			System.out.println("My name is" + request.getSession().getAttribute("name"));
 			try { // Partner login
-
+				
+				//checking if encrypted password exists in database
+				String partnerpwd = book.getPartnerPassword(book.encryptPassword(password)); 
+				
 				if (userName.length() == 8 && partnerpwd != null && book.getUID(userName) != null
 						&& partnerpwd.equals("partner password exists") && book.getUID(userName).equals("uid exists")) {
 
@@ -172,12 +175,28 @@ public class BookStore extends HttpServlet {
 				ex.printStackTrace();
 
 			}
+			
+			
+			//password encryption, it encrypts the user provided password and it checks if this encrypted password matches the one in dB then access is granted.
+			String visitorpwd = null;
+			try {
+				visitorpwd = book.getPassword(book.encryptPassword(password));
+			} catch (NoSuchAlgorithmException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 
 			// Visitor/Customer Login is successful
 			if (visitorpwd != null && visitorUsername != null && visitorpwd.equals("password exists")
 					&& visitorUsername.equals("email exists")) {
 
 				request.removeAttribute("loginfailed");
+				try {
+					System.out.println("The encrypted password is " + book.encryptPassword(password));
+				} catch (NoSuchAlgorithmException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				System.out.println("i am logged in");
 				request.setAttribute("found", "false");
 				request.getSession().setAttribute("name", firstname);
@@ -205,7 +224,7 @@ public class BookStore extends HttpServlet {
 				System.out.println("System not success");
 				request.setAttribute("loginfailed", "failed");
 				request.getRequestDispatcher("/login.jspx").forward(request, response);
-				// response.sendRedirect("Login");
+				
 			}
 
 		}
@@ -350,7 +369,7 @@ public class BookStore extends HttpServlet {
 			
 			
 			System.out.println("uid value is " + uid);
-			String partnerPassword = request.getParameter("uidpassword");
+			
 			if (book.getUID(request.getParameter("uid")) != null
 					&& book.getUID(request.getParameter("uid")).equals("uid exists")) {
 
@@ -360,9 +379,11 @@ public class BookStore extends HttpServlet {
 
 			else {
 				try {
+					//partner password is encrypted and inserted to dB
+					String partnerPassword = book.encryptPassword(request.getParameter("uidpassword"));
 					book.insertIntoAddress(street, province, country, zip, phone, city);
-					book.insertPartnerLogin(uid, partnerPassword);
-				} catch (SQLException e) {
+					book.insertPartnerLogin(uid, partnerPassword, fname, lname);
+				} catch (SQLException | NoSuchAlgorithmException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

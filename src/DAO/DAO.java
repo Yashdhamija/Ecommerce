@@ -49,23 +49,6 @@ public class DAO { // DB class
 																							// during
 		count = getMaxAddressId();																				// signing up
 		getRemoteConnection();
-//		try {
-//
-//			this.stmt = this.con.createStatement();
-//			System.out.println(fname);
-//			System.out.println(lname);
-//			String query = "INSERT INTO Users " + "VALUES ('" + fname + "', '" + lname + "', '" + email + "', '"
-//					+ password + "')";
-//			stmt.executeUpdate(query);
-//			// String query = "insert into customer values (null, '"+fname+"', '"+lname+"',
-//			// '"+tel+"', '"+email+"', '"+password+"')";
-//
-//		} catch (SQLException se) {
-//			se.printStackTrace();
-//		}
-//
-//		catch (Exception e) {
-//			e.printStackTrace();
 					
 		String query = "INSERT INTO Users VALUES(?,?,?,?,?)";
 
@@ -110,35 +93,21 @@ public class DAO { // DB class
 
 	}
 
-	public void insertPartnerDB(int uid, String password) throws SQLException { // Insert DB for new users
+	public void insertPartnerDB(int uid, String password, String fname, String lname) throws SQLException { // Insert DB for new users
 															// during
 		// signing up
 		getRemoteConnection();
 		c = getMaxAddressId();	
-//		try {
-//
-//			this.stmt = this.con.createStatement();
-//
-//			String query = "INSERT INTO Partners " + "VALUES ('" + uid + "', '" + password + "')";
-//			stmt.executeUpdate(query);
-//
-//			con.close();
-//
-//		} catch (SQLException se) {
-//			se.printStackTrace();
-//		}
-//
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
 		
-		String query = "INSERT INTO Partners VALUES(?,?,?)";
+		String query = "INSERT INTO Partners VALUES(?,?,?,?,?)";
 
 		PreparedStatement ps = con.prepareStatement(query);
 	
 		ps.setInt(1, uid);
 		ps.setString(2, password);
 		ps.setInt(3, c);
+		ps.setString(4, fname);
+		ps.setString(5, lname);
 		int rs = ps.executeUpdate();
 		
 
@@ -242,7 +211,7 @@ public class DAO { // DB class
 
 	public String retrievePassword(String password) {
 		getRemoteConnection(); // added this
-		String s = null;
+		String str = null;
 		String p = null;
 		try {
 			this.stmt = this.con.createStatement();
@@ -253,8 +222,11 @@ public class DAO { // DB class
 				p = rs.getString("password");
 				// System.out.println(e);
 			}
-			if (p != null && p.equals(password)) {
-				s = "password exists";
+			if (p != null) {
+				str = "password exists";
+			}
+			else {
+				str = "password doesnt match, try again";
 			}
 
 			rs.close();
@@ -268,7 +240,7 @@ public class DAO { // DB class
 			e.printStackTrace();
 		}
 
-		return s;
+		return str;
 
 	}
 	
@@ -322,6 +294,9 @@ public class DAO { // DB class
 			}
 			if (p != null && p.equals(password)) {
 				s = "partner password exists";
+			}
+			else {
+				s = "incorrect password provided";
 			}
 
 			rs.close();
