@@ -18,7 +18,8 @@ public class DAO { // DB class
 
 	private Connection con;
 	private Statement stmt;
-
+	int count;
+	int c;
 	public DAO() {
 
 		getRemoteConnection();
@@ -44,30 +45,42 @@ public class DAO { // DB class
 
 	}
 
-	public void insertUserDB(String fname, String lname, String email, String password) { // Insert DB for new users
+	public void insertUserDB(String fname, String lname, String email, String password) throws SQLException { // Insert DB for new users
 																							// during
-																							// signing up
+		count = getMaxAddressId();																				// signing up
 		getRemoteConnection();
-		try {
+//		try {
+//
+//			this.stmt = this.con.createStatement();
+//			System.out.println(fname);
+//			System.out.println(lname);
+//			String query = "INSERT INTO Users " + "VALUES ('" + fname + "', '" + lname + "', '" + email + "', '"
+//					+ password + "')";
+//			stmt.executeUpdate(query);
+//			// String query = "insert into customer values (null, '"+fname+"', '"+lname+"',
+//			// '"+tel+"', '"+email+"', '"+password+"')";
+//
+//		} catch (SQLException se) {
+//			se.printStackTrace();
+//		}
+//
+//		catch (Exception e) {
+//			e.printStackTrace();
+					
+		String query = "INSERT INTO Users VALUES(?,?,?,?,?)";
 
-			this.stmt = this.con.createStatement();
-			System.out.println(fname);
-			System.out.println(lname);
-			String query = "INSERT INTO Users " + "VALUES ('" + fname + "', '" + lname + "', '" + email + "', '"
-					+ password + "')";
-			stmt.executeUpdate(query);
-			// String query = "insert into customer values (null, '"+fname+"', '"+lname+"',
-			// '"+tel+"', '"+email+"', '"+password+"')";
-
-		} catch (SQLException se) {
-			se.printStackTrace();
-		}
-
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
+		PreparedStatement ps = con.prepareStatement(query);
+	
+		ps.setString(1, fname);
+		ps.setString(2, lname);
+		ps.setString(3, email);
+		ps.setString(4, password);
+		ps.setInt(5, count);
+		
+		int rs = ps.executeUpdate();
+	
+	
+}
 
 	public String getFullName(String email) {
 		String name="";
@@ -97,26 +110,37 @@ public class DAO { // DB class
 
 	}
 
-	public void insertPartnerDB(int uid, String password) { // Insert DB for new users
+	public void insertPartnerDB(int uid, String password) throws SQLException { // Insert DB for new users
 															// during
 		// signing up
 		getRemoteConnection();
-		try {
+		c = getMaxAddressId();	
+//		try {
+//
+//			this.stmt = this.con.createStatement();
+//
+//			String query = "INSERT INTO Partners " + "VALUES ('" + uid + "', '" + password + "')";
+//			stmt.executeUpdate(query);
+//
+//			con.close();
+//
+//		} catch (SQLException se) {
+//			se.printStackTrace();
+//		}
+//
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
+		String query = "INSERT INTO Partners VALUES(?,?,?)";
 
-			this.stmt = this.con.createStatement();
-
-			String query = "INSERT INTO Partners " + "VALUES ('" + uid + "', '" + password + "')";
-			stmt.executeUpdate(query);
-
-			con.close();
-
-		} catch (SQLException se) {
-			se.printStackTrace();
-		}
-
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		PreparedStatement ps = con.prepareStatement(query);
+	
+		ps.setInt(1, uid);
+		ps.setString(2, password);
+		ps.setInt(3, c);
+		int rs = ps.executeUpdate();
+		
 
 	}
 	
@@ -137,6 +161,21 @@ public class DAO { // DB class
 		int rs = ps.executeUpdate();
 			
 	}
+	
+	public void insertAddress(String street, String province, String country, String zip, String phone, String city) throws SQLException {
+		getRemoteConnection();
+		String query = "INSERT INTO Address VALUES(?,?,?,?,?,?,?)";
+		PreparedStatement ps = con.prepareStatement(query);	
+		
+		ps.setString(1, null);
+		ps.setString(2, street);
+		ps.setString(3, province);
+		ps.setString(4, country);
+		ps.setString(5, zip);
+		ps.setString(6, phone);
+		ps.setString(7, city);
+		int rs = ps.executeUpdate();
+	}
 
 	public String retrieveEmail(String email) { // For Signing up, if previous email exists then it checks
 		String s = null;
@@ -155,6 +194,7 @@ public class DAO { // DB class
 			if (e != null && e.equals(email)) {
 				s = "email exists";
 			}
+
 
 			rs.close();
 			con.close();
@@ -252,6 +292,19 @@ public class DAO { // DB class
 		con.close();
 		return price;
 	}
+	
+	public int getMaxAddressId() throws SQLException {
+		int maximum = 0;
+		getRemoteConnection();
+		String query = "SELECT Max(id) as max FROM Address";
+		PreparedStatement ps = con.prepareStatement(query);	
+		ResultSet rs = ps.executeQuery();
+		
+		while(rs.next()) {
+			maximum = rs.getInt("max");
+		}
+		return maximum;
+	}
 
 	public String retrievePartnerPassword(String password) {
 
@@ -289,6 +342,7 @@ public class DAO { // DB class
 	public String retrieveUID(String uid) { // For Signing up, if previous email exists then it checks
 		String s = null;
 		String u = null;
+		getRemoteConnection();
 		try {
 
 			this.stmt = this.con.createStatement();

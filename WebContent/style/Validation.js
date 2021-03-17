@@ -58,7 +58,22 @@ function SignUpAjax(address) {
 		"&";
 	data += "email=" + document.getElementById("email").value +
 		"&";
-	data += "password=" + document.getElementById("password").value;
+	data += "password=" + document.getElementById("password").value +
+		"&";
+	
+	data += "street=" + document.getElementById("street").value +
+		"&"; 
+	
+	data += "province=" + document.getElementById("province").value +
+		"&";
+	
+	data += "country=" + document.getElementById("country").value +
+		"&";
+	
+	data += "zip=" + document.getElementById("zip").value +
+		"&";
+	
+	data += "phone=" + document.getElementById("phone").value;
 
 	console.log(data);
 

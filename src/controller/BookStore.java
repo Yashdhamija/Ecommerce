@@ -24,7 +24,7 @@ import bean.ReviewBean;
 /**
  * Servlet implementation class BookStoreModel
  */
-@WebServlet({ "/BookStore", "/BookStore/*" })
+@WebServlet({ "/BookStore", "/BookStore/*", "/Login", "/Register", "/PartnerRegister" })
 public class BookStore extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
@@ -32,6 +32,7 @@ public class BookStore extends HttpServlet {
 	String path;
 	List<BookBean> l = null;
 	List<CartBean> cart;
+	String loginerror;
 
 	int id = 0;
 
@@ -65,7 +66,44 @@ public class BookStore extends HttpServlet {
 		ServletContext context = getServletContext();
 		BookStoreModel book = (BookStoreModel) context.getAttribute("BookStore");
 
-		if (request.getParameter("signup") != null) {
+		if (request.getParameter("registerbtn") != null) {
+			System.out.println("Hi i am an ajax call");
+			System.out.println("Street value is " + request.getParameter("street"));
+			String fname = request.getParameter("firstName");
+			String lname = request.getParameter("lastName");
+			String emailAddresss = request.getParameter("email");
+			String password = request.getParameter("password");
+			String street = request.getParameter("street");
+			String province = request.getParameter("province");
+			String city = request.getParameter("city");
+			String country = request.getParameter("country");
+			String zip = request.getParameter("zip");
+			String phone = request.getParameter("phone");
+
+			String s = book.getEmail(emailAddresss);
+			response.setContentType("application/json");
+
+			PrintWriter out = response.getWriter();
+
+			if (s != null && s.equals("email exists")) {
+
+				out.printf("This email is already being used");
+				out.flush();
+
+			} else {
+				try {
+					book.insertIntoAddress(street, province, country, zip, phone, city);
+					book.insertUserLogin(fname, lname, emailAddresss, password);
+
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+		else if (request.getServletPath().equals("/Register")) {
 
 			this.target = "/register.jspx";
 
@@ -99,6 +137,85 @@ public class BookStore extends HttpServlet {
 			request.getSession().setAttribute("carttotal",
 					book.cartTotal(book.quantityUpdate(l, quantity, request.getParameter("btnid"))));
 			request.getRequestDispatcher("/Cart.jspx").forward(request, response);
+
+		}
+
+		else if (request.getParameter("loginButton") != null) { // Actual login button inside the login.jspx
+			System.out.println("I pressed the login button");
+			String userName = request.getParameter("Username"); // This is from login page
+			String password = request.getParameter("signinpassword");
+			String visitorpwd = book.getPassword(password);
+			String visitorUsername = book.getEmail(userName); // Visitor login information from db
+			String partnerpwd = book.getPartnerPassword(password); // Password from partner information in db
+			String firstname = book.getFullName(userName);
+
+			System.out.println("My name is" + request.getSession().getAttribute("name"));
+			try { // Partner login
+
+				if (userName.length() == 8 && partnerpwd != null && book.getUID(userName) != null
+						&& partnerpwd.equals("partner password exists") && book.getUID(userName).equals("uid exists")) {
+
+					System.out.println("Access granted for partners");
+					return; // need to diffrentiate between visitor login and partner login
+				}
+
+				else {
+
+					System.out.println("Access not granted");
+
+				}
+
+			}
+
+			catch (Exception ex) {
+
+				ex.printStackTrace();
+
+			}
+
+			// Visitor/Customer Login is successful
+			if (visitorpwd != null && visitorUsername != null && visitorpwd.equals("password exists")
+					&& visitorUsername.equals("email exists")) {
+
+				request.removeAttribute("loginfailed");
+				System.out.println("i am logged in");
+				request.setAttribute("found", "false");
+				request.getSession().setAttribute("name", firstname);
+				try {
+
+					l = book.retrieveBookRecords("");
+					request.setAttribute("books", l);
+
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				if (request.getParameter("search") == null) {
+
+					System.out.println("On main page of book store");
+					response.sendRedirect("/E-commerceoriginal/BookStore");
+					request.getSession().setAttribute("hi", "hi");
+
+				}
+
+			}
+
+			else { // if user login fails
+				System.out.println("System not success");
+				request.setAttribute("loginfailed", "failed");
+				request.getRequestDispatcher("/login.jspx").forward(request, response);
+				// response.sendRedirect("Login");
+			}
+
+		}
+
+		else if (request.getServletPath().equals("/Login")) { // Going into user logins
+
+			this.target = "/login.jspx";
+			System.out.println("I am line 106");
+
+			request.getRequestDispatcher(target).forward(request, response);
 
 		}
 
@@ -202,28 +319,6 @@ public class BookStore extends HttpServlet {
 			}
 		}
 
-		else if (request.getPathInfo() != null && request.getPathInfo().indexOf("Ajax") >= 0) {
-			System.out.println("Hi i am an ajax call");
-			String fname = request.getParameter("firstName");
-			String lname = request.getParameter("lastName");
-			String emailAddresss = request.getParameter("email");
-			String password = request.getParameter("password");
-			String s = book.getEmail(emailAddresss);
-			response.setContentType("application/json");
-
-			PrintWriter out = response.getWriter();
-
-			if (s != null && s.equals("email exists")) {
-
-				out.printf("This email is already being used");
-				out.flush();
-
-			} else {
-				book.insertUserLogin(fname, lname, emailAddresss, password);
-			}
-
-		}
-
 		else if (request.getParameter("category") != null) {
 			String category = request.getParameter("category");
 			List<BookBean> books = null;
@@ -237,30 +332,54 @@ public class BookStore extends HttpServlet {
 			}
 
 		}
-
-		else if (request.getParameter("partnersignup") != null) {
-
-			this.target = "/partners.jspx";
-			request.getRequestDispatcher(target).forward(request, response);
-
-		}
-
+		
 		else if (request.getParameter("uidregister") != null) { // Partner signup
 
 			int uid = Integer.parseInt(request.getParameter("uid"));
+			String fname = request.getParameter("firstName");
+			String lname = request.getParameter("lastName");
+			String street = request.getParameter("street");
+			String province = request.getParameter("province");
+			String country = request.getParameter("country");
+			String city = request.getParameter("city");
+			String zip = request.getParameter("zip");
+			String phone = request.getParameter("phone");
+			
+			
+			
+			
+			
+			System.out.println("uid value is " + uid);
 			String partnerPassword = request.getParameter("uidpassword");
-			if (book.getUID(request.getParameter("uid")).equals("uid exists")) {
+			if (book.getUID(request.getParameter("uid")) != null
+					&& book.getUID(request.getParameter("uid")).equals("uid exists")) {
 
 				System.out.println("This UID exists");
 
 			}
 
 			else {
-				book.insertPartnerLogin(uid, partnerPassword);
+				try {
+					book.insertIntoAddress(street, province, country, zip, phone, city);
+					book.insertPartnerLogin(uid, partnerPassword);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 
 			}
 
 		}
+
+		else if (request.getServletPath().equals("/PartnerRegister")) {
+
+			this.target = "/partners.jspx";
+			request.getRequestDispatcher(target).forward(request, response);
+
+		}
+
+	
 
 		else if (request.getParameter("logout") != null) {
 			try {
@@ -274,13 +393,6 @@ public class BookStore extends HttpServlet {
 			}
 
 			System.out.println("i am Logged out");
-		}
-
-		else if (request.getParameter("login") != null) { // Going into user logins
-
-			this.target = "/login.jspx";
-			request.getRequestDispatcher(target).forward(request, response);
-
 		}
 
 		else if (request.getParameter("search") != null) {
@@ -330,17 +442,12 @@ public class BookStore extends HttpServlet {
 		}
 
 		else if (request.getParameter("loginButton") == null) { // Login button on main bookstore
+			System.out.println("The value of loginerror is " + request.getAttribute("loginfailed"));
 			System.out.println("This is the first page");
 			try {
+				request.removeAttribute("loginfailed");
 				l = book.retrieveBookRecords("");
 				request.setAttribute("books", l);
-
-//				if (request.getSession().getAttribute("shoppingcart") == null) {
-//					System.out.println("Cart is cleared");
-//					cart.clear();
-//					request.getSession().setAttribute("shoppingcart", 0);
-//					request.getSession().setAttribute("carttotal", 0);
-//				}
 
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -349,78 +456,6 @@ public class BookStore extends HttpServlet {
 
 			this.target = "/bookstore.jspx";
 			request.getRequestDispatcher(target).forward(request, response);
-		}
-
-		else if (request.getParameter("loginButton") != null) { // Actual login button inside the login.jspx
-			System.out.println("I pressed the login button");
-			String userName = request.getParameter("Username"); // This is from login page
-			String password = request.getParameter("signinpassword");
-			String visitorpwd = book.getPassword(password);
-			String visitorUsername = book.getEmail(userName); // Visitor login information from db
-			String partnerpwd = book.getPartnerPassword(password); // Password from partner information in db
-			String firstname = book.getFullName(userName);
-
-			System.out.println("My name is" + request.getSession().getAttribute("name"));
-			try { // Partner login
-
-				// int uid = Integer.parseInt(userName);
-
-				if (userName.length() == 8 && partnerpwd != null && book.getUID(userName) != null
-						&& partnerpwd.equals("partner password exists") && book.getUID(userName).equals("uid exists")) {
-
-					System.out.println("Access granted for partners");
-					return; // need to diffrentiate between visitor login and partner login
-				}
-
-				else {
-
-					System.out.println("Access not granted");
-
-				}
-
-			}
-
-			catch (Exception ex) {
-
-				ex.printStackTrace();
-
-			}
-
-			// Visitor/Customer Login
-			if (visitorpwd != null && visitorUsername != null && visitorpwd.equals("password exists")
-					&& visitorUsername.equals("email exists")) {
-
-				System.out.println("System success");
-				// request.getSession().setAttribute("userloginname", visitorUsername);
-				request.setAttribute("found", "false");
-				request.getSession().setAttribute("name", firstname);
-				try {
-
-					l = book.retrieveBookRecords("");
-					request.setAttribute("books", l);
-
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				if (request.getParameter("search") == null) {
-
-					System.out.println("On main page of book store");
-					request.getRequestDispatcher("/bookstore.jspx").forward(request, response);
-					request.getSession().setAttribute("hi", "hi");
-
-				}
-
-			}
-
-			else {
-				System.out.println("System not success");
-				request.setAttribute("loginfailed", "failed");
-				request.getRequestDispatcher("/login.jspx").forward(request, response);
-
-			}
-
 		}
 
 	}

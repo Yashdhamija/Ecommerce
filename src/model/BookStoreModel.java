@@ -22,13 +22,13 @@ public class BookStoreModel {
 
 	}
 
-	public void insertUserLogin(String fname, String lname, String email, String password) {
+	public void insertUserLogin(String fname, String lname, String email, String password) throws SQLException {
 
 		this.dao.insertUserDB(fname, lname, email, password);
 
 	}
 
-	public void insertPartnerLogin(int uid, String password) {
+	public void insertPartnerLogin(int uid, String password) throws SQLException {
 
 		this.dao.insertPartnerDB(uid, password);
 
@@ -36,6 +36,10 @@ public class BookStoreModel {
 
 	public void insertAReview(String fname, String lname, String bid, String review) throws SQLException {
 		this.dao.insertReview(fname, lname, bid, review);
+	}
+	
+	public void insertIntoAddress(String street, String province, String country, String zip, String phone, String city) throws SQLException {
+		this.dao.insertAddress(street, province, country, zip, phone, city);
 	}
 
 	public String getPartnerPassword(String password) {

@@ -128,3 +128,7 @@ span.price {
 	
 }
 
+#loginButton:hover {
+	colour: blue;
+}
+

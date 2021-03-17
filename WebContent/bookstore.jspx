@@ -11,7 +11,7 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Insert title here</title>
+<title>Canada's Biggest BookStore</title>
 <link rel="StyleSheet" href="style/ui.css" type="text/css"
 	title="cse4413" media="screen, print" />
 
@@ -79,10 +79,9 @@
 
 					<c:otherwise>
 
-						<form action="BookStore" class="d-flex" method="POST">
-							<button class="btn btn-outline-success" id="login" name="login"
-								value="true">LogIn/Register</button>
-						</form>
+							<a class="btn btn-outline-success" id="login" name="login"
+								href="/E-commerceoriginal/Login" >LogIn/Register</a>
+					
 
 						<a href="BookStore?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 
