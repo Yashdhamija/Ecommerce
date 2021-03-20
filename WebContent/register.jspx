@@ -15,7 +15,7 @@
 	;
 </script>
 <head>
-<title>Hello</title>
+<title>Register</title>
 
 
 
@@ -177,7 +177,17 @@
 						<option>Canada</option>
 					</select>
 					</div>
+					
+					<c:choose>
+						<c:when test="${emailexists eq 'yes'}">
+							<p style="color:red;">Email Already Exists Please try again!</p>
+						</c:when>
 
+
+					</c:choose>
+					
+					
+					
 
 					<div class="col-12">
 						<button name="registerbtn" value="true" type="submit"

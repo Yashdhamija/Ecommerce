@@ -11,8 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bean.AddressBean;
 import bean.BookBean;
 import bean.ReviewBean;
+import bean.UserBean;
 
 public class DAO { // DB class
 
@@ -471,6 +473,97 @@ public class DAO { // DB class
 		
 		
 	}
+	
+	
+	public int retrieveAddressId(String email) throws SQLException {
+		getRemoteConnection();
+		int aid = 0;
+		String query = "SELECT addressid FROM Users WHERE email='" + email + "'";
+
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			 aid = rs.getInt("addressid");
+
+		}
+
+		rs.close();
+		ps.close();
+		con.close();
+		return aid;
+	}
+	
+	
+	
+	public AddressBean retrieveAddressById(String email) throws SQLException {
+		int addressid = retrieveAddressId(email);
+		int aid;
+		String street;
+		String province;
+		String city;
+		String zip;
+		String country;
+		String phone;
+		
+		getRemoteConnection();
+		AddressBean address = null;
+		
+		String query = "SELECT * FROM Address WHERE id='" + addressid + "'";
+
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			 aid = rs.getInt("id");
+			 street = rs.getString("street");
+			 province = rs.getString("province");
+			 city = rs.getString("city");
+			 zip = rs.getString("zip");
+			 country = rs.getString("country");
+			 phone = rs.getString("phone");
+			 address = new AddressBean(country, province, city, street, zip, phone);
+		}
+
+		rs.close();
+		ps.close();
+		con.close();
+		return address;
+		
+	}
+	
+	
+	public UserBean retrieveAllUserInfo(String email) throws SQLException {
+		getRemoteConnection();
+		String fname;
+		String lname;
+		String e;
+		UserBean user = null;
+		String query = "SELECT * FROM Users WHERE email='" + email + "'";
+
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			 fname = rs.getString("fname");
+			 lname = rs.getString("lname");
+			 e = rs.getString("email");
+			 user = new UserBean(fname, lname, email);
+		}
+
+		rs.close();
+		ps.close();
+		con.close();
+		return user;
+		
+		
+		
+		
+	}
+	
+	
+	
+	
 
 	public String numberOfSearchResults(String title) throws SQLException {
 		getRemoteConnection();

@@ -132,3 +132,12 @@ span.price {
 	colour: blue;
 }
 
+.returnshopping{ 
+	text-align: center;
+}
+
+#emptycart {
+	font-family: "Futura Medium";
+	font-size: 36px;
+}
+

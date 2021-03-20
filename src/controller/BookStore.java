@@ -25,7 +25,7 @@ import bean.ReviewBean;
 /**
  * Servlet implementation class BookStoreModel
  */
-@WebServlet({ "/BookStore", "/BookStore/*", "/Login", "/Register", "/PartnerRegister" })
+@WebServlet({ "/BookStore", "/BookStore/*", "/Login", "/Register", "/PartnerRegister" , "/Payment" })
 public class BookStore extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
@@ -85,16 +85,18 @@ public class BookStore extends HttpServlet {
 			PrintWriter out = response.getWriter();
 
 			if (s != null && s.equals("email exists")) {
-
-				out.printf("This email is already being used");
-				out.flush();
+				request.setAttribute("emailexists", "yes");
+				request.getRequestDispatcher("/register.jspx").forward(request, response);
 
 			} else {
 				try {
 					String password =  book.encryptPassword(request.getParameter("password"));
 					book.insertIntoAddress(street, province, country, zip, phone, city);
 					book.insertUserLogin(fname, lname, emailAddresss, password);
-
+					//request.getRequestDispatcher("/login.jspx").forward(request, response);
+					response.sendRedirect("Login");
+					
+					
 				} catch (SQLException | NoSuchAlgorithmException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -102,6 +104,29 @@ public class BookStore extends HttpServlet {
 			}
 
 		}
+		
+		else if(request.getServletPath().equals("/Payment")) {
+			
+			if(request.getSession().getAttribute("name") != null) {
+				try {
+					request.getSession().setAttribute("fulladdress", book.retrieveAddress((String) request.getSession().getAttribute("visitoremail")));
+					
+					request.getSession().setAttribute("userinfo", book.retrieveUserInfo((String) request.getSession().getAttribute("visitoremail")));    	
+					request.getRequestDispatcher("/payment.jspx").forward(request, response);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			else {
+				//request.getRequestDispatcher("/login.jspx").forward(request, response);
+				response.sendRedirect("Login");
+			}
+			
+		}
+		
+		
 
 		else if (request.getServletPath().equals("/Register")) {
 
@@ -120,9 +145,88 @@ public class BookStore extends HttpServlet {
 			request.getSession().setAttribute("cartsize", book.remove(request.getParameter("removebook"), l).size());
 			request.getRequestDispatcher("/Cart.jspx").forward(request, response);
 		}
+		
+		else if (request.getParameter("addtocart") != null) {
+			int price;
+			int total;
+			int flag = 0;
+
+
+			if (request.getSession().getAttribute("shoppingcart") == null) {
+				// System.out.println("Cart is cleared");
+				// book.cart.clear();
+				System.out.println("Cart is empty");
+				cart = new ArrayList<CartBean>();
+				request.getSession().setAttribute("shoppingcart", cart);
+				
+			} else {
+				cart = (ArrayList) request.getSession().getAttribute("shoppingcart");
+			}
+			id++;
+			String bid = request.getParameter("addtocart");
+
+			try {
+				String btitle = book.retrieveBookTitle(bid);
+				price = book.retrievePriceofABook(bid);
+				System.out.println("The price of book is " + price);
+
+				CartBean b = new CartBean(id, bid, price, btitle, 1);
+				System.out.println(b.getBookid() + " " + b.getId() + " " + b.getPrice() + " " + b.getQuantity() + " "
+						+ b.getTitle());
+				System.out.println("b is " + b);
+				System.out.println("cart is " + cart);
+
+				for (int i = 0; i < cart.size(); i++) {
+					if (cart.get(i).getBookid().equals(bid)) {
+						flag = 1;
+						cart.get(i).setQuantity(cart.get(i).getQuantity() + 1);
+						total = book.cartTotal(cart);		
+						request.getSession().setAttribute("carttotal", total);
+						request.getSession().setAttribute("quantity", cart.get(i).getQuantity() + 1);
+						request.getSession().setAttribute("shoppingcart", cart);
+						
+
+					}
+				}
+
+				if (flag != 1) {
+					cart.add(b);
+					System.out.println("cart items are " + cart);
+					total = book.cartTotal(cart);
+					request.getSession().setAttribute("cartsize", cart.size());
+					request.getSession().setAttribute("carttotal", total);
+					request.getSession().setAttribute("shoppingcart", cart);
+
+					request.getSession().setAttribute("iscart", "clicked");
+
+				}
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// }
+			try {
+				l = book.retrieveBookRecords("");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			request.setAttribute("books", l);
+			request.getRequestDispatcher("bookstore.jspx").forward(request, response);
+		}
+		
+		
 
 		else if (request.getParameter("viewcart") != null) {
 			System.out.println("The shopping cart is " + request.getSession().getAttribute("shoppingcart"));
+			
+			if(request.getSession().getAttribute("shoppingcart") == null) {
+				request.getSession().setAttribute("carttotal", "0");
+			}
+			
+			
 			request.getRequestDispatcher("/Cart.jspx").forward(request, response);
 		}
 
@@ -144,7 +248,7 @@ public class BookStore extends HttpServlet {
 			System.out.println("I pressed the login button");
 			String userName = request.getParameter("Username"); // This is from login page
 			String password = request.getParameter("signinpassword");
-
+			
 			String visitorUsername = book.getEmail(userName); // Visitor login information from db
 			
 			String firstname = book.getFullName(userName);
@@ -189,7 +293,10 @@ public class BookStore extends HttpServlet {
 			// Visitor/Customer Login is successful
 			if (visitorpwd != null && visitorUsername != null && visitorpwd.equals("password exists")
 					&& visitorUsername.equals("email exists")) {
-
+				
+				
+				System.out.println("The email address is " + userName);
+				request.getSession().setAttribute("visitoremail", userName);             // saving email in the login page in session
 				request.removeAttribute("loginfailed");
 				try {
 					System.out.println("The encrypted password is " + book.encryptPassword(password));
@@ -238,76 +345,6 @@ public class BookStore extends HttpServlet {
 
 		}
 
-		else if (request.getParameter("addtocart") != null) {
-			int price;
-			int total;
-			int flag = 0;
-//			if (!(path != null && path.equals(request.getQueryString()))) {
-
-			path = request.getQueryString();
-			System.out.println("The path is " + path);
-
-			if (request.getSession().getAttribute("shoppingcart") == null) {
-				// System.out.println("Cart is cleared");
-				// book.cart.clear();
-				cart = new ArrayList<CartBean>();
-				request.getSession().setAttribute("shoppingcart", cart);
-				request.getSession().setAttribute("carttotal", 0);
-			} else {
-				cart = (ArrayList) request.getSession().getAttribute("shoppingcart");
-			}
-			id++;
-			String bid = request.getParameter("addtocart");
-
-			try {
-				String btitle = book.retrieveBookTitle(bid);
-				price = book.retrievePriceofABook(bid);
-				System.out.println("The price of book is " + price);
-
-				CartBean b = new CartBean(id, bid, price, btitle, 1);
-				System.out.println(b.getBookid() + " " + b.getId() + " " + b.getPrice() + " " + b.getQuantity() + " "
-						+ b.getTitle());
-				System.out.println("b is " + b);
-				System.out.println("cart is " + cart);
-
-				for (int i = 0; i < cart.size(); i++) {
-					if (cart.get(i).getBookid().equals(bid)) {
-						flag = 1;
-						cart.get(i).setQuantity(cart.get(i).getQuantity() + 1);
-						total = book.cartTotal(cart);
-						request.getSession().setAttribute("carttotal", total);
-						request.getSession().setAttribute("quantity", cart.get(i).getQuantity() + 1);
-						request.getSession().setAttribute("shoppingcart", cart);
-					}
-				}
-
-				if (flag != 1) {
-					cart.add(b);
-					System.out.println("cart items are " + cart);
-					total = book.cartTotal(cart);
-					request.getSession().setAttribute("cartsize", cart.size());
-					request.getSession().setAttribute("carttotal", total);
-					request.getSession().setAttribute("shoppingcart", cart);
-
-					request.getSession().setAttribute("iscart", "clicked");
-
-				}
-
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			// }
-			try {
-				l = book.retrieveBookRecords("");
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			request.setAttribute("books", l);
-			request.getRequestDispatcher("bookstore.jspx").forward(request, response);
-		}
 
 		else if (request.getParameter("submitreview") != null) {
 			String fname = request.getParameter("fname");
@@ -374,6 +411,8 @@ public class BookStore extends HttpServlet {
 					&& book.getUID(request.getParameter("uid")).equals("uid exists")) {
 
 				System.out.println("This UID exists");
+				request.setAttribute("uidexists", "yes");
+				request.getRequestDispatcher("/partners.jspx").forward(request, response);
 
 			}
 
@@ -383,6 +422,9 @@ public class BookStore extends HttpServlet {
 					String partnerPassword = book.encryptPassword(request.getParameter("uidpassword"));
 					book.insertIntoAddress(street, province, country, zip, phone, city);
 					book.insertPartnerLogin(uid, partnerPassword, fname, lname);
+					//request.getRequestDispatcher("/login.jspx").forward(request, response);
+					response.sendRedirect("Login");
+					
 				} catch (SQLException | NoSuchAlgorithmException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

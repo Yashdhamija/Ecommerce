@@ -11,9 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 import DAO.DAO;
+import bean.AddressBean;
 import bean.BookBean;
 import bean.CartBean;
 import bean.ReviewBean;
+import bean.UserBean;
 
 public class BookStoreModel {
 
@@ -90,6 +92,14 @@ public class BookStoreModel {
 	
 	public String retrieveBookTitle(String bid) throws SQLException {
 		return this.dao.retrieveSingleBookTitle(bid);
+	}
+	
+	public AddressBean retrieveAddress(String email) throws SQLException {
+		return this.dao.retrieveAddressById(email);
+	}
+	
+	public UserBean retrieveUserInfo(String email) throws SQLException {
+		return this.dao.retrieveAllUserInfo(email);
 	}
 
 	public List<BookBean> getSearchedBook(String title) throws SQLException {
