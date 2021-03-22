@@ -111,6 +111,10 @@ public class BookStoreModel {
 	public String searchResultsCount(String title) throws SQLException {
 		return this.dao.numberOfSearchResults(title);
 	}
+	
+	public Map<String,Integer> retrieveNumberOfEachBookSold() throws SQLException{
+		return this.dao.getNumberOfEachBookSold();
+	}
 
 	public String encryptPassword(String password) throws NoSuchAlgorithmException {
 

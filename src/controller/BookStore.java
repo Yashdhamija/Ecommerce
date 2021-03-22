@@ -27,7 +27,7 @@ import bean.ReviewBean;
  * Servlet implementation class BookStoreModel
  */
 @WebServlet({ "/BookStore", "/BookStore/*", "/Login", "/Register", "/PartnerRegister", "/Payment",
-		"/OrderConfirmation" })
+		"/OrderConfirmation", "/Administrator" })
 public class BookStore extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
@@ -468,6 +468,22 @@ public class BookStore extends HttpServlet {
 			this.target = "/partners.jspx";
 			request.getRequestDispatcher(target).forward(request, response);
 
+		}
+		else if (request.getServletPath().equals("/Administrator")) {
+			System.out.println("Reached administrator page");
+			Map<String, Integer> list;
+			try {
+				list = book.retrieveNumberOfEachBookSold();
+				System.out.println("the list of books are:");
+				System.out.println(list);
+				request.setAttribute("listOfBooks", list);
+				this.target = "/analytics.jspx";
+				request.getRequestDispatcher(target).forward(request, response);
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		else if (request.getParameter("logout") != null) {
