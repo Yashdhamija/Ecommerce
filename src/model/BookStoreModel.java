@@ -49,6 +49,10 @@ public class BookStoreModel {
 			throws SQLException {
 		this.dao.insertAddress(street, province, country, zip, phone, city);
 	}
+	
+	public void insertPOitem(int orderId, String fname, String lname, String status, String email) throws SQLException {
+		this.dao.insertPurchaseOrder(orderId, fname, lname, status, email);
+	}
 
 	public String getPartnerPassword(String password) {
 		return this.dao.retrievePartnerPassword(password);
@@ -175,7 +179,7 @@ public class BookStoreModel {
 
 	public int OrderNumberGenerator() {
 
-		int random = (int) Math.random() * 1000000;
+		int random = (int) (Math.random() * 1000000);
 		int orderNum = 0;
 
 		if (!this.orderNumber.contains(random)) {

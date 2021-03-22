@@ -22,6 +22,7 @@ import bean.BookBean;
 import bean.CartBean;
 import bean.CounterBean;
 import bean.ReviewBean;
+import bean.UserBean;
 
 /**
  * Servlet implementation class BookStoreModel
@@ -112,19 +113,38 @@ public class BookStore extends HttpServlet {
 			// book.incrementPaymentCounter(); This was here original
 
 			counter = (CounterBean) request.getSession().getAttribute("counter");
+
+			if (counter != null && counter.getCounter() == 3) {
+
+				counter.resetCounter();
+				System.out.println("The counter has been successffuly reset " + counter.getCounter());
+			}
+
 			if (counter != null) {
 				counter.updateCounter();
+				request.getSession().setAttribute("countervalue", counter.getCounter());
+				System.out.println("This is the value of the consecutive calls" + counter.getCounter());
 			}
-			request.getSession().setAttribute("countervalue", counter.getCounter());
-			System.out.println("This is the value of the consecutive calls" + counter.getCounter());
 
-			if (counter.getCounter() <= 2) {
+
+			if (counter != null && counter.getCounter() <= 2) {
 
 				int total = 0;
+
+				try {
+					book.insertPOitem(book.OrderNumberGenerator(),
+							((UserBean) request.getSession().getAttribute("userbean")).getFname(),
+							((UserBean) request.getSession().getAttribute("userbean")).getLname(), "ORDERED",
+							(String) request.getSession().getAttribute("visitoremail"));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				request.getRequestDispatcher("/Confirmation.jspx").forward(request, response);
 				request.getSession().removeAttribute("shoppingcart");
 				request.getSession().removeAttribute("carttotal");
 				request.getSession().removeAttribute("cartsize");
+
 			}
 
 			else {
@@ -331,6 +351,14 @@ public class BookStore extends HttpServlet {
 				System.out.println("The email address is " + userName);
 				request.getSession().setAttribute("visitoremail", userName); // saving email in the login page in
 																				// session
+
+				try {
+					request.getSession().setAttribute("userbean", book.retrieveUserInfo(userName));
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+
 				request.removeAttribute("loginfailed");
 				try {
 					System.out.println("The encrypted password is " + book.encryptPassword(password));
@@ -385,14 +413,13 @@ public class BookStore extends HttpServlet {
 			String bid = (String) request.getSession().getAttribute("bookid");
 			String review = (String) request.getParameter("writereview");
 			String title = request.getParameter("reviewtitle");
-			
-			
+
 			System.out.println(review);
 			try {
 				book.insertAReview(fname, lname, bid, review, title);
-				
+
 				request.setAttribute("bookinfo", book.retrieveInfoOfBook(bid));
-				request.setAttribute("reviews", book.retrieveLastThreeReviews(bid)); 
+				request.setAttribute("reviews", book.retrieveLastThreeReviews(bid));
 				request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -492,7 +519,6 @@ public class BookStore extends HttpServlet {
 							"The valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee of counter after logout is "
 									+ counter.getCounter());
 				}
-				
 
 				request.getRequestDispatcher("/bookstore.jspx").forward(request, response);
 			} catch (SQLException e) {

@@ -521,7 +521,6 @@ public class DAO { // DB class
 	}
 	
 	
-	
 	public AddressBean retrieveAddressById(String email) throws SQLException {
 		int addressid = retrieveAddressId(email);
 		int aid;
