@@ -6,7 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,6 +134,27 @@ public class DAO { // DB class
 		ps.setString(5, null);
 		int rs = ps.executeUpdate();
 			
+	}
+	
+	public void insertPurchaseOrder(int orderId, String fname, String lname, String status, String email)
+			throws SQLException {
+		getRemoteConnection();
+		String query = "INSERT INTO PO VALUES(?,?,?,?,?,?)";
+		PreparedStatement ps = con.prepareStatement(query);	
+		int addressId = retrieveAddressId(email);
+		Date date = new Date();
+		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		int year  = localDate.getYear();
+		int month = localDate.getMonthValue();
+		int day   = localDate.getDayOfMonth();
+		String dateString = String.valueOf(year)+"-"+String.valueOf(month)+"-"+String.valueOf(day);
+		ps.setInt(1, orderId);
+		ps.setString(2, fname);
+		ps.setString(3, lname);
+		ps.setString(4, status);
+		ps.setInt(5, addressId);
+		ps.setString(6, dateString);
+	    int rs = ps.executeUpdate();
 	}
 	
 	public void insertAddress(String street, String province, String country, String zip, String phone, String city) throws SQLException {

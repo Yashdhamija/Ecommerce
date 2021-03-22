@@ -88,29 +88,6 @@ function SignUpAjax(address) {
 }
 
 
-function updateCart(id) {
-
-	var request = new XMLHttpRequest();
-	var data = '';
-	/* add your code here to grab all parameters from form*/
-	data += "quantity=" + document.getElementById(id + "_quantity").value
-		+ "&";
-	data += "addtocart=" + id;
-
-	console.log(data);
-
-	request.open("GET", ("E-commerceoriginal/BookStore" + "?" + data), true);
-	request.onreadystatechange = function() {
-		if ((request.readyState == 4) && (request.status == 200)) {
-			location.reload();
-		};
-		request.send();
-
-        }
-
-	}
-
-
 
 	function handler(request) {
 		if ((request.readyState == 4) && (request.status == 200)) {

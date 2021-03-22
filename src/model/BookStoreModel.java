@@ -20,12 +20,13 @@ import bean.UserBean;
 public class BookStoreModel {
 
 	private DAO dao;
-	
-
+	private ArrayList<Integer> orderNumber = null;
+	private int paymentCounter;
 	public BookStoreModel() {
 
 		this.dao = new DAO();
-
+		this.orderNumber = new ArrayList<Integer>();
+		this.paymentCounter= 0;
 	}
 
 	public void insertUserLogin(String fname, String lname, String email, String password) throws SQLException {
@@ -43,8 +44,9 @@ public class BookStoreModel {
 	public void insertAReview(String fname, String lname, String bid, String review) throws SQLException {
 		this.dao.insertReview(fname, lname, bid, review);
 	}
-	
-	public void insertIntoAddress(String street, String province, String country, String zip, String phone, String city) throws SQLException {
+
+	public void insertIntoAddress(String street, String province, String country, String zip, String phone, String city)
+			throws SQLException {
 		this.dao.insertAddress(street, province, country, zip, phone, city);
 	}
 
@@ -89,15 +91,15 @@ public class BookStoreModel {
 	public int retrievePriceofABook(String bid) throws SQLException {
 		return this.dao.retrievePriceofSingleBook(bid);
 	}
-	
+
 	public String retrieveBookTitle(String bid) throws SQLException {
 		return this.dao.retrieveSingleBookTitle(bid);
 	}
-	
+
 	public AddressBean retrieveAddress(String email) throws SQLException {
 		return this.dao.retrieveAddressById(email);
 	}
-	
+
 	public UserBean retrieveUserInfo(String email) throws SQLException {
 		return this.dao.retrieveAllUserInfo(email);
 	}
@@ -109,24 +111,18 @@ public class BookStoreModel {
 	public String searchResultsCount(String title) throws SQLException {
 		return this.dao.numberOfSearchResults(title);
 	}
-	
-	
-	
+
 	public String encryptPassword(String password) throws NoSuchAlgorithmException {
-		
+
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
 		byte[] hashed = digest.digest(password.getBytes(StandardCharsets.UTF_8));
 		String encryptedpassword = Base64.getEncoder().encodeToString(hashed);
-		
+
 		return encryptedpassword;
 	}
-	
-	
-	
 
-	
-	//Cart methods
-	
+	// Cart methods
+
 	// This method returns the total in the cart. This method should be double**
 	public int cartTotal(List<CartBean> l) {
 		int total = 0;
@@ -137,7 +133,6 @@ public class BookStoreModel {
 
 		return total;
 	}
-	
 
 	public List<CartBean> remove(String bid, List<CartBean> l) {
 
@@ -148,24 +143,54 @@ public class BookStoreModel {
 		}
 		return l;
 	}
-	
-									//
+
+	//
 	public List<CartBean> quantityUpdate(List<CartBean> l, int quantity, String bid) {
 		int newTotal = 0;
 		for (int i = 0; i < l.size(); i++) {
 			if (l.get(i).getBookid().equals(bid)) {
 				l.get(i).setQuantity(quantity);
-				
-				
+
 			}
 		}
 		return l;
 	}
 	
 	
+	public int getIncrementCounter( ) {
+		
+		return this.paymentCounter;
+	}
+	
+	public void incrementPaymentCounter() {
+		
+		this.paymentCounter++;
+	}
 	
 	
-	
-	
-}
+	public void resetPaymentCounter() {
+		
+		this.paymentCounter = 0;
+	}
 
+	public int OrderNumberGenerator() {
+
+		int random = (int) Math.random() * 1000000;
+		int orderNum = 0;
+
+		if (!this.orderNumber.contains(random)) {
+
+			this.orderNumber.add(random);
+			orderNum = random;
+			return orderNum;
+		}
+
+		return orderNum;
+
+	}
+	
+	
+	
+	
+
+}
