@@ -27,7 +27,7 @@ import bean.ReviewBean;
  * Servlet implementation class BookStoreModel
  */
 @WebServlet({ "/BookStore", "/BookStore/*", "/Login", "/Register", "/PartnerRegister", "/Payment",
-		"/OrderConfirmation", "/Administrator" })
+		"/OrderConfirmation" })
 public class BookStore extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
@@ -384,9 +384,16 @@ public class BookStore extends HttpServlet {
 			String lname = request.getParameter("lname");
 			String bid = (String) request.getSession().getAttribute("bookid");
 			String review = (String) request.getParameter("writereview");
+			String title = request.getParameter("reviewtitle");
+			
+			
 			System.out.println(review);
 			try {
-				book.insertAReview(fname, lname, bid, review);
+				book.insertAReview(fname, lname, bid, review, title);
+				
+				request.setAttribute("bookinfo", book.retrieveInfoOfBook(bid));
+				request.setAttribute("reviews", book.retrieveLastThreeReviews(bid)); 
+				request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -400,6 +407,7 @@ public class BookStore extends HttpServlet {
 				String bid = (String) request.getSession().getAttribute("bookid");
 				System.out.println("Bid is " + bid);
 				request.setAttribute("bookinfo", book.retrieveInfoOfBook(bid));
+				request.setAttribute("reviews", book.retrieveLastThreeReviews(bid));
 				request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
 
 			} catch (SQLException e) {
@@ -469,22 +477,6 @@ public class BookStore extends HttpServlet {
 			request.getRequestDispatcher(target).forward(request, response);
 
 		}
-		else if (request.getServletPath().equals("/Administrator")) {
-			System.out.println("Reached administrator page");
-			Map<String, Integer> list;
-			try {
-				list = book.retrieveNumberOfEachBookSold();
-				System.out.println("the list of books are:");
-				System.out.println(list);
-				request.setAttribute("listOfBooks", list);
-				this.target = "/analytics.jspx";
-				request.getRequestDispatcher(target).forward(request, response);
-				
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 
 		else if (request.getParameter("logout") != null) {
 			try {
@@ -547,7 +539,7 @@ public class BookStore extends HttpServlet {
 			try {
 				request.getSession().setAttribute("bookid", bid);
 				request.setAttribute("bookinfo", book.retrieveInfoOfBook(bid));
-				list = book.retrieveLastTwoReviews(bid);
+				list = book.retrieveLastThreeReviews(bid);
 				request.setAttribute("reviews", list); // This
 				request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
 

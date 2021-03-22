@@ -41,8 +41,8 @@ public class BookStoreModel {
 
 	}
 
-	public void insertAReview(String fname, String lname, String bid, String review) throws SQLException {
-		this.dao.insertReview(fname, lname, bid, review);
+	public void insertAReview(String fname, String lname, String bid, String review, String title) throws SQLException {
+		this.dao.insertReview(fname, lname, bid, review, title);
 	}
 
 	public void insertIntoAddress(String street, String province, String country, String zip, String phone, String city)
@@ -84,7 +84,7 @@ public class BookStoreModel {
 		return this.dao.retriveBookFromCategory(category);
 	}
 
-	public List<ReviewBean> retrieveLastTwoReviews(String bid) throws SQLException {
+	public List<ReviewBean> retrieveLastThreeReviews(String bid) throws SQLException {
 		return this.dao.retriveReviews(bid);
 	}
 
@@ -110,10 +110,6 @@ public class BookStoreModel {
 
 	public String searchResultsCount(String title) throws SQLException {
 		return this.dao.numberOfSearchResults(title);
-	}
-	
-	public Map<String,Integer> retrieveNumberOfEachBookSold() throws SQLException{
-		return this.dao.getNumberOfEachBookSold();
 	}
 
 	public String encryptPassword(String password) throws NoSuchAlgorithmException {

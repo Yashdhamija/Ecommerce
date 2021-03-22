@@ -119,11 +119,11 @@ public class DAO { // DB class
 	}
 	
 	
-	public void insertReview(String fname, String lname, String bid, String review) throws SQLException {
+	public void insertReview(String fname, String lname, String bid, String review, String title) throws SQLException {
 		
 		getRemoteConnection();
 		
-		String query = "INSERT INTO Review VALUES(?,?,?,?,?)";
+		String query = "INSERT INTO Review VALUES(?,?,?,?,?,?)";
 
 		PreparedStatement ps = con.prepareStatement(query);
 		
@@ -132,14 +132,15 @@ public class DAO { // DB class
 		ps.setString(3, bid);
 		ps.setString(4, review);
 		ps.setString(5, null);
+		ps.setString(6, title);
 		int rs = ps.executeUpdate();
 			
 	}
 	
-	public void insertPurchaseOrder(int orderId, String fname, String lname, String status, String email, String bid, int quantity)
+	public void insertPurchaseOrder(int orderId, String fname, String lname, String status, String email)
 			throws SQLException {
 		getRemoteConnection();
-		String query = "INSERT INTO PO VALUES(?,?,?,?,?,?,?,?)";
+		String query = "INSERT INTO PO VALUES(?,?,?,?,?,?)";
 		PreparedStatement ps = con.prepareStatement(query);	
 		int addressId = retrieveAddressId(email);
 		Date date = new Date();
@@ -154,8 +155,6 @@ public class DAO { // DB class
 		ps.setString(4, status);
 		ps.setInt(5, addressId);
 		ps.setString(6, dateString);
-		ps.setString(7, bid);
-		ps.setInt(8, quantity);
 	    int rs = ps.executeUpdate();
 	}
 	
@@ -214,7 +213,7 @@ public class DAO { // DB class
 		List<ReviewBean> list = new ArrayList<ReviewBean>();
 		
 		
-		String query = "SELECT * FROM Review WHERE bid='" + bid + "' ORDER BY reviewid DESC limit 2";
+		String query = "SELECT * FROM Review WHERE bid='" + bid + "' ORDER BY reviewid DESC limit 3";
 
 		PreparedStatement ps = con.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
@@ -224,7 +223,8 @@ public class DAO { // DB class
 			String lname = rs.getString("lname");
 			String bookid = rs.getString("bid");
 			String review = rs.getString("review");
-			list.add(new ReviewBean(fname, lname, bookid, review));
+			String title = rs.getString("title");
+			list.add(new ReviewBean(fname, lname, bookid, review, title));
 
 		}
 
@@ -582,8 +582,15 @@ public class DAO { // DB class
 		con.close();
 		return user;
 		
+		
+		
+		
 	}
 	
+	
+	
+	
+
 	public String numberOfSearchResults(String title) throws SQLException {
 		getRemoteConnection();
 		List<BookBean> l = new ArrayList<BookBean>();
@@ -607,24 +614,6 @@ public class DAO { // DB class
 		ps.close();
 		con.close();
 		return s;
-	}
-	
-	public Map<String,Integer> getNumberOfEachBookSold() throws SQLException {
-		Map<String,Integer> list = new HashMap<String, Integer>();
-		getRemoteConnection();
-		
-		//"SELECT bid, sum(quantity) AS num FROM bookstore.PO where status != "DENIED" GROUP BY bid ORDER BY num DESC"
-		String query = "SELECT bid, sum(quantity) AS num FROM bookstore.PO GROUP BY bid ORDER BY num DESC";
-		
-		PreparedStatement ps = con.prepareStatement(query);
-		ResultSet rs = ps.executeQuery();
-		
-		while(rs.next()) {
-			String bookid = rs.getString("bid");
-			Integer count = rs.getInt("num");
-			list.put(bookid, count);
-		}
-		return list;
 	}
 
 }

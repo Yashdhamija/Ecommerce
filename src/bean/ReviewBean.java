@@ -5,12 +5,14 @@ public class ReviewBean {
 	String lastname;
 	String bid;
 	String review;
+	String title;
 	
-	public ReviewBean(String fname, String lname, String bid, String review) {
+	public ReviewBean(String fname, String lname, String bid, String review, String title) {
 		this.firstName = fname;
 		this.lastname = lname;
 		this.bid = bid;
 		this.review = review;
+		this.title = title;
 	}
 
 	public String getFirstName() {
@@ -31,6 +33,14 @@ public class ReviewBean {
 
 	public String getBid() {
 		return bid;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public void setBid(String bid) {

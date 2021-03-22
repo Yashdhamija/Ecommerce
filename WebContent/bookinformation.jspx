@@ -12,7 +12,10 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Insert title here</title>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet"></link>
 <link rel="StyleSheet" href="style/ui.css" type="text/css"
 	title="cse4413" media="screen, print" />
 <link
@@ -58,15 +61,15 @@
 								value="true">Logout</button>
 						</form>
 					</c:when>
-					
+
 					<c:otherwise>
 						<form action="BookStore" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="login" name="login"
 								value="true">Login/Register</button>
 						</form>
-						
+
 						<a href="BookStore?viewcart=true"><i class="material-icons">shopping_cart</i></a>
-					
+
 					</c:otherwise>
 
 				</c:choose>
@@ -91,7 +94,8 @@
 
 
 				<form action="BookStore" class="d-flex" method="GET">
-					<button class="btn btn-outline-primary btn-sm" id="addtocart" name="addtocart" value="${book.getBid()}" >Add to Cart</button>
+					<button class="btn btn-outline-primary btn-sm" id="addtocart"
+						name="addtocart" value="${book.getBid()}">Add to Cart</button>
 				</form>
 
 
@@ -101,12 +105,16 @@
 					<c:when test="${review eq true}">
 						<form action="BookStore">
 							<label for="fname">First Name</label> <input type="text"
-								id="fname" name="fname" placeholder="Your name.."></input><label
-								for="lname">Last Name</label> <input type="text" id="lname"
-								name="lname" placeholder="Your last name.."></input><label
-								for="writereview">Write a Review</label>
+								id="fname" name="fname" required="required"
+								placeholder="Your first name"></input><label for="lname">Last
+								Name</label> <input type="text" id="lname" name="lname"
+								required="required" placeholder="Your last name.."></input> <label
+								for="reviewtitle">Title of Review</label> <input type="text"
+								id="reviewtitle" name="reviewtitle" required="required"
+								placeholder="Your title"></input> <label for="writereview">Write
+								a Review</label>
 							<textarea id="writereview" name="writereview" type="text"
-								style="height: 200px"> <jsp:text /> </textarea>
+								required="required" style="height: 200px"> <jsp:text /> </textarea>
 							<button id="submitreview" name="submitreview" value="true">
 								Submit a Review</button>
 
@@ -126,11 +134,7 @@
 				</c:choose>
 
 
-				<c:forEach var="review" items="${reviews}">
 
-					<p>${review.getFirstName()} ${review.getLastname()}</p>
-					<p>${review.getReview()}</p>
-				</c:forEach>
 
 			</div>
 
@@ -140,6 +144,37 @@
 
 
 	</c:forEach>
+
+
+
+
+
+	<h2 class="heading">Customer Reviews</h2>
+	<br></br>
+
+	<c:choose>
+		<c:when test="${empty reviews}">
+			<h6>No customer reviews yet</h6>
+		</c:when>
+
+		<c:otherwise>
+			<c:forEach var="review" items="${reviews}">
+
+				<h4>${review.getTitle()}</h4>
+				<h6>By ${review.getFirstName()} ${review.getLastname()}</h6>
+				<p>${review.getReview()}</p>
+				<hr></hr>
+			</c:forEach>
+
+		</c:otherwise>
+
+	</c:choose>
+
+
+
+
+
+	<hr style="border: 3px solid #f1f1f1"></hr>
 
 
 
