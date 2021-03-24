@@ -47,7 +47,7 @@
 				</ul>
 				<form action="BookStore" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
-						type="search" placeholder="Search" aria-label="Search"></input>
+						type="search" placeholder="Search" aria-label="Search" required="true" oninvalid="return false;"></input>
 					<button class="btn btn-outline-success" id="btnsubmit"
 						action="submit" value="true">Search</button>
 

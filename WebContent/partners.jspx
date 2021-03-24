@@ -106,9 +106,9 @@
 							required="required"></input>
 					</div>
 					<div class="col-12">
-						<label for="uid" class="form-label">Unique User Id</label> <input
-							type="tel" class="form-control" name="uid" id="uid"
-							required="required"></input>
+						<label for="uid" class="form-label">Unique User Id (8 numbers required)</label> <input
+							type="text" class="form-control" name="uid" id="uid" pattern="[0-9]{8}"
+							required="required"></input><small>Format: 00000000</small>
 					</div>
 
 					<div class="col-12">
@@ -130,8 +130,8 @@
 					</div>
 					<div class="col-md-2">
 						<label for="province" class="form-label">Province</label> <select
-							name="province" id="province" class="form-select">
-							<option selected="selected"></option>
+							name="province" id="province" class="form-select" required="required">
+							<option hidden="hidden"></option>
 							<option>Alberta</option>
 							<option>British Columbia</option>
 							<option>Manitoba</option>
@@ -168,7 +168,7 @@
 
 					<div class="col-md-4">
 						<label for="country" class="form-label">Country</label> <select
-							name="country" id="country" class="form-select">
+							name="country" id="country" class="form-select" required="required">
 							<option selected="selected"></option>
 							<option>Canada</option>
 						</select>

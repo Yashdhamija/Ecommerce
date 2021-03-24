@@ -11,7 +11,7 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Insert title here</title>
+<title>Cart</title>
 <link rel="StyleSheet" href="style/ui.css" type="text/css"
 	title="cse4413" media="screen, print" />
 

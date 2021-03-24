@@ -155,6 +155,12 @@ public class BookStore extends HttpServlet {
 			}
 
 		}
+		
+		else if(request.getServletPath().equals("/Payment") && request.getSession().getAttribute("cartsize") == null) {
+			response.sendRedirect("BookStore?viewcart=true");
+			System.out.println("i am here in line 161");
+		}
+		
 
 		else if (request.getServletPath().equals("/Payment") && request.getSession().getAttribute("cartsize") != null) {
 
@@ -296,6 +302,7 @@ public class BookStore extends HttpServlet {
 			String visitorUsername = book.getEmail(userName); // Visitor login information from db
 
 			String firstname = book.getFullName(userName);
+			boolean partnerAuthenticated = false;
 
 			System.out.println("My name is" + request.getSession().getAttribute("name"));
 			try { // Partner login
@@ -305,7 +312,7 @@ public class BookStore extends HttpServlet {
 
 				if (userName.length() == 8 && partnerpwd != null && book.getUID(userName) != null
 						&& partnerpwd.equals("partner password exists") && book.getUID(userName).equals("uid exists")) {
-
+					partnerAuthenticated = true;
 					System.out.println("Access granted for partners");
 					return; // need to diffrentiate between visitor login and partner login
 				}
@@ -335,8 +342,8 @@ public class BookStore extends HttpServlet {
 			}
 
 			// Visitor/Customer Login is successful
-			if (visitorpwd != null && visitorUsername != null && visitorpwd.equals("password exists")
-					&& visitorUsername.equals("email exists")) {
+			if ((visitorpwd != null && visitorUsername != null && visitorpwd.equals("password exists")
+					&& visitorUsername.equals("email exists")) || partnerAuthenticated  ) {
 
 				if (request.getSession().getAttribute("counter") == null) {
 					System.out.println("I am in 1");

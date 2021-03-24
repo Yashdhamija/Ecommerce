@@ -11,7 +11,13 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Insert title here</title>
+<title>Login</title>
+<link rel="StyleSheet" href="style/ui.css" type="text/css"
+	title="cse4413" media="screen, print" />
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet"></link>
+
 </head>
 <body>
 <body>
@@ -60,6 +66,10 @@
 						action="submit" value="true">Search</button>
 
 				</form>
+				
+				<a href="BookStore?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+				
+				
 
 			</div>
 		</div>
@@ -69,7 +79,7 @@
 	<div class="container">
 		<div class="row justify-content-center">
 			<fieldset class="col-6">
-				<legend>Brick And Mortor Book Store</legend>
+				<legend>Sign in to your Account</legend>
 				<form action="" method="POST" class="loginForm">
 					<div class="mb-4">
 						<label for="Username" class="form-label">Email address/
