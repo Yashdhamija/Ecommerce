@@ -86,7 +86,7 @@
 	<div class="container">
 		<div class="row justify-content-center">
 			<fieldset class="col-6">
-				<legend>Sign in to your Account</legend>
+				<legend>Sign in to your BookLand Account</legend>
 				<form action="" method="POST" class="loginForm">
 					<div class="mb-4">
 						<label for="Username" class="form-label">Email address </label> <input

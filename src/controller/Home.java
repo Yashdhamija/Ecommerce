@@ -27,10 +27,8 @@ import bean.UserBean;
 /**
  * Servlet implementation class BookStoreModel
  */
-@WebServlet({ "/Home", "/Login", "/Register", "/PartnerRegister", "/Payment", "/OrderConfirmation" }) // Remove /*
-																											// as we can
-																											// random
-																											// pages
+@WebServlet({ "/Home", "/Login", "/Register", "/PartnerRegister", "/Payment", "/OrderConfirmation" }) 
+
 public class Home extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
@@ -562,6 +560,11 @@ public class Home extends HttpServlet {
 
 		else if (request.getParameter("logout") != null) {
 			try {
+				request.getSession().removeAttribute("shoppingcart");      // Added this so if a user logs out cart is cleared
+				request.getSession().removeAttribute("carttotal");
+				request.getSession().removeAttribute("cartsize");
+				
+				
 				l = book.retrieveBookRecords("");
 				request.setAttribute("books", l);
 				request.getSession().setAttribute("name", null);
