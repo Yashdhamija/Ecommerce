@@ -27,11 +27,11 @@ import bean.UserBean;
 /**
  * Servlet implementation class BookStoreModel
  */
-@WebServlet({ "/BookStore", "/Login", "/Register", "/PartnerRegister", "/Payment", "/OrderConfirmation" }) // Remove /*
+@WebServlet({ "/Home", "/Login", "/Register", "/PartnerRegister", "/Payment", "/OrderConfirmation" }) // Remove /*
 																											// as we can
 																											// random
 																											// pages
-public class BookStore extends HttpServlet {
+public class Home extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
 	String login = "";
@@ -47,7 +47,7 @@ public class BookStore extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public BookStore() {
+	public Home() {
 		super();
 
 	}
@@ -175,7 +175,7 @@ public class BookStore extends HttpServlet {
 
 		else if (request.getServletPath().equals("/Payment")
 				&& (Integer) request.getSession().getAttribute("cartsize") == 0) {
-			response.sendRedirect("BookStore?viewcart=true");
+			response.sendRedirect("Home?viewcart=true");
 
 		}
 
@@ -422,7 +422,7 @@ public class BookStore extends HttpServlet {
 
 				if (request.getParameter("search") == null) {
 
-					response.sendRedirect("/E-commerceoriginal/BookStore");
+					response.sendRedirect("/BookLand/Home");
 					request.getSession().setAttribute("hi", "hi");
 
 				}

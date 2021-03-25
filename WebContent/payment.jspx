@@ -44,7 +44,7 @@
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="BookStore"><i class="material-icons">menu_book</i></a>
+			<a class="navbar-brand" href="Home"><i class="material-icons">menu_book</i></a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -54,7 +54,7 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item"><a class="nav-link active"
-						aria-current="page" href="BookStore">Home</a></li>
+						aria-current="page" href="Home">Home</a></li>
 					
 
 					<li class="nav-item dropdown"><a
@@ -64,18 +64,18 @@
 						<ul class="dropdown-menu"
 							aria-labelledby="navbarScrollingDropdown">
 							<li><a class="dropdown-item"
-								href="BookStore?category=Fiction">Fiction</a></li>
+								href="Home?category=Fiction">Fiction</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Science">Science</a></li>
+								href="Home?category=Science">Science</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Engineering">Engineering</a></li>
+								href="Home?category=Engineering">Engineering</a></li>
 						</ul></li>
 
 
 
 
 				</ul>
-				<form action="BookStore" class="d-flex" method="GET">
+				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
 						type="search" placeholder="Search" aria-label="Search"
 						required="true" oninvalid="return false;"></input>
@@ -87,7 +87,7 @@
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">
 
-						<form action="BookStore" class="d-flex" method="POST">
+						<form action="Home" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
@@ -96,7 +96,7 @@
 					<c:otherwise>
 
 						<a class="btn btn-outline-success" id="login" name="login"
-							href="/E-commerceoriginal/Login">LogIn/Register</a>
+							href="/BookLand/Login">LogIn/Register</a>
 
 
 					</c:otherwise>
@@ -162,7 +162,7 @@
 			<div class="col-md-8 order-md-1">
 				<h4 class="mb-3">Billing address</h4>
 				<form class="needs-validation"
-					action="/E-commerceoriginal/OrderConfirmation" method="POST"
+					action="/BookLand/OrderConfirmation" method="POST"
 					novalidate="novalidate">
 					<div class="row">
 						<div class="col-md-6 mb-3">

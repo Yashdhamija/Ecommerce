@@ -29,7 +29,7 @@
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="BookStore"><i class="material-icons">menu_book</i></a>
+			<a class="navbar-brand" href="Home"><i class="material-icons">menu_book</i></a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -39,7 +39,7 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item"><a class="nav-link active"
-						aria-current="page" href="BookStore">Home</a></li>
+						aria-current="page" href="Home">Home</a></li>
 					
 
 					<li class="nav-item dropdown"><a
@@ -49,28 +49,28 @@
 						<ul class="dropdown-menu"
 							aria-labelledby="navbarScrollingDropdown">
 							<li><a class="dropdown-item"
-								href="BookStore?category=Fiction">Fiction</a></li>
+								href="Home?category=Fiction">Fiction</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Science">Science</a></li>
+								href="Home?category=Science">Science</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Engineering">Engineering</a></li>
+								href="Home?category=Engineering">Engineering</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Sci-fi">Sci-fi</a></li>
-							<li><a class="dropdown-item" href="BookStore?category=Crime">Crime</a></li>
-							<li><a class="dropdown-item" href="BookStore?category=Arts">Arts</a></li>
+								href="Home?category=Sci-fi">Sci-fi</a></li>
+							<li><a class="dropdown-item" href="Home?category=Crime">Crime</a></li>
+							<li><a class="dropdown-item" href="Home?category=Arts">Arts</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Romance">Romance</a></li>
+								href="Home?category=Romance">Romance</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=History">History</a></li>
+								href="Home?category=History">History</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Literacy">Literacy</a></li>
+								href="Home?category=Literacy">Literacy</a></li>
 						</ul></li>
 
 
 
 
 				</ul>
-				<form action="BookStore" class="d-flex" method="GET">
+				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
 						type="search" placeholder="Search" aria-label="Search"
 						required="true" oninvalid="return false;"></input>
@@ -82,7 +82,7 @@
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">
 
-						<form action="BookStore" class="d-flex" method="POST">
+						<form action="Home" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
@@ -91,7 +91,7 @@
 					<c:otherwise>
 
 						<a class="btn btn-outline-success" id="login" name="login"
-							href="/E-commerceoriginal/Login">LogIn/Register</a>
+							href="/BookLand/Login">LogIn/Register</a>
 
 
 					</c:otherwise>
@@ -107,7 +107,7 @@
 			<h2 id="emptycart" style="text-align: center;">Your shopping
 				cart is Empty</h2>
 			<div class="returnshopping">
-				<a href="BookStore">
+				<a href="Home">
 					<button class="btn btn-dark">Continue Shopping</button>
 				</a>
 			</div>
@@ -125,7 +125,7 @@
 				<c:forEach var="items" items="${shoppingcart}">
 
 					<span class="price">${items.getPrice() * items.getQuantity()}</span>
-					<form action="BookStore" method="GET">
+					<form action="Home" method="GET">
 						<button style="display: none;" name="btnid"
 							id="btn_${items.getBookid()}" value="${items.getBookid()}">Hi
 						</button>
@@ -174,7 +174,7 @@
 			</div>
 
 			<a style="float: right;" id="checkout"
-				href="/E-commerceoriginal/Payment" class="mt-3 me-2 btn btn-dark">Proceed
+				href="/BookLand/Payment" class="mt-3 me-2 btn btn-dark">Proceed
 				to Checkout</a>
 
 		</c:otherwise>

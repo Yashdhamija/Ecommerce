@@ -24,7 +24,7 @@
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="BookStore"><i class="material-icons">menu_book</i></a>
+			<a class="navbar-brand" href="Home"><i class="material-icons">menu_book</i></a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -34,7 +34,7 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item"><a class="nav-link active"
-						aria-current="page" href="BookStore">Home</a></li>
+						aria-current="page" href="Home">Home</a></li>
 
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#"
@@ -43,28 +43,28 @@
 						<ul class="dropdown-menu"
 							aria-labelledby="navbarScrollingDropdown">
 							<li><a class="dropdown-item"
-								href="BookStore">All</a></li>
+								href="Home">All</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Fiction">Fiction</a></li>
+								href="Home?category=Fiction">Fiction</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Science">Science</a></li>
+								href="Home?category=Science">Science</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Sci-fi">Sci-fi</a></li>
-							<li><a class="dropdown-item" href="BookStore?category=Crime">Crime</a></li>
-							<li><a class="dropdown-item" href="BookStore?category=Arts">Arts</a></li>
+								href="Home?category=Sci-fi">Sci-fi</a></li>
+							<li><a class="dropdown-item" href="Home?category=Crime">Crime</a></li>
+							<li><a class="dropdown-item" href="Home?category=Arts">Arts</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Romance">Romance</a></li>
+								href="Home?category=Romance">Romance</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=History">History</a></li>
+								href="Home?category=History">History</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Literacy">Literacy</a></li>
+								href="Home?category=Literacy">Literacy</a></li>
 						</ul></li>
 
 
 
 
 				</ul>
-				<form action="BookStore" class="d-flex" method="GET">
+				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
 						type="search" placeholder="Search" aria-label="Search"
 						required="true" oninvalid="return false;"></input>
@@ -76,23 +76,23 @@
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">
 
-						<form action="BookStore" class="d-flex" method="POST">
+						<form action="Home" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
 						
 						<div class="thecart">
-							<a href="BookStore?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+							<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 						</div>
 					</c:when>
 
 					<c:otherwise>
 
 						<a class="btn btn-outline-success" id="login" name="login"
-							href="/E-commerceoriginal/Login">LogIn/Register</a>
+							href="/BookLand/Login">LogIn/Register</a>
 
 
-						<a href="BookStore?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+						<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 
 					</c:otherwise>
 
@@ -135,12 +135,12 @@
 						<img id="images" src="images/${result.getUrl()}"></img>
 
 
-						<form action="BookStore" class="d-flex" method="POST">
+						<form action="Home" class="d-flex" method="POST">
 							<Button id="bookinfo" name="bookinfo" value="${result.getBid()}">${result.getTitle()}</Button>
 						</form>
 
 						<p class="bookprice">$${result.getPrice()}</p>
-						<form action="BookStore" class="d-flex" method="GET">
+						<form action="Home" class="d-flex" method="GET">
 							<button name="addtocart" id="addtocart" value="${result.getBid()}" class="btn btn-outline-primary btn-sm">Add
 							to Cart</button>
 						</form>
@@ -158,7 +158,7 @@
 
 						<img id="images" src="images/${books.getUrl()}"></img>
 
-						<form action="BookStore" class="d-flex" method="POST">
+						<form action="Home" class="d-flex" method="POST">
 							<Button id="bookinfo" name="bookinfo" value="${books.getBid()}">${books.getTitle()}</Button>
 						</form>
 
@@ -182,13 +182,13 @@
 
 						<img id="images" src="images/${book.getUrl()}"></img>
 
-						<form action="BookStore" class="d-flex" method="GET">
+						<form action="Home" class="d-flex" method="GET">
 							<Button id="bookinfo" name="bookinfo" value="${book.getBid()}">${book.getTitle()}</Button>
 						</form>
 
 						<p class="bookprice">$${book.getPrice()}</p>
 
-						<form action="BookStore" class="d-flex" method="GET">
+						<form action="Home" class="d-flex" method="GET">
 							<button class="btn btn-outline-primary btn-sm" id="addtocart"
 								name="addtocart" value="${book.getBid()}">Add to Cart</button>
 						</form>

@@ -11,7 +11,12 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Insert title here</title>
+
+<c:forEach var="book" items="${bookinfo}">
+	<title>${book.getTitle()}</title>
+</c:forEach>
+
+
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -28,7 +33,7 @@
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="BookStore"><i class="material-icons">menu_book</i></a>
+			<a class="navbar-brand" href="Home"><i class="material-icons">menu_book</i></a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -38,11 +43,11 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="home"><a class="nav-link active"
-						aria-current="page" href="BookStore">Home</a></li>
+						aria-current="page" href="Home">Home</a></li>
 					
 
 				</ul>
-				<form action="BookStore" class="d-flex" method="GET">
+				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
 						type="search" placeholder="Search" aria-label="Search" required="true" oninvalid="return false;"></input>
 					<button class="btn btn-outline-success" id="btnsubmit"
@@ -53,19 +58,19 @@
 
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">
-						<form action="BookStore" class="d-flex" method="POST">
+						<form action="Home" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">Logout</button>
 						</form>
 					</c:when>
 
 					<c:otherwise>
-						<form action="BookStore" class="d-flex" method="POST">
+						<form action="Home" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="login" name="login"
 								value="true">Login/Register</button>
 						</form>
 
-						<a href="BookStore?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+						<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 
 					</c:otherwise>
 
@@ -79,7 +84,6 @@
 
 
 
-
 		<div class="item" id="${book.getBid()}">
 			<img id="singleimage" src="images/${book.getUrl()}"></img>
 
@@ -90,7 +94,7 @@
 				<p id="pprice">Price: $ ${book.getPrice()}</p>
 
 
-				<form action="BookStore" class="d-flex" method="GET">
+				<form action="Home" class="d-flex" method="GET">
 					<button class="btn btn-outline-primary btn-me " id="addtocart"
 						name="addtocart" value="${book.getBid()}">Add to Cart</button>
 				</form>
@@ -98,7 +102,7 @@
 
 				<c:choose>
 					<c:when test="${review eq true}">
-						<form action="BookStore" method="POST">
+						<form action="Home" method="POST">
 							<label for="fname">First Name</label> <input type="text"
 								id="fname" name="fname" required="required"
 								placeholder="Your first name"></input><label for="lname">Last
@@ -118,7 +122,7 @@
 
 
 					<c:otherwise>
-						<form action="BookStore">
+						<form action="Home">
 							<button class="btn btn-outline-dark btn-sm" id="reviewform" name="reviewform" value="${book.getBid()}">
 								Write a Review</button>
 						</form>
