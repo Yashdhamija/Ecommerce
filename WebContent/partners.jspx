@@ -21,7 +21,7 @@
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="#">Navbar</a>
+			<a class="navbar-brand" href="BookStore"><i class="material-icons">menu_book</i></a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -106,9 +106,9 @@
 							required="required"></input>
 					</div>
 					<div class="col-12">
-						<label for="uid" class="form-label">Unique User Id (8 numbers required)</label> <input
-							type="text" class="form-control" name="uid" id="uid" pattern="[0-9]{8}"
-							required="required"></input><small>Format: 00000000</small>
+						<label for="uid" class="form-label">Email</label> <input
+							type="email" class="form-control" name="email" id="email" 
+							required="required"></input><small>Format:example@gmail.com</small>
 					</div>
 
 					<div class="col-12">
@@ -177,7 +177,7 @@
 
 					<c:choose>
 						<c:when test="${uidexists eq 'yes'}">
-							<p style="color: red;">User Id Already Exists Please try again!</p>
+							<p style="color: red;">Email Address Already Exists Please try again!</p>
 						</c:when>
 
 

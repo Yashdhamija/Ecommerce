@@ -24,7 +24,7 @@
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="#">Navbar</a>
+			<a class="navbar-brand" href="BookStore"><i class="material-icons">menu_book</i></a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -35,10 +35,6 @@
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item"><a class="nav-link active"
 						aria-current="page" href="BookStore">Home</a></li>
-					<li class="nav-item"><a class="nav-link active" href="#">About</a></li>
-
-					<li class="nav-item"><a class="nav-link active" href="#">Contact
-							Us</a></li>
 
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#"
@@ -47,13 +43,22 @@
 						<ul class="dropdown-menu"
 							aria-labelledby="navbarScrollingDropdown">
 							<li><a class="dropdown-item"
+								href="BookStore">All</a></li>
+							<li><a class="dropdown-item"
 								href="BookStore?category=Fiction">Fiction</a></li>
 							<li><a class="dropdown-item"
 								href="BookStore?category=Science">Science</a></li>
 							<li><a class="dropdown-item"
-								href="BookStore?category=Engineering">Engineering</a></li>
-						</ul>
-						</li>
+								href="BookStore?category=Sci-fi">Sci-fi</a></li>
+							<li><a class="dropdown-item" href="BookStore?category=Crime">Crime</a></li>
+							<li><a class="dropdown-item" href="BookStore?category=Arts">Arts</a></li>
+							<li><a class="dropdown-item"
+								href="BookStore?category=Romance">Romance</a></li>
+							<li><a class="dropdown-item"
+								href="BookStore?category=History">History</a></li>
+							<li><a class="dropdown-item"
+								href="BookStore?category=Literacy">Literacy</a></li>
+						</ul></li>
 
 
 
@@ -76,14 +81,16 @@
 								value="true">LogOut</button>
 						</form>
 						
-						<a href="BookStore?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+						<div class="thecart">
+							<a href="BookStore?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+						</div>
 					</c:when>
 
 					<c:otherwise>
 
-							<a class="btn btn-outline-success" id="login" name="login"
-								href="/E-commerceoriginal/Login" >LogIn/Register</a>
-					
+						<a class="btn btn-outline-success" id="login" name="login"
+							href="/E-commerceoriginal/Login">LogIn/Register</a>
+
 
 						<a href="BookStore?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 
@@ -115,13 +122,11 @@
 
 	<c:choose>
 		<c:when test="${found eq 'true'}">
-			<label id="label1">${numberofresults}</label>
-			<div class="container">
-
-
-
-
-
+			<div class="searchresults">
+					<label id="label1">${numberofresults}</label>
+			</div>
+			
+			<div class="container1">				
 
 				<c:forEach var="result" items="${bookfound}">
 
@@ -134,9 +139,11 @@
 							<Button id="bookinfo" name="bookinfo" value="${result.getBid()}">${result.getTitle()}</Button>
 						</form>
 
-						<p>$${result.getPrice()}</p>
-						<button type="button" class="btn btn-outline-primary btn-sm">Add
+						<p class="bookprice">$${result.getPrice()}</p>
+						<form action="BookStore" class="d-flex" method="GET">
+							<button name="addtocart" id="addtocart" value="${result.getBid()}" class="btn btn-outline-primary btn-sm">Add
 							to Cart</button>
+						</form>
 					</div>
 
 
@@ -155,7 +162,7 @@
 							<Button id="bookinfo" name="bookinfo" value="${books.getBid()}">${books.getTitle()}</Button>
 						</form>
 
-						<p>$${books.getPrice()}</p>
+						<p class="bookprice">$${books.getPrice()}</p>
 						<button type="button" class="btn btn-outline-primary btn-sm">Add
 							to Cart</button>
 					</div>
@@ -179,7 +186,7 @@
 							<Button id="bookinfo" name="bookinfo" value="${book.getBid()}">${book.getTitle()}</Button>
 						</form>
 
-						<p>$${book.getPrice()}</p>
+						<p class="bookprice">$${book.getPrice()}</p>
 
 						<form action="BookStore" class="d-flex" method="GET">
 							<button class="btn btn-outline-primary btn-sm" id="addtocart"

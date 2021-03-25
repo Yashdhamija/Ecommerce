@@ -28,7 +28,7 @@
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="#">Navbar</a>
+			<a class="navbar-brand" href="BookStore"><i class="material-icons">menu_book</i></a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -39,10 +39,7 @@
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="home"><a class="nav-link active"
 						aria-current="page" href="BookStore">Home</a></li>
-					<li class="about"><a class="nav-link" href="#">About</a></li>
-
-					<li class="contact"><a class="nav-link" href="#">Contact
-							Us</a></li>
+					
 
 				</ul>
 				<form action="BookStore" class="d-flex" method="GET">
@@ -94,16 +91,14 @@
 
 
 				<form action="BookStore" class="d-flex" method="GET">
-					<button class="btn btn-outline-primary btn-sm" id="addtocart"
+					<button class="btn btn-outline-primary btn-me " id="addtocart"
 						name="addtocart" value="${book.getBid()}">Add to Cart</button>
 				</form>
 
 
-
-
 				<c:choose>
 					<c:when test="${review eq true}">
-						<form action="BookStore">
+						<form action="BookStore" method="POST">
 							<label for="fname">First Name</label> <input type="text"
 								id="fname" name="fname" required="required"
 								placeholder="Your first name"></input><label for="lname">Last
@@ -124,7 +119,7 @@
 
 					<c:otherwise>
 						<form action="BookStore">
-							<button id="reviewform" name="reviewform" value="true">
+							<button class="btn btn-outline-dark btn-sm" id="reviewform" name="reviewform" value="${book.getBid()}">
 								Write a Review</button>
 						</form>
 
@@ -149,20 +144,20 @@
 
 
 
-	<h2 class="heading">Customer Reviews</h2>
+	<h2 class="reviewheading">Customer Reviews</h2>
 	<br></br>
 
 	<c:choose>
 		<c:when test="${empty reviews}">
-			<h6>No customer reviews yet</h6>
+			<h6 class="allreviews">No customer reviews yet</h6>
 		</c:when>
 
 		<c:otherwise>
 			<c:forEach var="review" items="${reviews}">
 
-				<h4>${review.getTitle()}</h4>
-				<h6>By ${review.getFirstName()} ${review.getLastname()}</h6>
-				<p>${review.getReview()}</p>
+				<h4 class="allreviews">${review.getTitle()}</h4>
+				<h6 class="allreviews">By ${review.getFirstName()} ${review.getLastname()}</h6>
+				<p class="allreviews">${review.getReview()}</p>
 				<hr></hr>
 			</c:forEach>
 

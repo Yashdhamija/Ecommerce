@@ -29,31 +29,38 @@ public class BookStoreModel {
 		this.paymentCounter= 0;
 	}
 
-	public void insertUserLogin(String fname, String lname, String email, String password) throws SQLException {
+	public int insertUserLogin(String fname, String lname, String email, String password) throws SQLException {
 
-		this.dao.insertUserDB(fname, lname, email, password);
-
-	}
-
-	public void insertPartnerLogin(int uid, String password, String fname, String lname) throws SQLException {
-
-		this.dao.insertPartnerDB(uid, password, fname, lname);
+		return this.dao.insertUserDB(fname, lname, email, password);
 
 	}
 
-	public void insertAReview(String fname, String lname, String bid, String review, String title) throws SQLException {
-		this.dao.insertReview(fname, lname, bid, review, title);
+	public int insertPartnerLogin(String email, String password, String fname, String lname) throws SQLException {
+
+		return this.dao.insertPartnerDB(email, password, fname, lname);
+
 	}
 
-	public void insertIntoAddress(String street, String province, String country, String zip, String phone, String city)
+	public int insertAReview(String fname, String lname, String bid, String review, String title) throws SQLException {
+		return this.dao.insertReview(fname, lname, bid, review, title);
+	}
+
+	public int insertIntoAddress(String street, String province, String country, String zip, String phone, String city)
 			throws SQLException {
-		this.dao.insertAddress(street, province, country, zip, phone, city);
+		return this.dao.insertAddress(street, province, country, zip, phone, city);
 	}
 	
-	public void insertPOitem(int orderId, String fname, String lname, String status, String email) throws SQLException {
+	public void insertPO(int orderId, String fname, String lname, String status, String email) throws SQLException {
 		this.dao.insertPurchaseOrder(orderId, fname, lname, status, email);
 	}
-
+	
+	
+	public int insertPOItem(String email, String bid, int price, int quantity) throws SQLException {
+		
+		return this.dao.insertPurchaseOrderItem(email, bid, price, quantity);
+		
+	}
+	
 	public String getPartnerPassword(String password) {
 		return this.dao.retrievePartnerPassword(password);
 
@@ -67,13 +74,18 @@ public class BookStoreModel {
 		return this.dao.retrievePassword(password);
 	}
 
-	public String getUID(String uid) {
-		return this.dao.retrieveUID(uid);
+	public String getPartnerEmail(String uid) {
+		return this.dao.retrievePartnerEmail(uid);
 	}
 
-	public String getFullName(String email) {
+	public String getCustomerName(String email) {
 
-		return this.dao.getFullName(email);
+		return this.dao.getCustomerName(email);
+	}
+	
+	public String getPartnerName(String email) {
+
+		return this.dao.getPartnerName(email);
 	}
 
 	public List<BookBean> retrieveBookRecords(String bid) throws SQLException {
@@ -106,6 +118,12 @@ public class BookStoreModel {
 
 	public UserBean retrieveUserInfo(String email) throws SQLException {
 		return this.dao.retrieveAllUserInfo(email);
+	}
+	
+	public UserBean retrievePartnerInfo(String email) throws SQLException {
+		
+		return this.dao.RetrievePartnerInfo(email);
+		
 	}
 
 	public List<BookBean> getSearchedBook(String title) throws SQLException {
