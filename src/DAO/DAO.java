@@ -63,7 +63,6 @@ public class DAO { // DB class
 		String query = "INSERT INTO Users VALUES(?,?,?,?,?)";
 
 		PreparedStatement ps = con.prepareStatement(query);
-		ResultSet rs = ps.executeQuery(query);
 
 		ps.setString(1, fname);
 		ps.setString(2, lname);
