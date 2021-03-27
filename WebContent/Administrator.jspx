@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	<jsp:directive.page contentType="text/html; charset=ISO-8859-1"
+		pageEncoding="ISO-8859-1" session="false" />
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Administrator Login</title>
+<link rel="StyleSheet" href="style/ui.css" type="text/css"
+	title="cse4413" media="screen, print" />
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet"></link>
+
+</head>
+<body>
+
+
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="Home"><i class="material-icons">menu_book</i></a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link active"
+						aria-current="page" href="Home">Home</a></li>
+
+
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#"
+						id="navbarScrollingDropdown" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"> Books </a>
+						<ul class="dropdown-menu"
+							aria-labelledby="navbarScrollingDropdown">
+							<li><a class="dropdown-item" href="Home?category=Fiction">Fiction</a></li>
+							<li><a class="dropdown-item" href="Home?category=Science">Science</a></li>
+							<li><a class="dropdown-item"
+								href="Home?category=Engineering">Engineering</a></li>
+							<li><a class="dropdown-item" href="Home?category=Sci-fi">Sci-fi</a></li>
+							<li><a class="dropdown-item" href="Home?category=Crime">Crime</a></li>
+							<li><a class="dropdown-item" href="Home?category=Arts">Arts</a></li>
+							<li><a class="dropdown-item" href="Home?category=Romance">Romance</a></li>
+							<li><a class="dropdown-item" href="Home?category=History">History</a></li>
+							<li><a class="dropdown-item" href="Home?category=Literacy">Literacy</a></li>
+						</ul></li>
+
+
+
+
+				</ul>
+				<form action="Home" class="d-flex" method="GET">
+					<input name="search" id="search" class="form-control me-2"
+						type="search" placeholder="Search" aria-label="Search"
+						required="true" oninvalid="return false;"></input>
+					<button class="btn btn-outline-success" id="btnsubmit"
+						action="submit" value="true">Search</button>
+
+				</form>
+
+				<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+
+
+
+			</div>
+		</div>
+	</nav>
+
+
+
+	<div class="container">
+		<div class="row justify-content-center">
+			<fieldset class="col-6">
+				<legend>Sign In As Administrator</legend>
+				<form action="" method="POST" class="loginForm">
+					<div class="mb-4">
+						<label for="adminEmail" class="form-label">Email address </label> <input
+							name="adminEmail" type="text" class="form-control" id="adminEmail"
+							required="required"></input>
+
+					</div>
+					<div class="mb-4">
+						<label for="exampleInputPassword1" class="form-label">Password</label>
+						<input name="adminPassword" type="password" class="form-control"
+							id="adminPassword" required="required"></input>
+					</div>
+
+					<c:choose>
+						<c:when test="${loginfailed eq 'failed'}">
+							<p style="color: red;">Incorrect Email and or password, not
+								enough access rights</p>
+						</c:when>
+
+
+					</c:choose>
+
+
+					<div class="invalid-feedback">Please choose a username.</div>
+
+
+					<button name="adminButton" id="adminButton" value="true"
+						type="submit" class="mt-3 me-2 btn btn-dark">Login</button>
+
+
+				</form>
+			</fieldset>
+		</div>
+	</div>
+
+
+
+
+
+
+
+</body>
+<c:import url="nav.html"></c:import>
+	</html>
+</jsp:root>

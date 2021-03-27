@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,8 @@ import bean.UserBean;
 /**
  * Servlet implementation class BookStoreModel
  */
-@WebServlet({ "/Home", "/Login", "/Register", "/PartnerRegister", "/Payment", "/OrderConfirmation" }) 
+@WebServlet({ "/Home", "/Login", "/Register", "/PartnerRegister", "/Payment", "/OrderConfirmation", "/Home/partner/*",
+		"/Administrator", "/AdministratorLogin" })
 
 public class Home extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -38,7 +40,6 @@ public class Home extends HttpServlet {
 	List<CartBean> cart;
 	CounterBean counter;
 	String loginerror;
-	
 
 	int id = 0;
 
@@ -53,9 +54,15 @@ public class Home extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 
 		super.init(config);
-		ServletContext context = getServletContext();
-		BookStoreModel store = new BookStoreModel();
-		context.setAttribute("BookStore", store);
+		BookStoreModel store;
+		try {
+			ServletContext context = getServletContext();
+			store = BookStoreModel.getInstance();
+			context.setAttribute("BookStore", store);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -109,6 +116,95 @@ public class Home extends HttpServlet {
 					e.printStackTrace();
 				}
 			}
+
+		}
+		
+		else if(request.getParameter("restcall") != null && request.getParameter("restcall").equals("true")) {
+			
+			request.getRequestDispatcher("/restcall.jspx").forward(request, response);
+		}
+		
+		else if(request.getParameter("topMonth") != null ) {
+			
+			LinkedHashMap<String, LinkedHashMap<String, Integer>> result = null;
+			try {
+				result = book.retrieveBooksSoldEachMonth();
+				request.setAttribute("topMonthResult", result.get(request.getParameter("topMonth")));
+				request.setAttribute("chosenMonth", request.getParameter("topMonth"));
+				this.target = "/analytics.jspx";
+				request.getRequestDispatcher(target).forward(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		else if (request.getServletPath().equals("/AdministratorLogin") && request.getParameter("adminEmail") == null
+				&& request.getParameter("adminPassword") == null ) {
+			System.out.println("I am two");
+
+			request.getRequestDispatcher("/Administrator.jspx").forward(request, response);
+
+		}
+		
+
+		else if (request.getParameter("adminEmail") != null && request.getParameter("adminPassword") != null) {
+		
+			String adminEmail = request.getParameter("adminEmail");
+			String adminPassword = request.getParameter("adminPassword");
+
+			// check if user is admin
+
+			try {
+				if (book.isValidAdmin(adminEmail, book.encryptPassword(adminPassword))) {
+					System.out.println("This is a valid admin");
+
+					LinkedHashMap<String, Integer> list;
+					LinkedHashMap<String, LinkedHashMap<String, Integer>> result;
+					List<List<String>> userStats;
+
+					result = book.retrieveBooksSoldEachMonth();
+					list = book.retrieveTopTenAllTime();
+					userStats = book.retrieveUserStatistics();
+
+					request.getSession().setAttribute("TopTen", list);
+					request.getSession().setAttribute("topMonthList", result);
+					request.getSession().setAttribute("userStats", userStats);
+
+					// if the admin chose a month in the dropdown menu, it would be set in topMonth
+					// find the list of books sold that month in "result"
+				
+					
+					this.target = "/analytics.jspx";
+					request.getRequestDispatcher(target).forward(request, response);
+				}
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ServletException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		
+		
+
+		else if (request.getRequestURI() != null && (request.getRequestURI().contains("partner"))
+				&& request.getSession().getAttribute("UserType") != null
+				&& request.getSession().getAttribute("UserType").equals("partner")) {
+			
+			System.out.println("The adfafafaf" +request.getSession().getAttribute("UserType"));
+
+			String productId = request.getParameter("productId");
+
 
 		}
 
@@ -358,12 +454,17 @@ public class Home extends HttpServlet {
 						&& visitorpwd.equals("password exists")) {
 					loginName = book.getCustomerName(email);
 					request.getSession().setAttribute("UserType", "visitor");
+					System.out.println("User type is" + request.getSession().getAttribute("UserType"));
 					System.out.println("This is the login name" + loginName);
 				} else {
 
 					loginName = book.getPartnerName(email);
+					request.getSession().setAttribute("partnerButton","present");
+					
+					
 					System.out.println("This is the login name" + loginName);
 					request.getSession().setAttribute("UserType", "partner");
+					
 				}
 
 				if (request.getSession().getAttribute("counter") == null) {
@@ -375,7 +476,7 @@ public class Home extends HttpServlet {
 					counter = (CounterBean) request.getSession().getAttribute("counter");
 					request.getSession().setAttribute("counter", counter);
 				}
-				
+
 				System.out.println("The email address is " + email);
 				request.getSession().setAttribute("visitoremail", email); // saving email in the login page in
 																			// session
@@ -419,7 +520,7 @@ public class Home extends HttpServlet {
 				}
 
 				if (request.getParameter("search") == null) {
-
+					System.out.println("I am in line search == null");
 					response.sendRedirect("/BookLand/Home");
 					request.getSession().setAttribute("hi", "hi");
 
@@ -464,7 +565,6 @@ public class Home extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		
 
 		else if (request.getParameter("reviewform") != null) {
 			request.getSession().setAttribute("reviewbookid", request.getParameter("reviewform"));
@@ -560,11 +660,11 @@ public class Home extends HttpServlet {
 
 		else if (request.getParameter("logout") != null) {
 			try {
-				request.getSession().removeAttribute("shoppingcart");      // Added this so if a user logs out cart is cleared
+				request.getSession().removeAttribute("shoppingcart"); // Added this so if a user logs out cart is
+																		// cleared
 				request.getSession().removeAttribute("carttotal");
 				request.getSession().removeAttribute("cartsize");
-				
-				
+
 				l = book.retrieveBookRecords("");
 				request.setAttribute("books", l);
 				request.getSession().setAttribute("name", null);
@@ -577,7 +677,10 @@ public class Home extends HttpServlet {
 							"The valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee of counter after logout is "
 									+ counter.getCounter());
 				}
-
+				
+				
+				request.getSession().setAttribute("partnerButton", "absence");
+				request.getSession().removeAttribute("UserType");
 				request.getRequestDispatcher("/bookstore.jspx").forward(request, response);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -634,24 +737,26 @@ public class Home extends HttpServlet {
 		}
 
 		else if (request.getParameter("loginButton") == null) { // Login button on main bookstore
-			System.out.println("The value of loginerror is " + request.getAttribute("loginfailed"));
-			System.out.println("This is the first page");
-			
-				try {
-					request.removeAttribute("loginfailed");
-					l = book.retrieveBookRecords("");
-					request.setAttribute("books", l);
+			System.out.println("This is the first page and i am on line 753");
+			request.getSession().removeAttribute("UserType");
 
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 
-				this.target = "/bookstore.jspx";
-				request.getRequestDispatcher(target).forward(request, response);
 
+			try {
+				request.removeAttribute("loginfailed");
+				l = book.retrieveBookRecords("");
+				request.setAttribute("books", l);
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+
+			this.target = "/bookstore.jspx";
+			request.getRequestDispatcher(target).forward(request, response);
+
 		}
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse

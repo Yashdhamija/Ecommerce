@@ -7,26 +7,43 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 import DAO.DAO;
 import bean.AddressBean;
 import bean.BookBean;
 import bean.CartBean;
+import bean.OrderBean;
 import bean.ReviewBean;
 import bean.UserBean;
 
 public class BookStoreModel {
 
+	private static BookStoreModel instance;
 	private DAO dao;
 	private ArrayList<Integer> orderNumber = null;
 	private int paymentCounter;
+
 	public BookStoreModel() {
 
 		this.dao = new DAO();
 		this.orderNumber = new ArrayList<Integer>();
-		this.paymentCounter= 0;
+		this.paymentCounter = 0;
+	}
+
+	public static BookStoreModel getInstance() throws ClassNotFoundException {
+		if (instance == null) {
+			instance = new BookStoreModel();
+			instance.dao = new DAO();
+		}
+		return instance;
 	}
 
 	public int insertUserLogin(String fname, String lname, String email, String password) throws SQLException {
@@ -49,18 +66,22 @@ public class BookStoreModel {
 			throws SQLException {
 		return this.dao.insertAddress(street, province, country, zip, phone, city);
 	}
-	
+
 	public void insertPO(int orderId, String fname, String lname, String status, String email) throws SQLException {
 		this.dao.insertPurchaseOrder(orderId, fname, lname, status, email);
 	}
-	
-	
+
 	public int insertPOItem(String email, String bid, int price, int quantity) throws SQLException {
-		
+
 		return this.dao.insertPurchaseOrderItem(email, bid, price, quantity);
-		
+
 	}
-	
+
+	public int insertAdmin(String email, String lname, String fname, String password) throws SQLException {
+
+		return this.dao.insertAdminIntoDB(email, fname, lname, password);
+	}
+
 	public String getPartnerPassword(String password) {
 		return this.dao.retrievePartnerPassword(password);
 
@@ -82,7 +103,7 @@ public class BookStoreModel {
 
 		return this.dao.getCustomerName(email);
 	}
-	
+
 	public String getPartnerName(String email) {
 
 		return this.dao.getPartnerName(email);
@@ -119,11 +140,11 @@ public class BookStoreModel {
 	public UserBean retrieveUserInfo(String email) throws SQLException {
 		return this.dao.retrieveAllUserInfo(email);
 	}
-	
+
 	public UserBean retrievePartnerInfo(String email) throws SQLException {
-		
+
 		return this.dao.RetrievePartnerInfo(email);
-		
+
 	}
 
 	public List<BookBean> getSearchedBook(String title) throws SQLException {
@@ -177,21 +198,19 @@ public class BookStoreModel {
 		}
 		return l;
 	}
-	
-	
-	public int getIncrementCounter( ) {
-		
+
+	public int getIncrementCounter() {
+
 		return this.paymentCounter;
 	}
-	
+
 	public void incrementPaymentCounter() {
-		
+
 		this.paymentCounter++;
 	}
-	
-	
+
 	public void resetPaymentCounter() {
-		
+
 		this.paymentCounter = 0;
 	}
 
@@ -210,9 +229,63 @@ public class BookStoreModel {
 		return orderNum;
 
 	}
-	
-	
-	
-	
+
+	public String getProductInfo(String productId) throws SQLException {
+		// TODO validate product id
+		BookBean book = this.instance.dao.getProductJSON(productId);
+		JsonObjectBuilder bookJSON = Json.createObjectBuilder();
+		bookJSON.add("BookTitle", book.getBid()).add("Title", book.getTitle()).add("Price", book.getPrice())
+				.add("Category", book.getCategory());
+		JsonObject value = bookJSON.build();
+		String serializedBookJson = value.toString();
+		return serializedBookJson;
+	}
+
+	public String getOrdersByPartNumber(String productId) throws SQLException {
+		List<OrderBean> orders = this.instance.dao.getOrdersByPartNumber(productId);
+
+		JsonObjectBuilder doc = Json.createObjectBuilder();
+		JsonArrayBuilder result = Json.createArrayBuilder();
+		for (OrderBean order : orders) {
+			result.add(Json.createObjectBuilder().add("orderId", order.getOrderId())
+					.add("name", order.getFname() + order.getLname()).add("status", order.getStatus())
+					.add("address", order.getAddress()).add("Date", order.getDate())
+					.add("quantity", order.getQuantity()).add("unitPrice", order.getPrice()));
+		}
+		doc.add("productId", productId).add("orders:", result);
+		JsonObject obj = doc.build();
+		return obj.toString();
+	}
+
+	public boolean isValidAdmin(String email, String password) {
+		String dbEmail = this.dao.getAdminEmail(email);
+		String dbPassword = this.dao.getAdminPwd(password);
+		System.out.println("The email is"+ dbEmail);
+		System.out.println("The password is"+dbPassword);
+		
+
+		if (dbEmail != null && dbPassword != null & dbEmail.equals(email) && dbPassword.equals(password)) {
+
+			return true;
+		}
+
+		else {
+
+			return false;
+		}
+
+	}
+
+	public LinkedHashMap<String, Integer> retrieveTopTenAllTime() throws SQLException {
+		return this.dao.getTopTenAllTime();
+	}
+
+	public LinkedHashMap<String, LinkedHashMap<String, Integer>> retrieveBooksSoldEachMonth() throws SQLException {
+		return this.dao.getBooksSoldEachMonth();
+	}
+
+	public List<List<String>> retrieveUserStatistics() throws SQLException {
+		return this.dao.getUserStatistics();
+	}
 
 }

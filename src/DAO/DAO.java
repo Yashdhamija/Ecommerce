@@ -10,14 +10,18 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import bean.AddressBean;
 import bean.BookBean;
+import bean.OrderBean;
 import bean.ReviewBean;
 import bean.UserBean;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 public class DAO { // DB class
 
@@ -63,7 +67,6 @@ public class DAO { // DB class
 		String query = "INSERT INTO Users VALUES(?,?,?,?,?)";
 
 		PreparedStatement ps = con.prepareStatement(query);
-		ResultSet rs = ps.executeQuery(query);
 
 		ps.setString(1, fname);
 		ps.setString(2, lname);
@@ -134,6 +137,21 @@ public class DAO { // DB class
 		}
 		System.out.println(name);
 		return name;
+	}
+	
+	
+	public int insertAdminIntoDB(String email,String fname,String lname,String password) throws SQLException {
+		getRemoteConnection();
+		String query = "INSERT INTO AdminBookStore VALUES(?,?,?,?)";
+		PreparedStatement ps = con.prepareStatement(query);
+		ps.setString(1, email);
+		ps.setString(2, lname);
+		ps.setString(3, fname);
+		ps.setString(4, password);
+		int result = ps.executeUpdate();
+		ps.close();
+		con.close();
+		return result;
 	}
 
 	public int insertPartnerDB(String email, String password, String fname, String lname) throws SQLException {
@@ -519,6 +537,54 @@ public class DAO { // DB class
 		con.close();
 		return btitle;
 	}
+	
+	public BookBean getProductJSON(String productId) throws SQLException {
+        List<BookBean> l = new ArrayList<BookBean>();
+        l = retreivebookrecord(productId);
+        return l.get(0);
+
+    }
+	
+	public List<OrderBean> getOrdersByPartNumber(String bid) throws SQLException {
+		
+        String orderId;
+        String lname;
+        String fname;
+        String status;
+        String address;
+        String date;
+        int quantity;
+        int unitPrice;
+        
+        List<OrderBean> orderList = new ArrayList<>();
+        getRemoteConnection();
+        String query = String.format("SELECT * FROM PO,POItem WHERE PO.orderid=POItem.id AND POItem.bid='%s'", bid);
+        PreparedStatement ps = con.prepareStatement(query);
+//        ps.setString(1,bid);
+        ResultSet rs = ps.executeQuery(query);
+
+
+        while (rs.next()) {
+            orderId = rs.getString("PO.orderid");
+            lname = rs.getString("lname");
+            fname = rs.getString("fname");
+            status = rs.getString("status");
+            address = rs.getString("address");
+            date = rs.getString("date");
+            quantity = rs.getInt("quantity");
+            unitPrice = rs.getInt("price");
+            OrderBean order = new OrderBean(orderId, quantity, unitPrice, lname, fname, status, address, date);
+            orderList.add(order);
+
+        }
+
+        rs.close();
+        ps.close();
+        con.close();
+
+        return orderList;
+
+    }
 
 	public List<BookBean> retrievebookinfo(String bid) throws SQLException {
 
@@ -730,5 +796,132 @@ public class DAO { // DB class
 		con.close();
 		return s;
 	}
+	
+	public LinkedHashMap<String, Integer> getTopTenAllTime() throws SQLException {
+		getRemoteConnection();
+		LinkedHashMap<String, Integer> list = new LinkedHashMap<String, Integer>();
+		// "SELECT bid, sum(quantity) AS num FROM bookstore.PO where status != "DENIED"
+		// GROUP BY bid ORDER BY num DESC"
+		String query = "SELECT title, POItem.bid as bid, sum(quantity) AS num FROM POItem join Book on POItem.bid=Book.bid GROUP BY bid ORDER BY num DESC LIMIT 10";
+
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			String bookid = rs.getString("title");
+			Integer count = rs.getInt("num");
+			list.put(bookid, count);
+		}
+		return list;
+	}
+
+	public LinkedHashMap<String, LinkedHashMap<String, Integer>> getBooksSoldEachMonth() throws SQLException {
+		getRemoteConnection();
+		LinkedHashMap<String, LinkedHashMap<String, Integer>> result = new LinkedHashMap<String, LinkedHashMap<String, Integer>>();
+		LinkedHashMap<String, Integer> list = new LinkedHashMap<String, Integer>();
+
+		String query = "select orderid,substring(`date`,1,7) as dates,POItem.bid,POItem.price,sum(quantity) as quantities, title from (POItem inner join PO on POItem.id=PO.orderid) join Book on POItem.bid = Book.bid group by POItem.bid order by dates, quantities desc;";
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+
+		rs.next();
+		String date = rs.getString("dates");
+		list.put(rs.getString("title"), rs.getInt("quantities"));
+		while (rs.next()) {
+			if (!rs.getString("dates").equals(date)) {
+				if (date.endsWith("-")) {
+					result.put(date.substring(0, date.length() - 1), list);
+				} else {
+					result.put(date, list);
+				}
+
+				date = rs.getString("dates");
+				list = new LinkedHashMap<String, Integer>();
+				list.put(rs.getString("title"), rs.getInt("quantities"));
+			} else {
+				list.put(rs.getString("title"), rs.getInt("quantities"));
+			}
+		}
+
+		if (!list.isEmpty()) {
+			if (date.endsWith("-")) {
+				result.put(date.substring(0, date.length() - 1), list);
+			} else {
+				result.put(date, list);
+			}
+		}
+		rs.close();
+		return result;
+	}
+
+	public List<List<String>> getUserStatistics() throws SQLException {
+		getRemoteConnection();
+		List<List<String>> result = new ArrayList<List<String>>();
+		List<String> current = new ArrayList<String>();
+
+		String query = "select PO.lname as lname, PO.fname as fname, sum(POItem.price*POItem.quantity) as total, Address.zip as zip from (PO join POItem on PO.orderid=POItem.id) join Address on Address.id=PO.address group by PO.fname, PO.lname";
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			current.add("****      ***");
+			current.add(rs.getString("zip"));
+			current.add(rs.getString("total"));
+			result.add(current);
+			current = new ArrayList<String>();
+		}
+
+		return result;
+	}
+	
+	public String getAdminPwd(String password) {
+		// password parameter should be encrypted by using BookStoreModel.encryptPassword()
+		getRemoteConnection();
+		String p = null;
+		try {
+			this.stmt = this.con.createStatement();
+			String query = "SELECT password FROM AdminBookStore WHERE password='" + password  + "'";
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery(query);
+
+			while (rs.next()) {
+				p = rs.getString("password");
+			}
+			rs.close();
+			con.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return p;
+	}
+	
+	public String getAdminEmail(String email) {
+		getRemoteConnection();
+		String p = null;
+		try {
+			this.stmt = this.con.createStatement();
+			String query = "SELECT email FROM AdminBookStore WHERE email='" + email + "'";
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery(query);
+
+			while (rs.next()) {
+				p = rs.getString("email");
+			}
+			rs.close();
+			con.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return p;
+	}
+	
+	
+	
 
 }
