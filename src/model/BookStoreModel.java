@@ -236,6 +236,24 @@ public class BookStoreModel {
 		String serializedBookJson = value.toString();
 		return serializedBookJson;
 	}
+	
+	
+	public String jsonErrorMessage() {
+		JsonObjectBuilder bookJSON = Json.createObjectBuilder();
+		bookJSON.add("Error Message:", "This information cannot be accessed.");
+		JsonObject value = bookJSON.build();
+		String serializedBookJson = value.toString();
+		return serializedBookJson;
+	}
+		
+		
+	public	boolean isValidAdmin(String email,String password) throws NoSuchAlgorithmException {
+		
+		
+		return this.dao.IsAdminValidated(email, this.encryptPassword(password));
+		
+	}
+	
 
 	public String getOrdersByPartNumber(String productId) throws SQLException {
 		List<OrderBean> orders = this.instance.dao.getOrdersByPartNumber(productId);
@@ -253,23 +271,23 @@ public class BookStoreModel {
 		return obj.toString();
 	}
 
-	public boolean isValidAdmin(String email, String password) {
-		String dbEmail = this.dao.getAdminEmail(email);
-		String dbPassword = this.dao.getAdminPwd(password);
-		System.out.println("The email is" + dbEmail);
-		System.out.println("The password is" + dbPassword);
-
-		if (dbEmail != null && dbPassword != null & dbEmail.equals(email) && dbPassword.equals(password)) {
-
-			return true;
-		}
-
-		else {
-
-			return false;
-		}
-
-	}
+//	public boolean isValidAdmin(String email, String password) {
+//		String dbEmail = this.dao.getAdminEmail(email);
+//		String dbPassword = this.dao.getAdminPwd(password);
+//		System.out.println("The email is" + dbEmail);
+//		System.out.println("The password is" + dbPassword);
+//
+//		if (dbEmail != null && dbPassword != null & dbEmail.equals(email) && dbPassword.equals(password)) {
+//
+//			return true;
+//		}
+//
+//		else {
+//
+//			return false;
+//		}
+//
+//	}
 
 	public LinkedHashMap<String, Integer> retrieveTopTenAllTime() throws SQLException {
 		return this.dao.getTopTenAllTime();

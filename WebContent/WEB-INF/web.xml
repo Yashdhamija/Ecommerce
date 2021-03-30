@@ -48,6 +48,16 @@
     <servlet-class>Payment.controller</servlet-class>
 </servlet>
 
+ <servlet>
+    <servlet-name>Admin</servlet-name>
+    <servlet-class>Admin.controller</servlet-class>
+</servlet>
+
+ <servlet>
+    <servlet-name>Analytics</servlet-name>
+    <servlet-class>Analytics.controller</servlet-class>
+</servlet>
+
 
 
 

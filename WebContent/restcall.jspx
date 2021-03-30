@@ -68,13 +68,13 @@
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">
 
-						<form action="Home" class="d-flex" method="POST">
+						<form action="Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
 
 						<div class="thecart">
-							<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+							<a href="/BookLand/Cart?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 						</div>
 					</c:when>
 
@@ -96,9 +96,9 @@
 	</nav>
 
 
-	GET (or READ) curl -X GET     http://localhost:8081/BookLand/rest/partner/read/getProductInfo?email=partner@gmail.com&amp;password=12345678&amp;productId=121-3-3434-4545-5
+	GET (or READ) curl -X GET     http://localhost:8080/BookLand/rest/partner/read/getProductInfo?email=partner@gmail.com&amp;password=12345678&amp;productId=121-3-3434-4545-5
 	<br/>
-	GET (or READ) curl -X GET     http://localhost:8081/BookLand/rest/partner/read/getOrdersByPartNumber?email=partner@gmail.com&amp;password=12345678&amp;productId=232-2-4342-2343-3
+	GET (or READ) curl -X GET     http://localhost:8080/BookLand/rest/partner/read/getOrdersByPartNumber?email=partner@gmail.com&amp;password=12345678&amp;productId=232-2-4342-2343-3
 </body>
 
 <c:import url="nav.html"></c:import>

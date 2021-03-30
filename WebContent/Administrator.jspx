@@ -82,11 +82,11 @@
 		<div class="row justify-content-center">
 			<fieldset class="col-6">
 				<legend>Sign In As Administrator</legend>
-				<form action="" method="POST" class="loginForm">
+				<form action="AdministratorLoginPage" method="POST" class="loginForm" >
 					<div class="mb-4">
-						<label for="adminEmail" class="form-label">Email address </label> <input
-							name="adminEmail" type="text" class="form-control" id="adminEmail"
-							required="required"></input>
+						<label for="adminEmail" class="form-label">Email address </label>
+						<input name="adminEmail" type="text" class="form-control"
+							id="adminEmail" required="required"></input>
 
 					</div>
 					<div class="mb-4">
@@ -96,7 +96,7 @@
 					</div>
 
 					<c:choose>
-						<c:when test="${loginfailed eq 'failed'}">
+						<c:when test="${adminLoginFailed eq 'failed'}">
 							<p style="color: red;">Incorrect Email and or password, not
 								enough access rights</p>
 						</c:when>

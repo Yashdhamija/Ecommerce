@@ -61,11 +61,11 @@
 						</ul></li>
 
 				<c:choose>
-						<c:when test="${sessionScope.partnerButton eq 'present'}">
+						<c:when test="${sessionScope.UserType eq 'partner'}">
 
 
 							<li class="nav-item"><a class="nav-link active"
-								aria-current="page" href="Home?restcall=true">RestCall</a></li>
+								aria-current="page" href="Home?restcall=true">Rest API</a></li>
 						</c:when>
 
 						<c:otherwise>

@@ -41,18 +41,18 @@ public class Home extends HttpServlet {
 	}
 
 	public void Dispatcher(HttpServletRequest request, HttpServletResponse response)
-			throws ClassNotFoundException, ServletException, IOException, SQLException { // This dispatches to each
-																							// component of
-		// this class acting as the front controller going to different pages such as
+			throws ClassNotFoundException, ServletException, IOException, SQLException { 
+																							
+		
 
-		if (request.getParameter("reviewform") != null) {
+		if (request.getParameter("reviewform") != null) { // This is for when user clicks the write a review button on the bookinformation.jspx page 
 
 			request.getSession().setAttribute("reviewbookid", request.getParameter("reviewform"));
 			if (request.getSession().getAttribute("name") != null) {
 
 				try {
 
-					request.setAttribute("review", "true");
+					request.setAttribute("review", "true"); 
 					String bid = (String) request.getSession().getAttribute("bookid");
 					System.out.println("Bid is " + bid);
 					request.setAttribute("bookinfo", this.model.retrieveInfoOfBook(bid));
@@ -67,13 +67,13 @@ public class Home extends HttpServlet {
 
 			else {
 
-				response.sendRedirect("/BookLand/Login");
+				response.sendRedirect("/BookLand/Login"); 
 
 			}
 
 		}
 
-		else if (request.getParameter("bookinfo") != null) {
+		else if (request.getParameter("bookinfo") != null) { //This is triggered when the bookTitle is clicked in the bookstore.jspx
 			String bid = request.getParameter("bookinfo");
 			request.getSession().setAttribute("bookid", bid);
 			openIndividualBook(request, response);
@@ -81,26 +81,36 @@ public class Home extends HttpServlet {
 		}
 
 		else if (request.getParameter("submitreview") != null) {
-			System.out.println("I am in submit");
-			SubmitReview(request, response);
+			
+			SubmitReview(request, response); // This is called when user submits review in the bookinformation.jspx page
 		}
 
 		else if ((request.getRequestURI().equals("/BookLand/Home") && request.getQueryString() == null)
 				|| (request.getRequestURI().equals("/BookLand/Home")
 						&& !this.model.retrieveBookTitle(request.getParameter("addtocart")).equals(""))) {
 
-			HomePage(request, response);
+			HomePage(request, response); // This is all the correct URLs with \Home\*
 
 		}
-		else if (request.getParameter("category") != null) {
+		else if (request.getParameter("category") != null) { // This is for displaying the books based on category
 			
 			displayBooksInCategory(request,response);
 			
 		}
 		
-		else if (request.getParameter("search") != null) { 
+		else if (request.getParameter("search") != null) {  // This is for searching the books
 			
 			searchForBooks(request,response);
+		}
+		
+		else if(request.getParameter("restcall") != null && request.getParameter("restcall").equals("true") &&
+				request.getSession().getAttribute("UserType") != null && 
+				request.getSession().getAttribute("UserType").equals("partner")) { // This is for clicking the rest API for partners
+			
+			
+				request.getRequestDispatcher("/restcall.jspx").forward(request, response);
+			
+			
 		}
 
 		else {
@@ -235,6 +245,9 @@ public class Home extends HttpServlet {
 		}
 
 	}
+	
+	
+	
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -245,17 +258,15 @@ public class Home extends HttpServlet {
 		// TODO Auto-generated method stub
 
 		try {
-			
+
 			// This is for the reason where counter gets null look into this
-			
-			if(request.getSession().getAttribute("counter") == null) {
-				
+
+			if (request.getSession().getAttribute("counter") == null) {
+
 				CounterBean counter = new CounterBean();
 				request.getSession().setAttribute("counter", counter);
 			}
-			
-			
-			
+
 			this.Dispatcher(request, response);
 			System.out.println("MY value is" + request.getParameter("loginButton"));
 		} catch (ClassNotFoundException | ServletException | IOException e) {

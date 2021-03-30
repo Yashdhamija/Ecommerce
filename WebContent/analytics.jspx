@@ -81,7 +81,7 @@
 	</div>
 
 	<!-- top books sold for a month -->
-	<form class="topMonth">
+	<form  action="Analytics" class="topMonth">
 		<label for="topMonth">Most sold for: </label> <select name="topMonth"
 			id="topMonth">
 			<c:forEach var="result" items="${topMonthList}">

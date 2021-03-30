@@ -139,6 +139,45 @@ public class DAO { // DB class
 		return name;
 	}
 	
+	public boolean IsAdminValidated(String email, String password) {
+		String dbEmail = null;
+		String dbPassword = null;
+		boolean isAdmin = false;
+		getRemoteConnection();
+		try {
+
+			this.stmt = this.con.createStatement();
+			String query = "SELECT email,password FROM AdminBookStore WHERE email='" + email + "' AND password='"
+					+ password + "'";
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery(query);
+			while (rs.next()) {
+				dbEmail = rs.getString("email");
+				dbPassword = rs.getString("password");
+
+			}
+
+			if (dbEmail != null && dbPassword != null) {
+
+				isAdmin = true;
+
+			}
+
+			rs.close();
+			con.close();
+
+		} catch (SQLException se) {
+			se.printStackTrace();
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return isAdmin;
+	}
+	
+	
 	
 	public int insertAdminIntoDB(String email,String fname,String lname,String password) throws SQLException {
 		getRemoteConnection();
