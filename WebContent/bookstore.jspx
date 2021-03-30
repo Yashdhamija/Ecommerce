@@ -89,13 +89,13 @@
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">
 
-						<form action="Home" class="d-flex" method="POST">
+						<form action="Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
 						
 						<div class="thecart">
-							<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+							<a href="/BookLand/Cart?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 						</div>
 					</c:when>
 
@@ -105,7 +105,7 @@
 							href="/BookLand/Login">LogIn/Register</a>
 
 
-						<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+						<a href="/BookLand/Cart?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 
 					</c:otherwise>
 
@@ -153,7 +153,7 @@
 						</form>
 
 						<p class="bookprice">$${result.getPrice()}</p>
-						<form action="Home" class="d-flex" method="GET">
+						<form action="/BookLand/Cart" class="d-flex" method="GET">
 							<button name="addtocart" id="addtocart" value="${result.getBid()}" class="btn btn-outline-primary btn-sm">Add
 							to Cart</button>
 						</form>
@@ -180,7 +180,7 @@
 						<p class="bookprice">$${books.getPrice()}</p>
 						
 						
-						<form action="Home" class="d-flex" method="GET">
+						<form action="/BookLand/Cart" class="d-flex" method="GET">
 							<button name="addtocart" id="addtocart" value="${books.getBid()}" class="btn btn-outline-primary btn-sm">Add
 							to Cart</button>
 						</form>
@@ -207,7 +207,7 @@
 
 						<p class="bookprice">$${book.getPrice()}</p>
 
-						<form action="Home" class="d-flex" method="GET">
+						<form action="/BookLand/Cart" class="d-flex" method="GET">
 							<button class="btn btn-outline-primary btn-sm" id="addtocart"
 								name="addtocart" value="${book.getBid()}">Add to Cart</button>
 						</form>

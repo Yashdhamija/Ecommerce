@@ -13,22 +13,22 @@ public class UserBean {
 	}
 
 
-	public String getFname() {
+	public String getFirstname() {
 		return fname;
 	}
 
 
-	public void setFname(String fname) {
+	public void setFirstname(String fname) {
 		this.fname = fname;
 	}
 
 
-	public String getLname() {
+	public String getLastname() {
 		return lname;
 	}
 
 
-	public void setLname(String lname) {
+	public void setLastname(String lname) {
 		this.lname = lname;
 	}
 

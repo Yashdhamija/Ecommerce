@@ -2,27 +2,20 @@ package bean;
 
 public class CartBean {
 	
-	int id;
+	
 	String bookid;
 	int price;
 	String title;
 	int quantity;
 	
-	public CartBean(int id, String bid, int price, String title, int quantity) {
-		this.id = id;
+	public CartBean(String bid, int price, String title, int quantity) {
+	
 		this.bookid = bid;
 		this.price = price;
 		this.title = title;
 		this.quantity = quantity;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getBookid() {
 		return bookid;

@@ -22,6 +22,38 @@
       <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
   
+
+
+
+
+
+ <servlet>
+    <servlet-name>Login</servlet-name>
+    <servlet-class>Login.controller</servlet-class>
+</servlet>
+
+
+ <servlet>
+    <servlet-name>Register</servlet-name>
+    <servlet-class>Register.controller</servlet-class>
+</servlet>
+
+ <servlet>
+    <servlet-name>Cart</servlet-name>
+    <servlet-class>Cart.controller</servlet-class>
+</servlet>
+
+ <servlet>
+    <servlet-name>Payment</servlet-name>
+    <servlet-class>Payment.controller</servlet-class>
+</servlet>
+
+
+
+
+
+
+
   <display-name>BookLand</display-name>
   
   

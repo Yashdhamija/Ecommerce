@@ -10,6 +10,7 @@ import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -71,9 +72,9 @@ public class BookStoreModel {
 		this.dao.insertPurchaseOrder(orderId, fname, lname, status, email);
 	}
 
-	public int insertPOItem(String email, String bid, int price, int quantity) throws SQLException {
+	public int insertPOItem(int orderId, String bid, int price, int quantity) throws SQLException {
 
-		return this.dao.insertPurchaseOrderItem(email, bid, price, quantity);
+		return this.dao.insertPurchaseOrderItem(orderId, bid, price, quantity);
 
 	}
 
@@ -82,13 +83,13 @@ public class BookStoreModel {
 		return this.dao.insertAdminIntoDB(email, fname, lname, password);
 	}
 
-	public String getPartnerPassword(String password) {
-		return this.dao.retrievePartnerPassword(password);
+	public boolean isVisitorExist(String email, String password) throws NoSuchAlgorithmException {
+		return this.dao.IsVisitorExistInDB(email, this.encryptPassword(password));
 
 	}
 
-	public String getEmail(String email) {
-		return this.dao.retrieveEmail(email);
+	public boolean isPartnerExist(String email, String password) throws NoSuchAlgorithmException {
+		return this.dao.IsPartnerExistInDB(email, this.encryptPassword(password));
 	}
 
 	public String getPassword(String password) {
@@ -167,36 +168,29 @@ public class BookStoreModel {
 	// Cart methods
 
 	// This method returns the total in the cart. This method should be double**
-	public int cartTotal(List<CartBean> l) {
+	public int cartTotal(Map<String, CartBean> cart) {
 		int total = 0;
+		for (Map.Entry<String, CartBean> entry : cart.entrySet()) {
 
-		for (int i = 0; i < l.size(); i++) {
-			total += l.get(i).getPrice() * l.get(i).getQuantity();
+			CartBean book = entry.getValue();
+			total += book.getPrice() * book.getQuantity();
+
 		}
-
 		return total;
 	}
 
-	public List<CartBean> remove(String bid, List<CartBean> l) {
+	public Map<String, CartBean> remove(String bid, Map<String, CartBean> cart) {
 
-		for (int i = 0; i < l.size(); i++) {
-			if (l.get(i).getBookid().equals(bid)) {
-				l.remove(i);
-			}
-		}
-		return l;
+		cart.remove(bid);
+		return cart;
+
 	}
 
 	//
-	public List<CartBean> quantityUpdate(List<CartBean> l, int quantity, String bid) {
-		int newTotal = 0;
-		for (int i = 0; i < l.size(); i++) {
-			if (l.get(i).getBookid().equals(bid)) {
-				l.get(i).setQuantity(quantity);
-
-			}
-		}
-		return l;
+	public Map<String,CartBean> quantityUpdate(Map<String,CartBean> cart, int quantity, String bid) {
+	
+		cart.get(bid).setQuantity(quantity);
+		return cart;
 	}
 
 	public int getIncrementCounter() {
@@ -215,14 +209,16 @@ public class BookStoreModel {
 	}
 
 	public int OrderNumberGenerator() {
-
-		int random = (int) (Math.random() * 1000000);
+		Random random = new Random();
+		int number =  random.nextInt(1000000);
+		System.out.println("This is the generateed number"+ number);
+		//int number = (int) (Math.random() * 1000000);
 		int orderNum = 0;
 
-		if (!this.orderNumber.contains(random)) {
+		if (!this.orderNumber.contains(number)) {
 
-			this.orderNumber.add(random);
-			orderNum = random;
+			this.orderNumber.add(number);
+			orderNum = number;
 			return orderNum;
 		}
 
@@ -260,9 +256,8 @@ public class BookStoreModel {
 	public boolean isValidAdmin(String email, String password) {
 		String dbEmail = this.dao.getAdminEmail(email);
 		String dbPassword = this.dao.getAdminPwd(password);
-		System.out.println("The email is"+ dbEmail);
-		System.out.println("The password is"+dbPassword);
-		
+		System.out.println("The email is" + dbEmail);
+		System.out.println("The password is" + dbPassword);
 
 		if (dbEmail != null && dbPassword != null & dbEmail.equals(email) && dbPassword.equals(password)) {
 

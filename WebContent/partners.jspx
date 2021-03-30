@@ -10,10 +10,7 @@
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/style/Validation.js">
-	;
-</script>
+
 <head>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet"></link>
@@ -65,7 +62,7 @@
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">
 
-						<form action="Home" class="d-flex" method="POST">
+						<form action="Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
@@ -87,11 +84,14 @@
 
 
 	<section>
+	
+	 
 
 
 		<div class="container">
 			<div class="row justify-content-center">
-				<form action="" method="POST" onsubmit="return validate();"
+			 <p>Partner Registeration Form </p>
+				<form action="Register" method="POST" onsubmit="return validate();"
 					class="row g-3">
 					<div class="col-md-6">
 						<label for="fname" class="form-label">First Name</label> <input
@@ -112,7 +112,7 @@
 					<div class="col-12">
 						<label for="uidpassword" class="form-label">Password (8
 							characters minimum)</label> <input type="password" class="form-control"
-							name="uidpassword" minlength="8" required="required"
+							name="password" minlength="8" required="required"
 							id="uidpassword"></input>
 					</div>
 
@@ -174,7 +174,7 @@
 
 
 					<c:choose>
-						<c:when test="${uidexists eq 'yes'}">
+						<c:when test="${partnerexists eq 'yes'}">
 							<p style="color: red;">Email Address Already Exists Please try again!</p>
 						</c:when>
 

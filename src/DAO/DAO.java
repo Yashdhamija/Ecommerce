@@ -219,9 +219,10 @@ public class DAO { // DB class
 		return result;
 	}
 
-	public int insertPurchaseOrderItem(String email, String bid, int price, int quantity) throws SQLException {
+	public int insertPurchaseOrderItem(int orderId, String bid, int price, int quantity) throws SQLException {
 
-		int orderId = this.retrieveOrderIdFromPO(email);
+		//int orderId = this.retrieveOrderIdFromPO(email);
+		System.out.println("This is the orderId from POItem"+orderId);
 		getRemoteConnection();
 		String query = "INSERT INTO POItem VALUES(?,?,?,?)";
 		PreparedStatement ps = con.prepareStatement(query);
@@ -256,29 +257,31 @@ public class DAO { // DB class
 		return result;
 	}
 
-	public String retrieveEmail(String email) { // For Signing up, if previous email exists then it checks
-		String s = null;
-		String e = null;
+	public boolean IsVisitorExistInDB(String email,String password) { // For Signing up, if previous email exists then it checks
+		String dbEmail = null;
+		String dbPassword = null;
+		boolean visitorExist = false;
 		getRemoteConnection();
 		try {
 
 			this.stmt = this.con.createStatement();
-			String query = "SELECT email FROM Users WHERE email='" + email + "'";
+			String query = "SELECT email,password FROM Users WHERE email='" + email + "' AND password='" + password + "'";
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery(query);
 
 			while (rs.next()) {
-				e = rs.getString("email");
+				dbEmail = rs.getString("email");
+				dbPassword = rs.getString("password");
+				System.out.println("This value inside the DB"+ dbEmail);
+				System.out.println("This value inside the DB"+ dbPassword);
 				// System.out.println(e);
 			}
-			if (e != null && e.equals(email)) {
-				s = "email exists";
+			if (dbEmail != null  && dbPassword != null) {
+				
+				visitorExist = true;
 			}
 
-			else {
-				s = "customer email does not exist";
-
-			}
+		
 
 			rs.close();
 			ps.close();
@@ -292,7 +295,7 @@ public class DAO { // DB class
 			ex.printStackTrace();
 		}
 
-		return s;
+		return visitorExist;
 	}
 
 	public List<ReviewBean> retriveReviews(String bid) throws SQLException {
@@ -417,27 +420,26 @@ public class DAO { // DB class
 		return maximum;
 	}
 
-	public String retrievePartnerPassword(String password) {
+	public boolean IsPartnerExistInDB(String email, String password) {
 
-		String s = null;
-		String p = null;
+		String dbEmail =null;
+		String dbPassword = null;
+		boolean partnerExist = false;
 		getRemoteConnection();
 		try {
 			this.stmt = this.con.createStatement();
-			String query = "SELECT password FROM Partners WHERE password='" + password + "'";
+			String query = "SELECT email,password FROM Partners WHERE password='" + password + "' AND email='" + email +"'";
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery(query);
 
 			while (rs.next()) {
-				p = rs.getString("password");
-				// System.out.println(e);
+				dbPassword = rs.getString("password");
+				dbEmail =  rs.getString("email");
+				
 			}
-			if (p != null && p.equals(password)) {
-				s = "partner password exists";
-			} else {
-				s = "incorrect password provided";
+			if (dbEmail != null && dbPassword != null) {
+				partnerExist = true;
 			}
-
 			rs.close();
 			ps.close();
 			con.close();
@@ -450,7 +452,7 @@ public class DAO { // DB class
 			e.printStackTrace();
 		}
 
-		return s;
+		return partnerExist;
 
 	}
 
@@ -492,7 +494,11 @@ public class DAO { // DB class
 		}
 		return s;
 	}
+	
+	
+	
 
+    // Don't forgot to change this as someone can put the bid that isn't right by means of a subset of actual bid
 	public List<BookBean> retreivebookrecord(String bid) throws SQLException {
 		getRemoteConnection();
 		List<BookBean> l = new ArrayList<BookBean>();
@@ -520,7 +526,7 @@ public class DAO { // DB class
 	}
 
 	public String retrieveSingleBookTitle(String bid) throws SQLException {
-		String btitle = null;
+		String btitle = "";
 		getRemoteConnection();
 
 		String query = "SELECT title FROM Book WHERE bid='" + bid + "'";

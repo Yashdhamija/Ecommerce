@@ -10,10 +10,7 @@
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/style/Validation.js">
-	;
-</script>
+
 <head>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet"></link>
@@ -93,7 +90,7 @@
 
 		<div class="container">
 			<div class="row justify-content-center">
-				<form  action="" method="POST" onsubmit="return validate();"
+				<form  action="Register" method="POST" onsubmit="return validate();"
 					class="row g-3">
 					<div class="col-md-6">
 						<label for="fname" class="form-label">First Name</label> <input
@@ -129,7 +126,7 @@
 					</div>
 					<div class="col-md-2">
 						<label for="province" class="form-label">Province</label> 
-						<select  name="province" id="province" class="form-select">
+						<select  name="province" id="province" class="form-select" required="required">
 						<option selected="selected"></option>
 						<option>Alberta</option>
 						<option>British Columbia</option>
@@ -167,14 +164,14 @@
 
 					<div class="col-md-4">
 						<label for="country" class="form-label">Country</label> 
-						<select  name="country" id="country" class="form-select">
+						<select  name="country" id="country" class="form-select" required="required">
 						<option selected="selected"></option>
 						<option>Canada</option>
 					</select>
 					</div>
 					
 					<c:choose>
-						<c:when test="${emailexists eq 'yes'}">
+						<c:when test="${emailexists eq true}">
 							<p style="color:red;">Email Already Exists Please try again!</p>
 						</c:when>
 

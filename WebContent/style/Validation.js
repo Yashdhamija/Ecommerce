@@ -83,8 +83,6 @@ function SignUpAjax(address) {
 	};
 	request.send();
 
-
-
 }
 
 

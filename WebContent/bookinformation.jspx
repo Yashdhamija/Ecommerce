@@ -58,19 +58,19 @@
 
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">
-						<form action="Home" class="d-flex" method="POST">
+						<form action="Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">Logout</button>
 						</form>
 					</c:when>
 
 					<c:otherwise>
-						<form action="Home" class="d-flex" method="POST">
+						<form action="/BookLand/Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="login" name="login"
 								value="true">Login/Register</button>
 						</form>
 
-						<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+						<a href="/BookLand/Cart?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 
 					</c:otherwise>
 
@@ -94,14 +94,14 @@
 				<p id="pprice">Price: $ ${book.getPrice()}</p>
 
 
-				<form action="Home" class="d-flex" method="GET">
-					<button class="btn btn-outline-primary btn-me " id="addtocart"
+				<form action="/BookLand/Cart" class="d-flex" method="GET">
+					<button class= "btn btn-outline-primary btn-me"  id="addtocart"
 						name="addtocart" value="${book.getBid()}">Add to Cart</button>
 				</form>
 
 
 				<c:choose>
-					<c:when test="${review eq true}">
+					<c:when test="${review eq 'true'}">
 						<form action="Home" method="POST">
 							<label for="fname">First Name</label> <input type="text"
 								id="fname" name="fname" required="required"
