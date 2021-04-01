@@ -74,9 +74,25 @@
 						</form>
 
 						<div class="thecart">
-							<a href="/BookLand/Cart?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+								class="material-icons">shopping_cart</i></a>
 						</div>
 					</c:when>
+					
+					
+						<c:when test="${sessionScope.adminValidated eq 'validated'}">
+
+						<form action="Login" class="d-flex" method="POST">
+							<button class="btn btn-outline-success" id="logout" name="logout"
+								value="true">LogOut</button>
+						</form>
+
+						<div class="thecart">
+							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+								class="material-icons">shopping_cart</i></a>
+						</div>
+					</c:when>
+					
 
 					<c:otherwise>
 
@@ -84,7 +100,8 @@
 							href="/BookLand/Login">LogIn/Register</a>
 
 
-						<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+							class="material-icons">shopping_cart</i></a>
 
 					</c:otherwise>
 

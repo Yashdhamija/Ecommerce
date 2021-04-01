@@ -15,7 +15,7 @@ public class Partner {
 
 	@GET
 	@Path("/read/getProductInfo")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public String getProductInfo(@QueryParam("email") String email, @QueryParam("password") String password,
 			@QueryParam("productId") String productId)
 			throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
@@ -38,7 +38,7 @@ public class Partner {
 
 	@GET
 	@Path("/read/getOrdersByPartNumber")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public String getOrdersByPartNumber(@QueryParam("email") String email, @QueryParam("password") String password,
 			@QueryParam("productId") String productId)
 			throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {

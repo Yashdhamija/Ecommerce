@@ -11,7 +11,7 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Insert title here</title>
+<title>Please Try Again</title>
 <link rel="StyleSheet" href="style/ui.css" type="text/css"
 	title="cse4413" media="screen, print" />
 
@@ -93,7 +93,7 @@
 						</form>
 						
 						<div class="thecart">
-							<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+							<a class="carticon" href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 						</div>
 					</c:when>
 
@@ -103,7 +103,7 @@
 							href="/BookLand/Login">LogIn/Register</a>
 
 
-						<a href="/BookLand/Cart?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 
 					</c:otherwise>
 

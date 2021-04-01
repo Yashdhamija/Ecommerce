@@ -28,14 +28,15 @@ public class OrderConfirmation extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	
-    
 
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		request.getRequestDispatcher("/Confirmation.jspx").forward(request, response);
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		request.getSession().removeAttribute("cartsize");
+		request.getSession().removeAttribute("carttotal");
+		request.getSession().removeAttribute("shoppingcart");
+		
 	}
 
 	/**

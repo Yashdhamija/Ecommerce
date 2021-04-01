@@ -55,24 +55,19 @@ public class DAO { // DB class
 
 	}
 
-	public int insertUserDB(String fname, String lname, String email, String password) throws SQLException { // Insert
-																												// DB
-																												// for
-																												// new
-																												// users
+	public int insertUserDB(String fname, String lname, String email, String password) throws SQLException {
 
-		count = getMaxAddressId();
 		getRemoteConnection();
 
-		String query = "INSERT INTO Users VALUES(?,?,?,?,?)";
+		String query = "INSERT INTO Users VALUES(?,?,?,?,?,?)";
 
 		PreparedStatement ps = con.prepareStatement(query);
-
-		ps.setString(1, fname);
-		ps.setString(2, lname);
-		ps.setString(3, email);
-		ps.setString(4, password);
-		ps.setInt(5, count);
+		ps.setString(1, null);
+		ps.setString(2, fname);
+		ps.setString(3, lname);
+		ps.setString(4, email);
+		ps.setInt(5, 0); // Usertype 0 is customer
+		ps.setString(6, password);
 
 		int result = ps.executeUpdate();
 		ps.close();
@@ -87,7 +82,7 @@ public class DAO { // DB class
 		try {
 
 			this.stmt = this.con.createStatement();
-			String query = "SELECT fname FROM Users WHERE email='" + email + "'";
+			String query = "SELECT fname FROM Users WHERE email='" + email + "' AND usertype=0";
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery(query);
 			while (rs.next()) {
@@ -117,7 +112,7 @@ public class DAO { // DB class
 		try {
 
 			this.stmt = this.con.createStatement();
-			String query = "SELECT fname FROM Partners WHERE email='" + email + "'";
+			String query = "SELECT fname FROM Users WHERE email='" + email + "' AND usertype=1";
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery(query);
 			while (rs.next()) {
@@ -138,7 +133,7 @@ public class DAO { // DB class
 		System.out.println(name);
 		return name;
 	}
-	
+
 	public boolean IsAdminValidated(String email, String password) {
 		String dbEmail = null;
 		String dbPassword = null;
@@ -176,10 +171,8 @@ public class DAO { // DB class
 
 		return isAdmin;
 	}
-	
-	
-	
-	public int insertAdminIntoDB(String email,String fname,String lname,String password) throws SQLException {
+
+	public void insertAdminIntoDB(String email, String fname, String lname, String password) throws SQLException {
 		getRemoteConnection();
 		String query = "INSERT INTO AdminBookStore VALUES(?,?,?,?)";
 		PreparedStatement ps = con.prepareStatement(query);
@@ -190,22 +183,22 @@ public class DAO { // DB class
 		int result = ps.executeUpdate();
 		ps.close();
 		con.close();
-		return result;
+		// return result;
 	}
 
-	public int insertPartnerDB(String email, String password, String fname, String lname) throws SQLException {
+	public int insertPartnerDB(String fname, String lname, String email, String password) throws SQLException {
 		getRemoteConnection();
-		c = getMaxAddressId();
 
-		String query = "INSERT INTO Partners VALUES(?,?,?,?,?)";
-
+		String query = "INSERT INTO Users VALUES(?,?,?,?,?,?)";
+		System.out.println("The length is" + fname.length());
+		System.out.println("The length is" + lname.length());
 		PreparedStatement ps = con.prepareStatement(query);
-
-		ps.setString(1, email);
-		ps.setString(2, password);
-		ps.setInt(3, c);
-		ps.setString(4, fname);
-		ps.setString(5, lname);
+		ps.setString(1, null);
+		ps.setString(2, fname);
+		ps.setString(3, lname);
+		ps.setString(4, email);
+		ps.setInt(5, 1); // 1 is for partners and 0 is customers
+		ps.setString(6, password);
 		int result = ps.executeUpdate();
 		ps.close();
 		con.close();
@@ -239,7 +232,7 @@ public class DAO { // DB class
 		getRemoteConnection();
 		String query = "INSERT INTO PO VALUES(?,?,?,?,?,?)";
 		PreparedStatement ps = con.prepareStatement(query);
-		int addressId = retrieveAddressId(email);
+		int customerId = retrieveCustomerId(email);
 		Date date = new Date();
 		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		int year = localDate.getYear();
@@ -250,7 +243,7 @@ public class DAO { // DB class
 		ps.setString(2, fname);
 		ps.setString(3, lname);
 		ps.setString(4, status);
-		ps.setInt(5, addressId);
+		ps.setInt(5, customerId);
 		ps.setString(6, dateString);
 		int result = ps.executeUpdate();
 		ps.close();
@@ -260,8 +253,8 @@ public class DAO { // DB class
 
 	public int insertPurchaseOrderItem(int orderId, String bid, int price, int quantity) throws SQLException {
 
-		//int orderId = this.retrieveOrderIdFromPO(email);
-		System.out.println("This is the orderId from POItem"+orderId);
+		// int orderId = this.retrieveOrderIdFromPO(email);
+		System.out.println("This is the orderId from POItem" + orderId);
 		getRemoteConnection();
 		String query = "INSERT INTO POItem VALUES(?,?,?,?)";
 		PreparedStatement ps = con.prepareStatement(query);
@@ -274,16 +267,16 @@ public class DAO { // DB class
 		ps.close();
 		con.close();
 		return result;
-	
+
 	}
 
-	public int insertAddress(String street, String province, String country, String zip, String phone, String city)
-			throws SQLException {
+	public int insertAddress(String email, String street, String province, String country, String zip, String phone,
+			String city) throws SQLException {
 		getRemoteConnection();
 		String query = "INSERT INTO Address VALUES(?,?,?,?,?,?,?)";
 		PreparedStatement ps = con.prepareStatement(query);
-
-		ps.setString(1, null);
+		int customerid = retrieveCustomerId(email);
+		ps.setInt(1, customerid);
 		ps.setString(2, street);
 		ps.setString(3, province);
 		ps.setString(4, country);
@@ -296,7 +289,8 @@ public class DAO { // DB class
 		return result;
 	}
 
-	public boolean IsVisitorExistInDB(String email,String password) { // For Signing up, if previous email exists then it checks
+	public boolean IsVisitorExistInDB(String email, String password) { // For Signing up, if previous email exists then
+																		// it checks
 		String dbEmail = null;
 		String dbPassword = null;
 		boolean visitorExist = false;
@@ -304,23 +298,22 @@ public class DAO { // DB class
 		try {
 
 			this.stmt = this.con.createStatement();
-			String query = "SELECT email,password FROM Users WHERE email='" + email + "' AND password='" + password + "'";
+			String query = "SELECT email,password FROM Users WHERE email='" + email + "' AND password='" + password
+					+ "' AND usertype=0";
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery(query);
 
 			while (rs.next()) {
 				dbEmail = rs.getString("email");
 				dbPassword = rs.getString("password");
-				System.out.println("This value inside the DB"+ dbEmail);
-				System.out.println("This value inside the DB"+ dbPassword);
+				System.out.println("This value inside the DB" + dbEmail);
+				System.out.println("This value inside the DB" + dbPassword);
 				// System.out.println(e);
 			}
-			if (dbEmail != null  && dbPassword != null) {
-				
+			if (dbEmail != null && dbPassword != null) {
+
 				visitorExist = true;
 			}
-
-		
 
 			rs.close();
 			ps.close();
@@ -366,13 +359,13 @@ public class DAO { // DB class
 
 	public int retrieveOrderIdFromPO(String email) throws SQLException {
 
-		int addressId = this.retrieveAddressId(email);
+		int customerId = this.retrieveCustomerId(email);
 		int orderId = 0;
 
 		getRemoteConnection();
 		List<ReviewBean> list = new ArrayList<ReviewBean>();
 
-		String query = "SELECT * FROM PO WHERE address='" + addressId + "'";
+		String query = "SELECT * FROM PO WHERE address='" + customerId + "'";
 
 		PreparedStatement ps = con.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
@@ -446,35 +439,23 @@ public class DAO { // DB class
 		return price;
 	}
 
-	public int getMaxAddressId() throws SQLException {
-		int maximum = 0;
-		getRemoteConnection();
-		String query = "SELECT Max(id) as max FROM Address";
-		PreparedStatement ps = con.prepareStatement(query);
-		ResultSet rs = ps.executeQuery();
-
-		while (rs.next()) {
-			maximum = rs.getInt("max");
-		}
-		return maximum;
-	}
-
 	public boolean IsPartnerExistInDB(String email, String password) {
 
-		String dbEmail =null;
+		String dbEmail = null;
 		String dbPassword = null;
 		boolean partnerExist = false;
 		getRemoteConnection();
 		try {
 			this.stmt = this.con.createStatement();
-			String query = "SELECT email,password FROM Partners WHERE password='" + password + "' AND email='" + email +"'";
+			String query = "SELECT email,password FROM Users WHERE password='" + password + "' AND email='" + email
+					+ "' AND usertype=1";
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery(query);
 
 			while (rs.next()) {
 				dbPassword = rs.getString("password");
-				dbEmail =  rs.getString("email");
-				
+				dbEmail = rs.getString("email");
+
 			}
 			if (dbEmail != null && dbPassword != null) {
 				partnerExist = true;
@@ -495,50 +476,9 @@ public class DAO { // DB class
 
 	}
 
-	public String retrievePartnerEmail(String email) { // For Signing up, if previous email exists then it checks
-		String s = "partner email doesn't exist";
-		String u = null;
-		getRemoteConnection();
-		try {
-
-			this.stmt = this.con.createStatement();
-			String query = "SELECT email FROM Partners WHERE email='" + email + "'";
-			PreparedStatement ps = con.prepareStatement(query);
-			ResultSet rs = ps.executeQuery(query);
-
-			while (rs.next()) {
-				u = rs.getString("email");
-				// System.out.println(e);
-			}
-			if (u != null && u.equals(email)) {
-				s = "partner email exists";
-			}
-
-			else {
-
-				s = "partner email does not exists";
-
-			}
-
-			rs.close();
-			ps.close();
-			con.close();
-
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return s;
-	}
-	
-	
-	
-
-    // Don't forgot to change this as someone can put the bid that isn't right by means of a subset of actual bid
-	public List<BookBean> retreivebookrecord(String bid) throws SQLException {
+	// Don't forgot to change this as someone can put the bid that isn't right by
+	// means of a subset of actual bid
+	public List<BookBean> retreivebookrecord(String bid) throws SQLException { // This is for search functionality improve this
 		getRemoteConnection();
 		List<BookBean> l = new ArrayList<BookBean>();
 
@@ -564,7 +504,7 @@ public class DAO { // DB class
 		return l;
 	}
 
-	public String retrieveSingleBookTitle(String bid) throws SQLException {
+	public String retrieveSingleBookTitle(String bid) throws SQLException { // change this to the below method grabbing all information return bookbean and just get title
 		String btitle = "";
 		getRemoteConnection();
 
@@ -583,53 +523,79 @@ public class DAO { // DB class
 		return btitle;
 	}
 	
-	public BookBean getProductJSON(String productId) throws SQLException {
-        List<BookBean> l = new ArrayList<BookBean>();
-        l = retreivebookrecord(productId);
-        return l.get(0);
-
-    }
 	
+	public  BookBean retrieveBook(String bid) throws SQLException { // change this to the below method grabbing all information return bookbean and just get title
+		BookBean book = null;
+		getRemoteConnection();
+
+		String query = "SELECT * FROM Book WHERE bid='" + bid + "'";
+
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			book = new BookBean(rs.getString("bid"), 
+					rs.getString("title"),
+					rs.getInt("price"),
+					rs.getString("category"),
+					rs.getString("imageurl"));
+			
+			
+		}
+
+		rs.close();
+		ps.close();
+		con.close();
+		return book;
+	}
+
+
+	public BookBean getProductJSON(String productId) throws SQLException {
+		List<BookBean> l = new ArrayList<BookBean>();
+		l = retreivebookrecord(productId);
+		return l.get(0);
+
+	}
+
 	public List<OrderBean> getOrdersByPartNumber(String bid) throws SQLException {
-		
-        String orderId;
-        String lname;
-        String fname;
-        String status;
-        String address;
-        String date;
-        int quantity;
-        int unitPrice;
-        
-        List<OrderBean> orderList = new ArrayList<>();
-        getRemoteConnection();
-        String query = String.format("SELECT * FROM PO,POItem WHERE PO.orderid=POItem.id AND POItem.bid='%s'", bid);
-        PreparedStatement ps = con.prepareStatement(query);
-//        ps.setString(1,bid);
-        ResultSet rs = ps.executeQuery(query);
 
+		String orderId;
+		String lname;
+		String fname;
+		String status;
+		int customerId;
+		String date;
+		int quantity;
+		int unitPrice;
 
-        while (rs.next()) {
-            orderId = rs.getString("PO.orderid");
-            lname = rs.getString("lname");
-            fname = rs.getString("fname");
-            status = rs.getString("status");
-            address = rs.getString("address");
-            date = rs.getString("date");
-            quantity = rs.getInt("quantity");
-            unitPrice = rs.getInt("price");
-            OrderBean order = new OrderBean(orderId, quantity, unitPrice, lname, fname, status, address, date);
-            orderList.add(order);
+		List<OrderBean> orderList = new ArrayList<>();
+		getRemoteConnection();
+		String query = String.format("SELECT * FROM PO,POItem WHERE PO.orderid=POItem.orderid AND POItem.bid='%s'",
+				bid);
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery(query);
 
-        }
+		while (rs.next()) {
+			orderId = rs.getString("PO.orderid");
+			lname = rs.getString("lname");
+			fname = rs.getString("fname");
+			status = rs.getString("status");
+			customerId = rs.getInt("cid");
+			date = rs.getString("date");
+			quantity = rs.getInt("quantity");
+			unitPrice = rs.getInt("price");
+			OrderBean order = new OrderBean(orderId, quantity, unitPrice, lname, fname, status, customerId, date);
+			orderList.add(order);
 
-        rs.close();
-        ps.close();
-        con.close();
+		}
 
-        return orderList;
+		rs.close();
+		ps.close();
+		con.close();
 
-    }
+		return orderList;
+
+	}
 
 	public List<BookBean> retrievebookinfo(String bid) throws SQLException {
 
@@ -709,32 +675,28 @@ public class DAO { // DB class
 
 	}
 
-	public int retrieveAddressId(String email) throws SQLException {
+	public int retrieveCustomerId(String email) throws SQLException {
 		getRemoteConnection();
-		int aid = 0;
-		int aid2 = 0;
-		// String query = "SELECT Partners.aid, Users.addressid FROM Users,Partners
-		// WHERE Users.email='" + email + "' OR Partners.email='"+ email + "'";
-		String query = "SELECT * FROM (SELECT Partners.aid FROM Partners WHERE Partners.email='" + email
-				+ "'UNION ALL SELECT Users.aid " + "FROM Users WHERE Users.email='" + email + "') AS t";
+		int customerId = 0;
+
+		String query = "SELECT customerid FROM Users WHERE email='" + email + "'";
 
 		PreparedStatement ps = con.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
 
-			aid = rs.getInt("t.aid");
+			customerId = rs.getInt("customerid");
 
 		}
 		rs.close();
 		ps.close();
 		con.close();
-		return aid;
+		return customerId;
 	}
 
-	public AddressBean retrieveAddressById(String email) throws SQLException {
-		int addressid = retrieveAddressId(email);
-		int aid;
+	public AddressBean retrieveAddressByEmail(String email) throws SQLException {
+		int customerid = retrieveCustomerId(email);
 		String street;
 		String province;
 		String city;
@@ -745,13 +707,12 @@ public class DAO { // DB class
 		getRemoteConnection();
 		AddressBean address = null;
 
-		String query = "SELECT * FROM Address WHERE id='" + addressid + "'";
+		String query = "SELECT * FROM Address WHERE cid='" + customerid + "'";
 
 		PreparedStatement ps = con.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
-			aid = rs.getInt("id");
 			street = rs.getString("street");
 			province = rs.getString("province");
 			city = rs.getString("city");
@@ -767,6 +728,44 @@ public class DAO { // DB class
 		return address;
 
 	}
+	
+	public AddressBean retrieveAddressByCustomerId(int cid) throws SQLException {
+		
+		
+		String street;
+		String province;
+		String city;
+		String zip;
+		String country;
+		String phone;
+
+		getRemoteConnection();
+		AddressBean address = null;
+
+		String query = "SELECT * FROM Address WHERE cid='" + cid + "'";
+
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			street = rs.getString("street");
+			province = rs.getString("province");
+			city = rs.getString("city");
+			zip = rs.getString("zip");
+			country = rs.getString("country");
+			phone = rs.getString("phone");
+			address = new AddressBean(country, province, city, street, zip, phone);
+		}
+
+		rs.close();
+		ps.close();
+		con.close();
+		return address;
+
+	}
+	
+	
+
 
 	public UserBean retrieveAllUserInfo(String email) throws SQLException {
 		getRemoteConnection();
@@ -793,27 +792,23 @@ public class DAO { // DB class
 
 	}
 
-	public UserBean RetrievePartnerInfo(String email) throws SQLException {
-
+	public String retrieveUrlOfSingleBook(String bid) throws SQLException {
 		getRemoteConnection();
-		String fname;
-		String lname;
-		UserBean user = null;
-		String query = "SELECT * FROM Partners WHERE email='" + email + "'";
+		String url = null;
+		String query = "SELECT imageurl FROM Book WHERE bid='" + bid + "'";
 
 		PreparedStatement ps = con.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
-			fname = rs.getString("fname");
-			lname = rs.getString("lname");
-			user = new UserBean(fname, lname, email);
+			url = rs.getString("imageurl");
+
 		}
 
 		rs.close();
 		ps.close();
 		con.close();
-		return user;
+		return url;
 
 	}
 
@@ -841,7 +836,7 @@ public class DAO { // DB class
 		con.close();
 		return s;
 	}
-	
+
 	public LinkedHashMap<String, Integer> getTopTenAllTime() throws SQLException {
 		getRemoteConnection();
 		LinkedHashMap<String, Integer> list = new LinkedHashMap<String, Integer>();
@@ -865,7 +860,7 @@ public class DAO { // DB class
 		LinkedHashMap<String, LinkedHashMap<String, Integer>> result = new LinkedHashMap<String, LinkedHashMap<String, Integer>>();
 		LinkedHashMap<String, Integer> list = new LinkedHashMap<String, Integer>();
 
-		String query = "select orderid,substring(`date`,1,7) as dates,POItem.bid,POItem.price,sum(quantity) as quantities, title from (POItem inner join PO on POItem.id=PO.orderid) join Book on POItem.bid = Book.bid group by POItem.bid order by dates, quantities desc;";
+		String query = "select PO.orderid,substring(`date`,1,7) as dates,POItem.bid,POItem.price,sum(quantity) as quantities, title from (POItem inner join PO on POItem.orderid=PO.orderid) join Book on POItem.bid = Book.bid group by POItem.bid order by dates, quantities desc;";
 		PreparedStatement ps = con.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
 
@@ -904,7 +899,7 @@ public class DAO { // DB class
 		List<List<String>> result = new ArrayList<List<String>>();
 		List<String> current = new ArrayList<String>();
 
-		String query = "select PO.lname as lname, PO.fname as fname, sum(POItem.price*POItem.quantity) as total, Address.zip as zip from (PO join POItem on PO.orderid=POItem.id) join Address on Address.id=PO.address group by PO.fname, PO.lname";
+		String query = "select PO.lname as lname, PO.fname as fname, sum(POItem.price*POItem.quantity) as total, Address.zip as zip from (PO join POItem on PO.orderid=POItem.orderid) join Address on Address.cid=PO.cid group by PO.fname, PO.lname";
 		PreparedStatement ps = con.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
 
@@ -918,14 +913,15 @@ public class DAO { // DB class
 
 		return result;
 	}
-	
+
 	public String getAdminPwd(String password) {
-		// password parameter should be encrypted by using BookStoreModel.encryptPassword()
+		// password parameter should be encrypted by using
+		// BookStoreModel.encryptPassword()
 		getRemoteConnection();
 		String p = null;
 		try {
 			this.stmt = this.con.createStatement();
-			String query = "SELECT password FROM AdminBookStore WHERE password='" + password  + "'";
+			String query = "SELECT password FROM AdminBookStore WHERE password='" + password + "'";
 			PreparedStatement ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery(query);
 
@@ -942,7 +938,7 @@ public class DAO { // DB class
 		}
 		return p;
 	}
-	
+
 	public String getAdminEmail(String email) {
 		getRemoteConnection();
 		String p = null;
@@ -965,8 +961,5 @@ public class DAO { // DB class
 		}
 		return p;
 	}
-	
-	
-	
 
 }

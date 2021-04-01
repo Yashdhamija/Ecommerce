@@ -44,12 +44,13 @@
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="home"><a class="nav-link active"
 						aria-current="page" href="Home">Home</a></li>
-					
+
 
 				</ul>
 				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
-						type="search" placeholder="Search" aria-label="Search" required="true" oninvalid="return false;"></input>
+						type="search" placeholder="Search" aria-label="Search"
+						required="true" oninvalid="return false;"></input>
 					<button class="btn btn-outline-success" id="btnsubmit"
 						action="submit" value="true">Search</button>
 
@@ -64,13 +65,28 @@
 						</form>
 					</c:when>
 
+					<c:when test="${sessionScope.adminValidated eq 'validated'}">
+
+						<form action="Login" class="d-flex" method="POST">
+							<button class="btn btn-outline-success" id="logout" name="logout"
+								value="true">LogOut</button>
+						</form>
+
+						<div class="thecart">
+							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+								class="material-icons">shopping_cart</i></a>
+						</div>
+					</c:when>
+
+
 					<c:otherwise>
 						<form action="/BookLand/Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="login" name="login"
 								value="true">Login/Register</button>
 						</form>
 
-						<a href="/BookLand/Cart?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+							class="material-icons">shopping_cart</i></a>
 
 					</c:otherwise>
 
@@ -95,7 +111,7 @@
 
 
 				<form action="/BookLand/Cart" class="d-flex" method="GET">
-					<button class= "btn btn-outline-primary btn-me"  id="addtocart"
+					<button class="btn btn-outline-primary btn-me" id="addtocart"
 						name="addtocart" value="${book.getBid()}">Add to Cart</button>
 				</form>
 
@@ -123,8 +139,9 @@
 
 					<c:otherwise>
 						<form action="Home">
-							<button class="btn btn-outline-dark btn-sm" id="reviewform" name="reviewform" value="${book.getBid()}">
-								Write a Review</button>
+							<button class="btn btn-outline-dark btn-sm" id="reviewform"
+								name="reviewform" value="${book.getBid()}">Write a
+								Review</button>
 						</form>
 
 					</c:otherwise>
@@ -160,7 +177,8 @@
 			<c:forEach var="review" items="${reviews}">
 
 				<h4 class="allreviews">${review.getTitle()}</h4>
-				<h6 class="allreviews">By ${review.getFirstName()} ${review.getLastname()}</h6>
+				<h6 class="allreviews">By ${review.getFirstName()}
+					${review.getLastname()}</h6>
 				<p class="allreviews">${review.getReview()}</p>
 				<hr></hr>
 			</c:forEach>

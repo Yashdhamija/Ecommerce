@@ -64,6 +64,18 @@ public class Admin extends HttpServlet {
 
     }
     
+	public void adminRegistration(String fname, String lname, String email, String password) throws SQLException {
+
+		
+		this.model.insertAdmin(fname, lname, email, password);
+		
+
+	}
+    
+    
+    
+    
+    
 
 
 	/**
@@ -73,14 +85,14 @@ public class Admin extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
-	
+		System.out.println("Register button is " + request.getParameter("adminRegister") != null);
 		
 	  if (request.getServletPath().equals("/AdministratorLoginPage") && request.getParameter("adminEmail") == null
-				&& request.getParameter("adminPassword") == null) {
+				&& request.getParameter("adminPassword") == null && request.getQueryString() == null) {
 			adminLogin(request, response);
 		}
 
-		else if (request.getParameter("adminButton") != null) {
+		else if (request.getParameter("adminLogin") != null) {
 
 			String adminPassword = request.getParameter("adminPassword");
 			String adminEmail = request.getParameter("adminEmail");
@@ -89,7 +101,9 @@ public class Admin extends HttpServlet {
 				if (this.model.isValidAdmin(adminEmail, adminPassword)) {
 					request.getSession().setAttribute("adminValidated", "validated");
 					
-					displayAnalytics(request,response);
+					response.sendRedirect("/BookLand/Home");
+					
+					//displayAnalytics(request,response);
 					
 				}
 
@@ -102,12 +116,51 @@ public class Admin extends HttpServlet {
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+		}
+	  
+		else if(request.getParameter("adminReport") != null && request.getSession().getAttribute("adminValidated")!= null &&
+				request.getSession().getAttribute("adminValidated").equals("validated")) {
+			
+			
+			try {
+				System.out.println("Hello adfaf");
+				displayAnalytics(request,response);
+			} catch (SQLException | ServletException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	  
+		else if(request.getParameter("adminSignUp") != null) {
+			
+			request.getRequestDispatcher("/AdminRegistration.jspx").forward(request, response);
+		}
+	  
+		else if(request.getParameter("adminregisterbtn") != null) {
+			
+	
+			try {
+				String fname =  request.getParameter("adminfirstName");
+				String lname = request.getParameter("adminlastName");
+				String email = request.getParameter("adminEmail");
+				String password = this.model.encryptPassword(request.getParameter("adminPassword"));
+				adminRegistration(fname,lname,email,password);
+				response.sendRedirect("/BookLand/AdministratorLoginPage");
+				
+			
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+	
 		}
-
+		
 	
 	}
 

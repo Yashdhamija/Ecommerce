@@ -64,7 +64,7 @@ public class Login extends HttpServlet {
 			request.getSession().removeAttribute("cartsize");
 			request.getSession().removeAttribute("carttotal");
 			request.getSession().removeAttribute("shoppingcart");
-		
+			request.getSession().removeAttribute("adminValidated");
 			response.sendRedirect("/BookLand/Home");
 		}
 		

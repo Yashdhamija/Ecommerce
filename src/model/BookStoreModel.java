@@ -55,7 +55,7 @@ public class BookStoreModel {
 
 	public int insertPartnerLogin(String email, String password, String fname, String lname) throws SQLException {
 
-		return this.dao.insertPartnerDB(email, password, fname, lname);
+		return this.dao.insertPartnerDB(fname, lname, email, password);
 
 	}
 
@@ -63,9 +63,9 @@ public class BookStoreModel {
 		return this.dao.insertReview(fname, lname, bid, review, title);
 	}
 
-	public int insertIntoAddress(String street, String province, String country, String zip, String phone, String city)
-			throws SQLException {
-		return this.dao.insertAddress(street, province, country, zip, phone, city);
+	public int insertIntoAddress(String email, String street, String province, String country, String zip, String phone,
+			String city) throws SQLException {
+		return this.dao.insertAddress(email, street, province, country, zip, phone, city);
 	}
 
 	public void insertPO(int orderId, String fname, String lname, String status, String email) throws SQLException {
@@ -78,9 +78,9 @@ public class BookStoreModel {
 
 	}
 
-	public int insertAdmin(String email, String lname, String fname, String password) throws SQLException {
+	public void insertAdmin(String email, String lname, String fname, String password) throws SQLException {
 
-		return this.dao.insertAdminIntoDB(email, fname, lname, password);
+		this.dao.insertAdminIntoDB(email, fname, lname, password);
 	}
 
 	public boolean isVisitorExist(String email, String password) throws NoSuchAlgorithmException {
@@ -94,10 +94,6 @@ public class BookStoreModel {
 
 	public String getPassword(String password) {
 		return this.dao.retrievePassword(password);
-	}
-
-	public String getPartnerEmail(String uid) {
-		return this.dao.retrievePartnerEmail(uid);
 	}
 
 	public String getCustomerName(String email) {
@@ -135,17 +131,15 @@ public class BookStoreModel {
 	}
 
 	public AddressBean retrieveAddress(String email) throws SQLException {
-		return this.dao.retrieveAddressById(email);
+		return this.dao.retrieveAddressByEmail(email);
 	}
 
 	public UserBean retrieveUserInfo(String email) throws SQLException {
 		return this.dao.retrieveAllUserInfo(email);
 	}
 
-	public UserBean retrievePartnerInfo(String email) throws SQLException {
-
-		return this.dao.RetrievePartnerInfo(email);
-
+	public String retrieveBookUrl(String bid) throws SQLException {
+		return this.dao.retrieveUrlOfSingleBook(bid);
 	}
 
 	public List<BookBean> getSearchedBook(String title) throws SQLException {
@@ -165,9 +159,7 @@ public class BookStoreModel {
 		return encryptedpassword;
 	}
 
-	// Cart methods
-
-	// This method returns the total in the cart. This method should be double**
+	
 	public int cartTotal(Map<String, CartBean> cart) {
 		int total = 0;
 		for (Map.Entry<String, CartBean> entry : cart.entrySet()) {
@@ -187,8 +179,8 @@ public class BookStoreModel {
 	}
 
 	//
-	public Map<String,CartBean> quantityUpdate(Map<String,CartBean> cart, int quantity, String bid) {
-	
+	public Map<String, CartBean> quantityUpdate(Map<String, CartBean> cart, int quantity, String bid) {
+
 		cart.get(bid).setQuantity(quantity);
 		return cart;
 	}
@@ -210,9 +202,9 @@ public class BookStoreModel {
 
 	public int OrderNumberGenerator() {
 		Random random = new Random();
-		int number =  random.nextInt(1000000);
-		System.out.println("This is the generateed number"+ number);
-		//int number = (int) (Math.random() * 1000000);
+		int number = random.nextInt(1000000);
+		System.out.println("This is the generateed number" + number);
+		// int number = (int) (Math.random() * 1000000);
 		int orderNum = 0;
 
 		if (!this.orderNumber.contains(number)) {
@@ -236,8 +228,7 @@ public class BookStoreModel {
 		String serializedBookJson = value.toString();
 		return serializedBookJson;
 	}
-	
-	
+
 	public String jsonErrorMessage() {
 		JsonObjectBuilder bookJSON = Json.createObjectBuilder();
 		bookJSON.add("Error Message:", "This information cannot be accessed.");
@@ -245,15 +236,23 @@ public class BookStoreModel {
 		String serializedBookJson = value.toString();
 		return serializedBookJson;
 	}
-		
-		
-	public	boolean isValidAdmin(String email,String password) throws NoSuchAlgorithmException {
-		
-		
+
+	public boolean isValidAdmin(String email, String password) throws NoSuchAlgorithmException {
+
 		return this.dao.IsAdminValidated(email, this.encryptPassword(password));
+
+	}
+	
+	public AddressBean getUserAddress(int cid) throws SQLException {
+		return this.dao.retrieveAddressByCustomerId(cid);
+		
 		
 	}
 	
+	public BookBean getSingleBookInfo(String bid) throws SQLException {
+		
+		return this.dao.retrieveBook(bid);
+	}
 
 	public String getOrdersByPartNumber(String productId) throws SQLException {
 		List<OrderBean> orders = this.instance.dao.getOrdersByPartNumber(productId);
@@ -261,33 +260,28 @@ public class BookStoreModel {
 		JsonObjectBuilder doc = Json.createObjectBuilder();
 		JsonArrayBuilder result = Json.createArrayBuilder();
 		for (OrderBean order : orders) {
-			result.add(Json.createObjectBuilder().add("orderId", order.getOrderId())
-					.add("name", order.getFname() + order.getLname()).add("status", order.getStatus())
-					.add("address", order.getAddress()).add("Date", order.getDate())
-					.add("quantity", order.getQuantity()).add("unitPrice", order.getPrice()));
+			
+			AddressBean userAddress = this.getUserAddress(order.getCid());
+			BookBean userbook =  this.getSingleBookInfo(productId);		
+			
+			
+			
+			
+			result.add(Json.createObjectBuilder().add("orderDate", order.getDate())
+					.add("name", order.getFname() + order.getLname())
+					.add("street", userAddress.getStreet()).add("city", userAddress.getCity())
+					.add("Province", userAddress.getProvince()).add("zipcode", userAddress.getZip())
+					.add("street", userAddress.getStreet()).add("book",
+							Json.createObjectBuilder().add("title", userbook.getTitle())
+									.add("bookId", userbook.getBid()).add("category", userbook.getCategory())
+									.add("quantity", order.getQuantity()).add("price", order.getPrice())));
+				
 		}
 		doc.add("productId", productId).add("orders:", result);
 		JsonObject obj = doc.build();
 		return obj.toString();
 	}
 
-//	public boolean isValidAdmin(String email, String password) {
-//		String dbEmail = this.dao.getAdminEmail(email);
-//		String dbPassword = this.dao.getAdminPwd(password);
-//		System.out.println("The email is" + dbEmail);
-//		System.out.println("The password is" + dbPassword);
-//
-//		if (dbEmail != null && dbPassword != null & dbEmail.equals(email) && dbPassword.equals(password)) {
-//
-//			return true;
-//		}
-//
-//		else {
-//
-//			return false;
-//		}
-//
-//	}
 
 	public LinkedHashMap<String, Integer> retrieveTopTenAllTime() throws SQLException {
 		return this.dao.getTopTenAllTime();

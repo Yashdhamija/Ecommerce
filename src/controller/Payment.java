@@ -42,7 +42,8 @@ public class Payment extends HttpServlet {
 	 *      response)
 	 */
 
-	public void retrieveUserInformation(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+	public void retrieveUserInformation(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, ServletException, IOException {
 
 		if (request.getSession().getAttribute("UserType").equals("visitor")) {
 
@@ -52,42 +53,39 @@ public class Payment extends HttpServlet {
 					this.model.retrieveUserInfo((String) request.getSession().getAttribute("useremail")));
 
 		}
-
-		else { // Partner
+		// Partner
+		else {
 
 			request.getSession().setAttribute("fulladdress",
 					this.model.retrieveAddress((String) request.getSession().getAttribute("useremail")));
 
 			request.getSession().setAttribute("userinfo",
-					this.model.retrievePartnerInfo((String) request.getSession().getAttribute("useremail")));
+					this.model.retrieveUserInfo((String) request.getSession().getAttribute("useremail")));
 		}
-		
-		
+
 		request.getRequestDispatcher("/payment.jspx").forward(request, response);
 
 	}
 	
-	
-	public void paymentSuccessful(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
+	public void paymentSuccessful(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		Map<String, CartBean> cart = (HashMap<String, CartBean>) request.getSession().getAttribute("shoppingcart");
 
 		try {// Everything inside the try is used to insert into PO, this is successful case
-			
+
 			int orderId = this.model.OrderNumberGenerator();
-			
-			this.model.insertPO(orderId ,
-					((UserBean) request.getSession().getAttribute("userinfo")).getFirstname(),
+
+			this.model.insertPO(orderId, ((UserBean) request.getSession().getAttribute("userinfo")).getFirstname(),
 					((UserBean) request.getSession().getAttribute("userinfo")).getLastname(), "ORDERED",
 					(String) request.getSession().getAttribute("useremail"));
 
 			for (Map.Entry<String, CartBean> entry : cart.entrySet()) {
-				
-		
-				
-				System.out.println( "This is the  email" + (String) request.getSession().getAttribute("useremail").toString());
-				this.model.insertPOItem(orderId ,entry.getValue().getBookid(), entry.getValue().getPrice(), entry.getValue().getQuantity());
+
+				System.out.println(
+						"This is the  email" + (String) request.getSession().getAttribute("useremail").toString());
+				this.model.insertPOItem(orderId, entry.getValue().getBookid(), entry.getValue().getPrice(),
+						entry.getValue().getQuantity());
 			}
 
 		} catch (SQLException e) {
@@ -98,8 +96,8 @@ public class Payment extends HttpServlet {
 		request.getSession().removeAttribute("shoppingcart");
 		request.getSession().removeAttribute("carttotal");
 		request.getSession().removeAttribute("cartsize");
-		CounterBean counter =  (CounterBean) request.getSession().getAttribute("counter");
-	
+		CounterBean counter = (CounterBean) request.getSession().getAttribute("counter");
+
 		request.getSession().setAttribute("counter", counter);
 		System.out.println("The value of counter is" + counter.getCounter());
 		response.sendRedirect("/BookLand/OrderConfirmation");
@@ -137,15 +135,19 @@ public class Payment extends HttpServlet {
 		System.out.println("The servlet path for payment is"+request.getServletPath());
 		System.out.println("Order confirmed 1" + request.getParameter("orderconfirmed"));
 		
-		if (request.getServletPath() != null && request.getServletPath().equals("/Payment")
-				&& (Integer) request.getSession().getAttribute("cartsize") == 0) {
+		if (request.getServletPath() != null && request.getServletPath().equals("/Payment") &&
+		 request.getSession().getAttribute("cartsize") != null && (Integer) 
+		 request.getSession().getAttribute("cartsize") == 0) {
 			System.out.println("Order confirmed 2" + request.getParameter("orderconfirmed"));
 			response.sendRedirect("/BookLand/Cart?viewcart=true");
 		}
 
 		else if (request.getServletPath() != null && request.getServletPath().equals("/Payment")
-				&& (Integer) request.getSession().getAttribute("cartsize") != 0 && 
+				&& request.getSession().getAttribute("cartsize") != null &&
+				(Integer) request.getSession().getAttribute("cartsize") != 0 && 
 				request.getParameter("orderconfirmed") == null) {
+			
+			
 			System.out.println("Order confirmed 3" + request.getParameter("orderconfirmed"));
 			if (request.getSession().getAttribute("UserType") != null) {
 				try {
@@ -165,6 +167,7 @@ public class Payment extends HttpServlet {
 		}
 			
 			else if (request.getServletPath() != null && request.getServletPath().equals("/Payment")
+					&& request.getSession().getAttribute("cartsize") != null 
 					&& (Integer) request.getSession().getAttribute("cartsize") != 0
 					&& request.getParameter("orderconfirmed") != null) {
 				System.out.println("Order confirmed 4" + request.getParameter("orderconfirmed"));
@@ -211,7 +214,7 @@ public class Payment extends HttpServlet {
 
 			}
 		
-		//System.out.println("The value of counter is" + ((CounterBean) request.getSession().getAttribute("counter")).getCounter());
+		
 
 		
 

@@ -83,7 +83,8 @@ public class Cart extends HttpServlet {
 					price = this.model.retrievePriceofABook(bookId);
 					System.out.println("The price is" + price);
 
-					CartBean bookCart = new CartBean(bookId, price, bookTitle, quantity);
+					String imageurl = model.retrieveBookUrl(bookId);
+					CartBean bookCart = new CartBean(bookId, price, bookTitle, quantity, imageurl);
 
 					if (this.cart.containsKey(bookId)) {
 						this.cart.get(bookId).setQuantity(cart.get(bookId).getQuantity() + 1);
@@ -157,36 +158,40 @@ public class Cart extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 
-		if (request.getParameter("viewcart") != null) {
+		if (request.getParameter("viewcart") != null && request.getParameter("viewcart").equals("true")) {
 
 			displayCartPage(request, response);
-		}
-
-		else if (request.getParameter("addtocart") != null) {
-
+		} else
 			try {
-				addToCart(request, response);
-			} catch (ServletException | IOException | SQLException e) {
+				if (request.getParameter("addtocart") != null && !this.model.retrieveBookTitle(request.getParameter("addtocart")).equals("")) {
+
+					try {
+						addToCart(request, response);
+					} catch (ServletException | IOException | SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+				else if (request.getParameter("removebook") != null) {
+
+					removeFromCart(request, response);
+
+				}
+
+				else if (request.getParameter("quantity") != null) {
+						
+					updateQuantityInCart(request,response);
+				}
+
+				else {
+
+					response.sendRedirect("ErrorPage");
+				}
+			} catch (SQLException | ServletException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-
-		else if (request.getParameter("removebook") != null) {
-
-			removeFromCart(request, response);
-
-		}
-
-		else if (request.getParameter("quantity") != null) {
-				
-			updateQuantityInCart(request,response);
-		}
-
-		else {
-
-			response.sendRedirect("ErrorPage");
-		}
 
 	}
 

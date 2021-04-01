@@ -41,18 +41,20 @@ public class Home extends HttpServlet {
 	}
 
 	public void Dispatcher(HttpServletRequest request, HttpServletResponse response)
-			throws ClassNotFoundException, ServletException, IOException, SQLException { 
-																							
-		
+			throws ClassNotFoundException, ServletException, IOException, SQLException {
 
-		if (request.getParameter("reviewform") != null) { // This is for when user clicks the write a review button on the bookinformation.jspx page 
+		// This is for when user clicks the write a review button on the
+		// bookinformation.jspx page
+
+		if (request.getParameter("reviewform") != null && 
+				!this.model.retrieveBookTitle(request.getParameter("reviewform")).equals("")) {
 
 			request.getSession().setAttribute("reviewbookid", request.getParameter("reviewform"));
 			if (request.getSession().getAttribute("name") != null) {
 
 				try {
 
-					request.setAttribute("review", "true"); 
+					request.setAttribute("review", "true");
 					String bid = (String) request.getSession().getAttribute("bookid");
 					System.out.println("Bid is " + bid);
 					request.setAttribute("bookinfo", this.model.retrieveInfoOfBook(bid));
@@ -67,58 +69,58 @@ public class Home extends HttpServlet {
 
 			else {
 
-				response.sendRedirect("/BookLand/Login"); 
+				response.sendRedirect("/BookLand/Login");
 
 			}
 
 		}
-
-		else if (request.getParameter("bookinfo") != null) { //This is triggered when the bookTitle is clicked in the bookstore.jspx
+		// This is triggered when the bookTitle is clicked in the bookstore.jspx
+		else if (request.getParameter("bookinfo") != null
+				&& !this.model.retrieveBookTitle(request.getParameter("bookinfo")).equals("")) {
 			String bid = request.getParameter("bookinfo");
 			request.getSession().setAttribute("bookid", bid);
 			openIndividualBook(request, response);
 
 		}
-
+		// This is called when user submits review in the bookinformation.jspx page
 		else if (request.getParameter("submitreview") != null) {
-			
-			SubmitReview(request, response); // This is called when user submits review in the bookinformation.jspx page
-		}
 
+			SubmitReview(request, response);
+		}
+		// This is all the correct URLs with \Home\*
 		else if ((request.getRequestURI().equals("/BookLand/Home") && request.getQueryString() == null)
 				|| (request.getRequestURI().equals("/BookLand/Home")
 						&& !this.model.retrieveBookTitle(request.getParameter("addtocart")).equals(""))) {
 
-			HomePage(request, response); // This is all the correct URLs with \Home\*
+			HomePage(request, response);
 
 		}
-		else if (request.getParameter("category") != null) { // This is for displaying the books based on category
-			
-			displayBooksInCategory(request,response);
-			
+		// This is for displaying the books based on category
+		else if (request.getParameter("category") != null
+				&& this.model.retrieveBooksUsingCategory(request.getParameter("category")).size() > 0) {
+
+			displayBooksInCategory(request, response);
+
 		}
-		
-		else if (request.getParameter("search") != null) {  // This is for searching the books
-			
-			searchForBooks(request,response);
+		// This is for searching the books
+		else if (request.getParameter("search") != null) {
+
+			searchForBooks(request, response);
 		}
-		
-		else if(request.getParameter("restcall") != null && request.getParameter("restcall").equals("true") &&
-				request.getSession().getAttribute("UserType") != null && 
-				request.getSession().getAttribute("UserType").equals("partner")) { // This is for clicking the rest API for partners
-			
-			
-				request.getRequestDispatcher("/restcall.jspx").forward(request, response);
-			
-			
+		// This is for rest calls for Partners
+		else if (request.getParameter("restcall") != null && request.getParameter("restcall").equals("true")
+				&& request.getSession().getAttribute("UserType") != null
+				&& request.getSession().getAttribute("UserType").equals("partner")) { // This is for clicking the rest
+																						// API for partners
+
+			request.getRequestDispatcher("/restcall.jspx").forward(request, response);
+
 		}
 
 		else {
-
+			// Error Page
 			response.sendRedirect("/BookLand/ErrorPage");
-			// System.out.println("Im in the home page");
 
-			// HomePage(request, response);
 		}
 
 	}
@@ -246,6 +248,8 @@ public class Home extends HttpServlet {
 
 	}
 	
+
+	
 	
 	
 
@@ -265,6 +269,7 @@ public class Home extends HttpServlet {
 
 				CounterBean counter = new CounterBean();
 				request.getSession().setAttribute("counter", counter);
+
 			}
 
 			this.Dispatcher(request, response);

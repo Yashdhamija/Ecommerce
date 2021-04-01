@@ -88,7 +88,7 @@ caption{
 }
 
 
-.material-icons {
+.carticon {
 	color: white;
 	margin-left: 5px;
 	
@@ -178,4 +178,28 @@ span.price {
 .container1 > .item > form > #addtocart {
 	margin-bottom: 30px;
 } 
+
+#welcometext {
+	margin: 0;
+	margin-right: 7px;
+}
+
+
+.card {
+	border: none !important;
+	
+}
+
+#deleteicon {
+	width: auto;
+	border: none;
+	background: none;
+	padding: 0;
+}
+
+
+#deletebuttonform {
+	padding: 0;
+	
+}
 

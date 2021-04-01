@@ -23,7 +23,7 @@ public class RegisterService {
 			String province, String zipCode, String phoneNumber, String country) throws SQLException, NoSuchAlgorithmException { // User
 		
 		this.book.insertUserLogin(fname, lname, email, this.book.encryptPassword(password));																								// Registration
-		this.book.insertIntoAddress(address, province, country, zipCode, phoneNumber, city);
+		this.book.insertIntoAddress(email,address, province, country, zipCode, phoneNumber, city);
 		
 		
 	}
@@ -34,7 +34,7 @@ public class RegisterService {
 																										// Registration
 		
 		this.book.insertPartnerLogin(email, this.book.encryptPassword(password), fname, lname);
-		this.book.insertIntoAddress(address, province, country, zipCode, phoneNumber, city);
+		this.book.insertIntoAddress(email,address, province, country, zipCode, phoneNumber, city);
 	
 	}
 	

@@ -38,10 +38,8 @@
 						data-bs-toggle="dropdown" aria-expanded="false"> Books </a>
 						<ul class="dropdown-menu"
 							aria-labelledby="navbarScrollingDropdown">
-							<li><a class="dropdown-item"
-								href="Home?category=Fiction">Fiction</a></li>
-							<li><a class="dropdown-item"
-								href="Home?category=Science">Science</a></li>
+							<li><a class="dropdown-item" href="Home?category=Fiction">Fiction</a></li>
+							<li><a class="dropdown-item" href="Home?category=Science">Science</a></li>
 							<li><a class="dropdown-item"
 								href="Home?category=Engineering">Engineering</a></li>
 						</ul></li>
@@ -66,13 +64,36 @@
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
+
+						<div class="thecart">
+							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+								class="material-icons">shopping_cart</i></a>
+						</div>
 					</c:when>
+
+
+					<c:when test="${sessionScope.adminValidated eq 'validated'}">
+
+						<form action="Login" class="d-flex" method="POST">
+							<button class="btn btn-outline-success" id="logout" name="logout"
+								value="true">LogOut</button>
+						</form>
+
+						<div class="thecart">
+							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+								class="material-icons">shopping_cart</i></a>
+						</div>
+					</c:when>
+
 
 					<c:otherwise>
 
 						<a class="btn btn-outline-success" id="login" name="login"
 							href="/BookLand/Login">LogIn/Register</a>
 
+
+						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+							class="material-icons">shopping_cart</i></a>
 
 					</c:otherwise>
 
@@ -84,13 +105,13 @@
 
 
 	<section>
-	
-	 
+
+
 
 
 		<div class="container">
 			<div class="row justify-content-center">
-			 <p>Partner Registeration Form </p>
+				<p>Partner Registeration Form</p>
 				<form action="Register" method="POST" onsubmit="return validate();"
 					class="row g-3">
 					<div class="col-md-6">
@@ -105,7 +126,7 @@
 					</div>
 					<div class="col-12">
 						<label for="uid" class="form-label">Email</label> <input
-							type="email" class="form-control" name="email" id="email" 
+							type="email" class="form-control" name="email" id="email"
 							required="required"></input><small>Format:example@gmail.com</small>
 					</div>
 
@@ -128,7 +149,8 @@
 					</div>
 					<div class="col-md-2">
 						<label for="province" class="form-label">Province</label> <select
-							name="province" id="province" class="form-select" required="required">
+							name="province" id="province" class="form-select"
+							required="required">
 							<option hidden="hidden"></option>
 							<option>Alberta</option>
 							<option>British Columbia</option>
@@ -166,7 +188,8 @@
 
 					<div class="col-md-4">
 						<label for="country" class="form-label">Country</label> <select
-							name="country" id="country" class="form-select" required="required">
+							name="country" id="country" class="form-select"
+							required="required">
 							<option selected="selected"></option>
 							<option>Canada</option>
 						</select>
@@ -175,7 +198,8 @@
 
 					<c:choose>
 						<c:when test="${partnerexists eq 'yes'}">
-							<p style="color: red;">Email Address Already Exists Please try again!</p>
+							<p style="color: red;">Email Address Already Exists Please
+								try again!</p>
 						</c:when>
 
 
@@ -211,6 +235,13 @@
 
 
 </body>
+<style>
+.carticon {
+	color: white;
+	margin-left: 5px;
+	
+}</style>
+
 <c:import url="nav.html"></c:import>
 	</html>
 </jsp:root>

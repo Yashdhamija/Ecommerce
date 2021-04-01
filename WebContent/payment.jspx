@@ -11,8 +11,10 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet"></link>
+
 <title>Payment</title>
 
 <script>
@@ -55,12 +57,21 @@
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item"><a class="nav-link active"
 						aria-current="page" href="Home">Home</a></li>
-					
 
-			
+
+
 
 
 				</ul>
+
+				<li class="nav-item"><c:choose>
+						<c:when test="${name ne null}">
+
+							<p id="welcometext" style="color: white;">Welcome ${name}</p>
+
+						</c:when>
+					</c:choose></li>
+
 				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
 						type="search" placeholder="Search" aria-label="Search"
@@ -70,6 +81,8 @@
 
 				</form>
 
+
+
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">
 
@@ -77,12 +90,30 @@
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
+
+
 					</c:when>
+
+					<c:when test="${sessionScope.adminValidated eq 'validated'}">
+
+						<form action="Login" class="d-flex" method="POST">
+							<button class="btn btn-outline-success" id="logout" name="logout"
+								value="true">LogOut</button>
+						</form>
+
+						<div class="thecart">
+							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+								class="material-icons">shopping_cart</i></a>
+						</div>
+					</c:when>
+
+
 
 					<c:otherwise>
 
 						<a class="btn btn-outline-success" id="login" name="login"
 							href="/BookLand/Login">LogIn/Register</a>
+
 
 
 					</c:otherwise>
@@ -147,9 +178,8 @@
 
 			<div class="col-md-8 order-md-1">
 				<h4 class="mb-3">Billing address</h4>
-				<form class="needs-validation"
-					action="/BookLand/Payment" method="POST"
-					novalidate="novalidate">
+				<form class="needs-validation" action="/BookLand/Payment"
+					method="POST" novalidate="novalidate">
 					<div class="row">
 						<div class="col-md-6 mb-3">
 							<label for="firstName">First name</label> <input type="text"
@@ -279,8 +309,8 @@
 						</div>
 					</div>
 
-					<button name="orderconfirmed" class="btn btn-dark btn-lg btn-block" type="submit" value="true">
-					Confirm Order</button>
+					<button name="orderconfirmed" class="btn btn-dark btn-lg btn-block"
+						type="submit" value="true">Confirm Order</button>
 
 				</form>
 			</div>
@@ -298,6 +328,16 @@
 
 
 </body>
+
+<style>
+#welcometext {
+	margin: 0;
+	margin-right: 7px;
+}
+
+
+</style>
+
 <c:import url="nav.html"></c:import>
 	</html>
 </jsp:root>

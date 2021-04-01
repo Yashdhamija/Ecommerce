@@ -6,20 +6,20 @@ public class OrderBean {
     private String lname;
     private String fname;
     private String status;
-    private String address;
+    private int cid;
     private String date;
     private String bid;
     private int quantity;
     private int unitPrice;
 
     public OrderBean(String orderId, int quantity, int unitPrice, String lname, String fname, String status,
-            String address, String date) {
+            int cid, String date) {
 
         this.orderId = orderId;
         this.lname = lname;
         this.fname = fname;
         this.status = status;
-        this.address = address;
+        this.cid = cid;
         this.date = date;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
@@ -57,8 +57,8 @@ public class OrderBean {
         return status;
     }
 
-    public String getAddress() {
-        return address;
+    public int getCid() {
+        return cid;
     }
 
     public String getDate() {

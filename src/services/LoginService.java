@@ -68,14 +68,14 @@ public class LoginService {
 			String province, String zipCode, String phoneNumber, String country) throws SQLException { // User Registration
 		
 		this.book.insertUserLogin(fname, lname, email, password);
-		this.book.insertIntoAddress(address, province, country, zipCode, phoneNumber, city);
+		this.book.insertIntoAddress(email,address, province, country, zipCode, phoneNumber, city);
 	}
 	
 	public void  PartnerRegister(String fname, String lname, String email, String password, String address, String city,
 			String province, String zipCode, String phoneNumber, String country) throws SQLException { // Partner
 		
 		this.book.insertUserLogin(fname, lname, email, password);
-		this.book.insertIntoAddress(address, province, country, zipCode, phoneNumber, city);
+		this.book.insertIntoAddress(email,address, province, country, zipCode, phoneNumber, city);
 	}
 	
 	
