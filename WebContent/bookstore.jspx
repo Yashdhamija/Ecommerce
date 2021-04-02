@@ -18,10 +18,8 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet"></link>
 
-
 </head>
 <body>
-
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="Home"><i class="material-icons">menu_book</i></a>
@@ -56,21 +54,19 @@
 
 					<c:choose>
 						<c:when test="${sessionScope.UserType eq 'partner'}">
-							<li class="nav-item"><a class="nav-link active"
-								aria-current="page" href="Home?restcall=true">Rest API</a></li>
+							<li class="nav-item">
+								<a class="nav-link active" aria-current="page" 
+									href="Home?restcall=true">Rest API</a>
+							</li>
 						</c:when>
 
 						<!-- TO DO - make admin login in login.java and attributes in userType -->
 						<c:when test="${sessionScope.adminValidated eq 'validated'}">
-							<li class="nav-item"><a class="nav-link active"
-								aria-current="page"
-								href="/BookLand/AdministratorLoginPage?adminReport=true">Admin
-									Report</a></li>
+							<li class="nav-item">
+								<a class="nav-link active" aria-current="page"
+									href="/BookLand/AdministratorLoginPage?adminReport=true">Admin Report</a>
+							</li>
 						</c:when>
-
-						<c:otherwise>
-						</c:otherwise>
-
 					</c:choose>
 
 					<!-- welcome greeting  -->
@@ -81,13 +77,14 @@
 							</c:when>
 							
 							<!-- treat admin as normal, display admin name under session scope-->
-							<c:when test="${adminValidated eq 'validated'}">
+							<c:when test="${sessionScope.adminValidated eq 'validated'}">
 								<p id="welcometext" style="color: white;">Welcome Admin</p>
 							</c:when>
 						</c:choose>
 					</li>					
 				</ul>
 					
+				<!-- Search option -->	
 				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
 						type="search" placeholder="Search" aria-label="Search"
@@ -96,45 +93,32 @@
 						action="submit" value="true">Search</button>
 				</form>
 
+				<!-- login/logout -->
 				<c:choose>
-					<c:when test="${sessionScope.name ne null}">
+					<c:when test="${sessionScope.name ne null || sessionScope.adminValidated eq 'validated'}">
 						<form action="Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
-
-						<div class="thecart">
-							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
-								class="material-icons">shopping_cart</i></a>
-						</div>
 					</c:when>
-
-					<c:when test="${sessionScope.adminValidated eq 'validated'}">
-						<form action="Login" class="d-flex" method="POST">
-							<button class="btn btn-outline-success" id="logout" name="logout"
-								value="true">LogOut</button>
-						</form>
-
-						<div class="thecart">
-							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
-								class="material-icons">shopping_cart</i></a>
-						</div>
-					</c:when>
-
 
 					<c:otherwise>
 						<a class="btn btn-outline-success" id="login" name="login"
 							href="/BookLand/Login">LogIn/Register</a>
-
-						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
-							class="material-icons">shopping_cart</i></a>
 					</c:otherwise>
 				</c:choose>
+				
+				<!-- shopping cart -->
+				<div class="thecart">
+					<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+						class="material-icons">shopping_cart</i></a>
+				</div>
+						
 			</div>
 		</div>
 	</nav>
 
-
+	<!-- saving the appropriate list of books to display in one variable in page scope-->
 	<c:choose>
 	    <c:when test="${found eq 'true'}">
 	    	<c:set var="bookcatalog" value="${bookfound}" scope="page"/>
@@ -150,6 +134,7 @@
 	    </c:otherwise>
 	</c:choose>
 	
+	<!-- displaying books from book catalog list -->
 	<div class="container">
 		<c:forEach var="books" items="${bookcatalog}">
 		
@@ -172,7 +157,7 @@
 
 </body>
 <c:import url="nav.html"></c:import>
-	</html>
+</html>
 </jsp:root>
 
 

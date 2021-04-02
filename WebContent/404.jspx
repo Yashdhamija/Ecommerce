@@ -19,12 +19,6 @@
 	rel="stylesheet"></link>
 </head>
 <body>
-
-
-
-
-
-
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="Home"><i class="material-icons">menu_book</i></a>
@@ -54,62 +48,37 @@
 							<li><a class="dropdown-item" href="Home?category=Romance">Romance</a></li>
 							<li><a class="dropdown-item" href="Home?category=History">History</a></li>
 							<li><a class="dropdown-item" href="Home?category=Literacy">Literacy</a></li>
-						</ul></li>
+						</ul>
+					</li>
 
 					<c:choose>
 						<c:when test="${sessionScope.UserType eq 'partner'}">
-
-
-							<li class="nav-item"><a class="nav-link active"
-								aria-current="page" href="Home?restcall=true">Rest API</a></li>
-
-
-
-
-
+							<li class="nav-item">
+								<a class="nav-link active" aria-current="page" 
+									href="Home?restcall=true">Rest API</a>
+							</li>
 						</c:when>
 
-						<c:otherwise>
-
-
-						</c:otherwise>
-
-					</c:choose>
-
-
-
-
-
-					<c:choose>
 						<c:when test="${sessionScope.adminValidated eq 'validated'}">
-							<li class="nav-item"><a class="nav-link active"
-								aria-current="page"
-								href="/BookLand/AdministratorLoginPage?adminReport=true">Admin
-									Report</a></li>
+							<li class="nav-item">
+								<a class="nav-link active" aria-current="page"
+									href="/BookLand/AdministratorLoginPage?adminReport=true">Admin Report</a>
+							</li>
 						</c:when>
-
-						<c:otherwise>
-
-
-						</c:otherwise>
-
 					</c:choose>
 
-
-
-
-
-
-				</ul>
-
-
-				<li class="nav-item"><c:choose>
-						<c:when test="${name ne null}">
-
-							<p id="welcometext" style="color: white;">Welcome ${name}</p>
-
+					<li class="nav-item">
+						<c:choose>
+							<c:when test="${name ne null}">
+								<p id="welcometext" style="color: white;">Welcome ${name}</p>
+							</c:when>
+							
+							<c:when test="${sessionScope.adminValidated eq 'validated'}">
+								<p id="welcometext" style="color: white;">Welcome Admin</p>
 						</c:when>
-					</c:choose></li>
+						</c:choose>
+					</li>
+				</ul>
 
 
 				<form action="Home" class="d-flex" method="GET">
@@ -118,69 +87,33 @@
 						required="true" oninvalid="return false;"></input>
 					<button class="btn btn-outline-success" id="btnsubmit"
 						action="submit" value="true">Search</button>
-
 				</form>
 
 				<c:choose>
-					<c:when test="${sessionScope.name ne null}">
-
+					<c:when test="${sessionScope.name ne null || sessionScope.adminValidated eq 'validated'}">
 						<form action="Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
-
-						<div class="thecart">
-							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
-								class="material-icons">shopping_cart</i></a>
-						</div>
 					</c:when>
-
-
-					<c:when test="${sessionScope.adminValidated eq 'validated'}">
-
-						<form action="Login" class="d-flex" method="POST">
-							<button class="btn btn-outline-success" id="logout" name="logout"
-								value="true">LogOut</button>
-						</form>
-
-						<div class="thecart">
-							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
-								class="material-icons">shopping_cart</i></a>
-						</div>
-					</c:when>
-
 
 					<c:otherwise>
-
 						<a class="btn btn-outline-success" id="login" name="login"
 							href="/BookLand/Login">LogIn/Register</a>
-
-
-						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
-							class="material-icons">shopping_cart</i></a>
-
 					</c:otherwise>
-
 				</c:choose>
-
-
+				
+				<div class="thecart">
+					<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+						class="material-icons">shopping_cart</i></a>
+				</div>
 			</div>
 		</div>
 	</nav>
 
-
-
-
-
-
-<div>This page is not available error  404</div>
-
-
-
-
-
+	<div>This page is not available error  404</div>
 
 </body>
 <c:import url="nav.html"></c:import>
-	</html>
+</html>
 </jsp:root>
