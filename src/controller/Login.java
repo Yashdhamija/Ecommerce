@@ -78,7 +78,6 @@ public class Login extends HttpServlet {
 
 			// error handling
 		}
-
 	}
 
 	public void LoginAuthentication(HttpServletRequest request, HttpServletResponse response)
@@ -108,7 +107,6 @@ public class Login extends HttpServlet {
 					String partnerLoginName = this.login.displayPartnerName(email);
 					request.getSession().setAttribute("name", partnerLoginName);
 					request.getSession().setAttribute("UserType", "partner");
-
 				}
 				
 				request.getSession().setAttribute("useremail", email);

@@ -51,33 +51,16 @@
 							<li><a class="dropdown-item" href="Home?category=Romance">Romance</a></li>
 							<li><a class="dropdown-item" href="Home?category=History">History</a></li>
 							<li><a class="dropdown-item" href="Home?category=Literacy">Literacy</a></li>
-						</ul></li>
+						</ul>
+					</li>
 
 					<c:choose>
 						<c:when test="${sessionScope.UserType eq 'partner'}">
-
-
 							<li class="nav-item"><a class="nav-link active"
 								aria-current="page" href="Home?restcall=true">Rest API</a></li>
-
-
-
-
-
 						</c:when>
 
-						<c:otherwise>
-
-
-						</c:otherwise>
-
-					</c:choose>
-
-
-
-
-
-					<c:choose>
+						<!-- TO DO - make admin login in login.java and attributes in userType -->
 						<c:when test="${sessionScope.adminValidated eq 'validated'}">
 							<li class="nav-item"><a class="nav-link active"
 								aria-current="page"
@@ -86,54 +69,35 @@
 						</c:when>
 
 						<c:otherwise>
-
-
 						</c:otherwise>
 
 					</c:choose>
 
-
-
-
-
-
+					<!-- welcome greeting  -->
+					<li class="nav-item">
+						<c:choose>
+							<c:when test="${name ne null}">
+								<p id="welcometext" style="color: white;">Welcome ${name}</p>	
+							</c:when>
+							
+							<!-- treat admin as normal, display admin name under session scope-->
+							<c:when test="${adminValidated eq 'validated'}">
+								<p id="welcometext" style="color: white;">Welcome Admin</p>
+							</c:when>
+						</c:choose>
+					</li>					
 				</ul>
-
-
-				<li class="nav-item"><c:choose>
-						<c:when test="${name ne null}">
-
-							<p id="welcometext" style="color: white;">Welcome ${name}</p>
-
-						</c:when>
-					</c:choose></li>
 					
-					
-							<li class="nav-item"><c:choose>
-						<c:when test="${adminValidated eq 'validated'}">
-
-							<p id="welcometext" style="color: white;">Welcome Admin</p>
-
-						</c:when>
-					</c:choose></li>
-					
-					
-					
-					
-
-
 				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
 						type="search" placeholder="Search" aria-label="Search"
 						required="true" oninvalid="return false;"></input>
 					<button class="btn btn-outline-success" id="btnsubmit"
 						action="submit" value="true">Search</button>
-
 				</form>
 
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">
-
 						<form action="Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
@@ -145,9 +109,7 @@
 						</div>
 					</c:when>
 
-
 					<c:when test="${sessionScope.adminValidated eq 'validated'}">
-
 						<form action="Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
@@ -161,121 +123,52 @@
 
 
 					<c:otherwise>
-
 						<a class="btn btn-outline-success" id="login" name="login"
 							href="/BookLand/Login">LogIn/Register</a>
 
-
 						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
 							class="material-icons">shopping_cart</i></a>
-
 					</c:otherwise>
-
 				</c:choose>
-
-
 			</div>
 		</div>
 	</nav>
 
 
-
-
-
-
-
-
-
 	<c:choose>
-		<c:when test="${found eq 'true'}">
-			<div class="searchresults">
+	    <c:when test="${found eq 'true'}">
+	    	<c:set var="bookcatalog" value="${bookfound}" scope="page"/>
+	   		<div class="searchresults">
 				<label id="label1">${numberofresults}</label>
 			</div>
-
-			<div class="container1">
-
-				<c:forEach var="result" items="${bookfound}">
-
-
-					<div class="item" id="${result.getBid()}">
-						<img id="images" src="images/${result.getUrl()}"></img>
-
-
-						<form action="Home" class="d-flex" method="POST">
-							<Button id="bookinfo" name="bookinfo" value="${result.getBid()}">${result.getTitle()}</Button>
-						</form>
-
-						<p class="bookprice">$${result.getPrice()}</p>
-						<form action="/BookLand/Cart" class="d-flex" method="GET">
-							<button name="addtocart" id="addtocart"
-								value="${result.getBid()}"
-								class="btn btn-outline-primary btn-sm">Add to Cart</button>
-						</form>
-					</div>
-
-
-				</c:forEach>
-			</div>
-		</c:when>
-
-		<c:when test="${category ne null}">
-			<div class="container">
-				<c:forEach var="books" items="${category}">
-
-					<div class="item" id="${books.getBid()}">
-
-						<img id="images" src="images/${books.getUrl()}"></img>
-
-
-						<form action="Home" class="d-flex" method="POST">
-							<Button id="bookinfo" name="bookinfo" value="${books.getBid()}">${books.getTitle()}</Button>
-						</form>
-
-						<p class="bookprice">$${books.getPrice()}</p>
-
-
-						<form action="/BookLand/Cart" class="d-flex" method="GET">
-							<button name="addtocart" id="addtocart" value="${books.getBid()}"
-								class="btn btn-outline-primary btn-sm">Add to Cart</button>
-						</form>
-					</div>
-
-				</c:forEach>
-			</div>
-		</c:when>
-
-
-		<c:otherwise>
-			<div class="container">
-
-				<c:forEach var="book" items="${books}">
-
-
-					<div class="item" id="${book.getBid()}">
-
-						<img id="images" src="images/${book.getUrl()}"></img>
-
-						<form action="Home" class="d-flex" method="GET">
-							<Button id="bookinfo" name="bookinfo" value="${book.getBid()}">${book.getTitle()}</Button>
-						</form>
-
-						<p class="bookprice">$${book.getPrice()}</p>
-
-						<form action="/BookLand/Cart" class="d-flex" method="GET">
-							<button class="btn btn-outline-primary btn-sm" id="addtocart"
-								name="addtocart" value="${book.getBid()}">Add to Cart</button>
-						</form>
-					</div>
-
-
-				</c:forEach>
-			</div>
-		</c:otherwise>
+	    </c:when>
+	    <c:when test="${category ne null}">
+	    	<c:set var="bookcatalog" value="${category}" scope="page"/>
+	    </c:when>
+	    <c:otherwise>
+	    	<c:set var="bookcatalog" value="${books}" scope="page"/>
+	    </c:otherwise>
 	</c:choose>
+	
+	<div class="container">
+		<c:forEach var="books" items="${bookcatalog}">
+		
+			<div class="item" id="${books.getBid()}">
+				<img id="images" src="images/${books.getUrl()}"></img>
 
+				<form action="Home" class="d-flex" method="POST">
+					<Button id="bookinfo" name="bookinfo" value="${books.getBid()}">${books.getTitle()}</Button>
+				</form>
 
+				<p class="bookprice">$${books.getPrice()}</p>
 
-
+				<form action="/BookLand/Cart" class="d-flex" method="GET">
+					<button name="addtocart" id="addtocart" value="${books.getBid()}"
+						class="btn btn-outline-primary btn-sm">Add to Cart</button>
+				</form>
+			</div>
+		</c:forEach>
+	</div>
 
 </body>
 <c:import url="nav.html"></c:import>
