@@ -19,12 +19,6 @@
 	rel="stylesheet"></link>
 </head>
 <body>
-
-
-
-
-
-
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="Home"><i class="material-icons">menu_book</i></a>
@@ -58,58 +52,35 @@
 
 					<c:choose>
 						<c:when test="${sessionScope.UserType eq 'partner'}">
-
-
-							<li class="nav-item"><a class="nav-link active"
-								aria-current="page" href="Home?restcall=true">Rest API</a></li>
-
-
-
-
-
+							<li class="nav-item">
+								<a class="nav-link active" aria-current="page" 
+									href="Home?restcall=true">Rest API</a>
+							</li>
 						</c:when>
 
-						<c:otherwise>
-
-
-						</c:otherwise>
-
-					</c:choose>
-
-
-
-
-
-					<c:choose>
+						<!-- TO DO - make admin login in login.java and attributes in userType -->
 						<c:when test="${sessionScope.adminValidated eq 'validated'}">
-							<li class="nav-item"><a class="nav-link active"
-								aria-current="page"
-								href="/BookLand/AdministratorLoginPage?adminReport=true">Admin
-									Report</a></li>
+							<li class="nav-item">
+								<a class="nav-link active" aria-current="page"
+									href="/BookLand/AdministratorLoginPage?adminReport=true">Admin Report</a>
+							</li>
 						</c:when>
-
-						<c:otherwise>
-
-
-						</c:otherwise>
-
 					</c:choose>
 
-
-
-
-
-
+					<!-- welcome greeting  -->
+					<li class="nav-item">
+						<c:choose>
+							<c:when test="${sessionScope.name ne null}">
+								<p id="welcometext" style="color: white;">Welcome ${name}</p>	
+							</c:when>
+							
+							<!-- treat admin as normal, display admin name under session scope-->
+							<c:when test="${sessionScope.adminValidated eq 'validated'}">
+								<p id="welcometext" style="color: white;">Welcome Admin</p>
+							</c:when>
+						</c:choose>
+					</li>
 				</ul>
-
-
-				<li class="nav-item"><c:choose>
-						<c:when test="${name ne null}">
-
-							<p id="welcometext" style="color: white;">Welcome ${name}</p>
-
-						</c:when>
-					</c:choose></li>
 
 
 				<form action="Home" class="d-flex" method="GET">
@@ -118,69 +89,36 @@
 						required="true" oninvalid="return false;"></input>
 					<button class="btn btn-outline-success" id="btnsubmit"
 						action="submit" value="true">Search</button>
-
 				</form>
 
+				<!-- login/logout -->
 				<c:choose>
-					<c:when test="${sessionScope.name ne null}">
-
+					<c:when test="${sessionScope.name ne null || sessionScope.adminValidated eq 'validated'}">
 						<form action="Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
-
-						<div class="thecart">
-							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
-								class="material-icons">shopping_cart</i></a>
-						</div>
 					</c:when>
-
-
-					<c:when test="${sessionScope.adminValidated eq 'validated'}">
-
-						<form action="Login" class="d-flex" method="POST">
-							<button class="btn btn-outline-success" id="logout" name="logout"
-								value="true">LogOut</button>
-						</form>
-
-						<div class="thecart">
-							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
-								class="material-icons">shopping_cart</i></a>
-						</div>
-					</c:when>
-
 
 					<c:otherwise>
-
 						<a class="btn btn-outline-success" id="login" name="login"
 							href="/BookLand/Login">LogIn/Register</a>
-
-
-						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
-							class="material-icons">shopping_cart</i></a>
-
 					</c:otherwise>
-
 				</c:choose>
-
-
+				
+				<!-- shopping cart -->
+				<div class="thecart">
+					<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+						class="material-icons">shopping_cart</i></a>
+				</div>
+				
 			</div>
 		</div>
 	</nav>
 
-
-
-
-
-
-<div>An exception occured please try again </div>
-
-
-
-
-
+	<div>An exception occurred please try again </div>
 
 </body>
 <c:import url="nav.html"></c:import>
-	</html>
+</html>
 </jsp:root>

@@ -72,7 +72,7 @@
 					<!-- welcome greeting  -->
 					<li class="nav-item">
 						<c:choose>
-							<c:when test="${name ne null}">
+							<c:when test="${sessionScope.name ne null}">
 								<p id="welcometext" style="color: white;">Welcome ${name}</p>	
 							</c:when>
 							

@@ -51,30 +51,47 @@
 							<li><a class="dropdown-item" href="Home?category=Crime">Crime</a></li>
 							<li><a class="dropdown-item" href="Home?category=Arts">Arts</a></li>
 							<li><a class="dropdown-item"
-								href="Home?category=Romance">Romance</a></li>
+								href="Home?category=Romance">Romance</a>
+							</li>
 							<li><a class="dropdown-item"
-								href="Home?category=History">History</a></li>
+								href="Home?category=History">History</a>
+							</li>
 							<li><a class="dropdown-item"
-								href="Home?category=Literacy">Literacy</a></li>
-						</ul></li>
+								href="Home?category=Literacy">Literacy</a>
+							</li>
+						</ul>
+					</li>
 
-				<c:choose>
-						<c:when test="${sessionScope.partnerButton eq 'present'}">
-
-
-							<li class="nav-item"><a class="nav-link active"
-								aria-current="page" href="Home?restcall=true">RestCall</a></li>
+					<c:choose>
+						<c:when test="${sessionScope.UserType eq 'partner'}">
+							<li class="nav-item">
+								<a class="nav-link active" aria-current="page" 
+									href="Home?restcall=true">Rest API</a>
+							</li>
 						</c:when>
 
-						<c:otherwise>
-
-
-						</c:otherwise>
-
+						<c:when test="${sessionScope.adminValidated eq 'validated'}">
+							<li class="nav-item">
+								<a class="nav-link active" aria-current="page"
+									href="/BookLand/AdministratorLoginPage?adminReport=true">Admin Report</a>
+							</li>
+						</c:when>
 					</c:choose>
 
-
+					<!-- welcome greeting  -->
+					<li class="nav-item">
+						<c:choose>
+							<c:when test="${sessionScope.name ne null}">
+								<p id="welcometext" style="color: white;">Welcome ${name}</p>	
+							</c:when>
+							
+							<c:when test="${sessionScope.adminValidated eq 'validated'}">
+								<p id="welcometext" style="color: white;">Welcome Admin</p>
+							</c:when>
+						</c:choose>
+					</li>					
 				</ul>
+				
 				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
 						type="search" placeholder="Search" aria-label="Search"
@@ -84,38 +101,31 @@
 
 				</form>
 
+				<!-- login/logout -->
 				<c:choose>
-					<c:when test="${sessionScope.name ne null}">
-
+					<c:when test="${sessionScope.name ne null || sessionScope.adminValidated eq 'validated'}">
 						<form action="Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
-						
-						<div class="thecart">
-							<a class="carticon" href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
-						</div>
 					</c:when>
 
 					<c:otherwise>
-
 						<a class="btn btn-outline-success" id="login" name="login"
 							href="/BookLand/Login">LogIn/Register</a>
-
-
-						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i class="material-icons">shopping_cart</i></a>
-
 					</c:otherwise>
-
 				</c:choose>
-
-
+				
+				<!-- shopping cart -->
+				<div class="thecart">
+					<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+						class="material-icons">shopping_cart</i></a>
+				</div>
 			</div>
 		</div>
 	</nav>
 
-
-<p>This information is not available</p>
+	<p>This information is not available</p>
 
 </body>
 <c:import url="nav.html"></c:import>
