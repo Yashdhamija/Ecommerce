@@ -102,8 +102,7 @@ public class Login extends HttpServlet {
 				request.getSession().setAttribute("name", user.getFirstname());
 				request.getSession().setAttribute("useremail", email);
 				request.getSession().setAttribute("UserType", user.getUserType() == 0 ? "visitor" : "partner"); 
-				
-				
+								
 				if (request.getSession().getAttribute("counter") == null) {
 					System.out.println("I am in 1");
 					this.counter = new CounterBean();

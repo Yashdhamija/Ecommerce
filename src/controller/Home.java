@@ -45,40 +45,13 @@ public class Home extends HttpServlet {
 
 		// This is for when user clicks the write a review button on the
 		// bookinformation.jspx page
-
 		if (request.getParameter("reviewform") != null && 
 				!this.model.retrieveBookTitle(request.getParameter("reviewform")).equals("")) {
-
-			request.getSession().setAttribute("reviewbookid", request.getParameter("reviewform"));
-			if (request.getSession().getAttribute("name") != null) {
-
-				try {
-
-					request.setAttribute("review", "true");
-					String bid = (String) request.getSession().getAttribute("bookid");
-					System.out.println("Bid is " + bid);
-					request.setAttribute("bookinfo", this.model.retrieveInfoOfBook(bid));
-					request.setAttribute("reviews", this.model.retrieveLastThreeReviews(bid));
-					request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
-
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-			else {
-
-				response.sendRedirect("/BookLand/Login");
-
-			}
-
+			 reviewForm(request, response);
 		}
 		// This is triggered when the bookTitle is clicked in the bookstore.jspx
 		else if (request.getParameter("bookinfo") != null
 				&& !this.model.retrieveBookTitle(request.getParameter("bookinfo")).equals("")) {
-			String bid = request.getParameter("bookinfo");
-			request.getSession().setAttribute("bookid", bid);
 			openIndividualBook(request, response);
 
 		}
@@ -90,10 +63,8 @@ public class Home extends HttpServlet {
 		// This is all the correct URLs with \Home\*
 		else if ((request.getRequestURI().equals("/BookLand/Home") && request.getQueryString() == null)
 				|| (request.getRequestURI().equals("/BookLand/Home")
-						&& !this.model.retrieveBookTitle(request.getParameter("addtocart")).equals(""))) {
-
+				&& !this.model.retrieveBookTitle(request.getParameter("addtocart")).equals(""))) {
 			HomePage(request, response);
-
 		}
 		// This is for displaying the books based on category
 		else if (request.getParameter("category") != null
@@ -104,15 +75,13 @@ public class Home extends HttpServlet {
 		}
 		// This is for searching the books
 		else if (request.getParameter("search") != null) {
-
 			searchForBooks(request, response);
 		}
 		// This is for rest calls for Partners
 		else if (request.getParameter("restcall") != null && request.getParameter("restcall").equals("true")
 				&& request.getSession().getAttribute("UserType") != null
-				&& request.getSession().getAttribute("UserType").equals("partner")) { // This is for clicking the rest
-																						// API for partners
-
+				&& ((String) request.getSession().getAttribute("UserType")).equals("partner")) { 
+			// This is for clicking the rest API for partners
 			request.getRequestDispatcher("/restcall.jspx").forward(request, response);
 
 		}
@@ -120,24 +89,38 @@ public class Home extends HttpServlet {
 		else {
 			// Error Page
 			response.sendRedirect("/BookLand/ErrorPage");
-
+		}
+	}
+	
+	public void reviewForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.getSession().setAttribute("reviewbookid", request.getParameter("reviewform"));
+		
+		if (request.getSession().getAttribute("name") != null) {
+			request.setAttribute("review", "true");
+			System.out.println("ReviewForm requested: Bid is " + (String) request.getSession().getAttribute("bookid"));
+			
+			// [!ref-y] saving both in sessionScope saves re-computing them here again!
+//				request.setAttribute("bookinfo", this.model.retrieveInfoOfBook(bid));
+//				request.setAttribute("reviews", this.model.retrieveLastThreeReviews(bid));
+			request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
 		}
 
+		else {
+			response.sendRedirect("/BookLand/Login");
+		}
 	}
 
 	public void HomePage(HttpServletRequest request, HttpServletResponse response)
-			throws ClassNotFoundException, ServletException, IOException { // start the homepage of the bookstore
-		BookStoreModel book = BookStoreModel.getInstance();
-		List<BookBean> l;
+			throws ClassNotFoundException, ServletException, IOException { 
+		// start the homepage of the bookstore
 		try {
-			l = book.retrieveBookRecords("");
-			request.setAttribute("books", l);
+			request.setAttribute("books", this.model.retrieveBookRecords(""));
 			request.getRequestDispatcher("/bookstore.jspx").forward(request, response);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	public void displayBooksInCategory(HttpServletRequest request, HttpServletResponse response)
@@ -172,38 +155,31 @@ public class Home extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
- 
-	public void BookInfoPage(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, ServletException, IOException {
-
-		if (!this.model.retrieveBookTitle(request.getParameter("bookinfo")).equals("")
-				|| !this.model.retrieveBookTitle(request.getParameter("reviewform")).equals("")
-				|| !this.model.retrieveBookTitle(request.getParameter("submitform")).equals("")) {
-
-			System.out.println("Gsdsd");
-			request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
-
-		}
-
-	}
 
 	public void openIndividualBook(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
 		// provides a new page on each book with a write a review section
 		String bid = request.getParameter("bookinfo");
-		List<ReviewBean> list = null;
-
-		try {
-			request.getSession().setAttribute("bookid", bid);
-			request.setAttribute("bookinfo", this.model.retrieveInfoOfBook(bid));
-			list = this.model.retrieveLastThreeReviews(bid);
-			request.setAttribute("reviews", list); // This
-			request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		if (request.getSession().getAttribute("bookinfo") == null 
+				|| !((BookBean) request.getSession().getAttribute("bookinfo")).getBid().equals(bid)) {
+		
+			try {
+				request.getSession().setAttribute("bookid", bid);
+				// [~ref-y] storing in session so don't re-compute when upon reloading of book information page 
+				// (due to in -page action e.g, submitReview)
+				request.getSession().setAttribute("bookinfo", this.model.retrieveInfoOfBook(bid));
+				request.getSession().setAttribute("reviews", this.model.retrieveLastThreeReviews(bid)); // This
+	
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			// [~ref-y] is there possibility that bookinfo is set and reviews list is not??
 		}
+		
+		request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
 	}
 
 	public void SubmitReview(HttpServletRequest request, HttpServletResponse response)
@@ -218,12 +194,17 @@ public class Home extends HttpServlet {
 		System.out.println(review);
 		try {
 			this.model.insertAReview(fname, lname, bid, review, title);
-
-			request.setAttribute("bookinfo", this.model.retrieveInfoOfBook(bid));
-			request.setAttribute("reviews", this.model.retrieveLastThreeReviews(bid));
-			// request.getRequestDispatcher("/bookinformation.jspx").forward(request,
-			// response);
-			response.sendRedirect("/BookLand/Home?bookinfo=" + bid);
+			
+			// [~ref-y] no need since this request is made from from bookinformation page which already contains book info
+//			request.setAttribute("bookinfo", this.model.retrieveInfoOfBook(bid));
+			
+			// update reviews list
+			request.getSession().setAttribute("reviews", this.model.retrieveLastThreeReviews(bid));
+			request.getRequestDispatcher("/bookinformation.jspx").forward(request,	response);
+			
+			// [~ref-y] no need to redirect via HomePage again since, 
+			// we got all information we need to display saved in session, no re-compuattion needed!
+//			response.sendRedirect("/BookLand/Home?bookinfo=" + bid);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -243,14 +224,8 @@ public class Home extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 	
-
-	
-	
-	
-
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
@@ -260,11 +235,8 @@ public class Home extends HttpServlet {
 		// TODO Auto-generated method stub
 
 		try {
-
 			// This is for the reason where counter gets null look into this
-
 			if (request.getSession().getAttribute("counter") == null) {
-
 				CounterBean counter = new CounterBean();
 				request.getSession().setAttribute("counter", counter);
 

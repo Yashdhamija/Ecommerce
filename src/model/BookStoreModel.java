@@ -114,7 +114,7 @@ public class BookStoreModel {
 		return this.dao.retreivebookrecord(bid);
 	}
 
-	public List<BookBean> retrieveInfoOfBook(String bid) throws SQLException {
+	public BookBean retrieveInfoOfBook(String bid) throws SQLException {
 		return this.dao.retrievebookinfo(bid);
 	}
 

@@ -632,30 +632,25 @@ public class DAO { // DB class
 
 	}
 
-	public List<BookBean> retrievebookinfo(String bid) throws SQLException {
+	// return book info associated with the given bid, wrapped in BookBean object
+	public BookBean retrievebookinfo(String bid) throws SQLException {
 
 		getRemoteConnection();
-		List<BookBean> list = new ArrayList<BookBean>();
-
+		BookBean bookinfo = null;
 		String query = "SELECT * FROM Book WHERE bid='" + bid + "'";
 
 		PreparedStatement ps = con.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
-			String bookid = rs.getString("bid");
-			String btitle = rs.getString("title");
-			int bprice = Integer.parseInt(rs.getString("price"));
-			String category = rs.getString("category");
-			String url = rs.getString("imageurl");
-			list.add(new BookBean(bookid, btitle, bprice, category, url));
-
+			bookinfo = new BookBean(rs.getString("bid"), rs.getString("title"),
+					rs.getInt("price"), rs.getString("category"), rs.getString("imageurl"));
 		}
 
 		rs.close();
 		ps.close();
 		con.close();
-		return list;
+		return bookinfo;
 
 	}
 
