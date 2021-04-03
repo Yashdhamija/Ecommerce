@@ -59,10 +59,8 @@
 								href="Home?category=History">History</a></li>
 							<li><a class="dropdown-item"
 								href="Home?category=Literacy">Literacy</a></li>
-						</ul></li>
-
-
-
+						</ul>
+					</li>
 
 				</ul>
 				<form action="Home" class="d-flex" method="GET">
@@ -71,13 +69,14 @@
 						required="true" oninvalid="return false;"></input>
 					<button class="btn btn-outline-success" id="btnsubmit"
 						action="submit" value="true">Search</button>
-
 				</form>
-
-				<a class="carticon" href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
-
-
-
+				
+				<!-- shopping cart -->
+				<div class="thecart">
+					<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+						class="material-icons">shopping_cart</i></a>
+				</div>
+				
 			</div>
 		</div>
 	</nav>
@@ -91,8 +90,8 @@
 					<div class="mb-4">
 						<label for="Username" class="form-label">Email address </label> <input
 							name="Username" type="text" class="form-control" id="Username"></input>
-
 					</div>
+					
 					<div class="mb-4">
 						<label for="exampleInputPassword1" class="form-label">Password</label>
 						<input name="signinpassword" type="password" class="form-control"
@@ -103,33 +102,26 @@
 						<c:when test="${loginfailed eq 'failed'}">
 							<p style="color: red;">Incorrect Email and or password</p>
 						</c:when>
-
-
 					</c:choose>
 
-
-					<div class="invalid-feedback">Please choose a username.</div>
-
+					<div class="invalid-feedback">Please choose a username</div>
 
 					<button name="loginButton" id="loginButton" value="true"
 						type="submit" class="mt-3 me-2 btn btn-dark">Login</button>
-					<a name="signup" id="signup"  href="/BookLand/Register"
-						class="mt-3 me-2 btn btn-dark">Register</a>
-						 <a name="partnersignup" id="partnersignup"
-						 href="/BookLand/PartnerRegister"
-						class="mt-3 me-2 btn btn-dark">Partner Sign Up</a>
+					
+					<button name="signup" id="signup" value="true"
+						type="submit" class="mt-3 me-2 btn btn-dark">Register</button>
+						
+					<button name="partnersignup" id="partnersignup" value="true"
+						type="submit" class="mt-3 me-2 btn btn-dark">Partner Sign Up</button>
 
 				</form>
 			</fieldset>
 		</div>
 	</div>
 
-
-
-
-
 </body>
 <c:import url="nav.html"></c:import>
 </body>
-	</html>
+</html>
 </jsp:root>

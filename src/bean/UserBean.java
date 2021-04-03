@@ -4,12 +4,14 @@ public class UserBean {
 	String fname;
 	String lname;
 	String email;
+	int userType;
 	
 	
-	public UserBean(String fname, String lname, String email) {
+	public UserBean(String fname, String lname, String email, int userType) {
 		this.fname = fname;
 		this.lname = lname;
 		this.email = email;
+		this.userType = userType;
 	}
 
 
@@ -40,6 +42,16 @@ public class UserBean {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+
+	public int getUserType() {
+		return userType;
+	}
+
+
+	public void setUserType(int userType) {
+		this.userType = userType;
 	}
 	
 }

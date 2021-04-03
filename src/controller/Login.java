@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.CounterBean;
+import bean.UserBean;
 
 import javax.servlet.ServletConfig;
 
@@ -25,6 +26,7 @@ import services.LoginService;
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private LoginService login;
+	private BookStoreModel model;
 	public CounterBean counter;
 
 	/**
@@ -32,30 +34,35 @@ public class Login extends HttpServlet {
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public Login() throws ClassNotFoundException {
-
 		super();
-		this.login = new LoginService();
-		//this.counter= new CounterBean();
 		
-	
-		
-
-		// TODO Auto-generated constructor stub
+		try {
+			this.login = new LoginService();
+			this.model = BookStoreModel.getInstance();
+		} catch (ClassNotFoundException e) {
+			// handle exception
+			// throw exception and hoping it would automatically 
+			// be caught and displays Eception.jspx
+			e.printStackTrace();
+			throw new ClassNotFoundException("Sorry, an exception occured");
+		}
 	}
 	
-	
-
-
-
 	public void LoginAndLogoutFromHomPage(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, NoSuchAlgorithmException {
-		// Login From Home Page by clicking the login/register button
 		
+		// validate login credentials provided (as user or as partner)
+		if (request.getParameter("loginButton") != null) {	
+			LoginAuthentication(request, response);	
+		} 
 		
-		if (request.getParameter("loginButton") != null) {
+		// sign up from login page
+		else if (request.getParameter("signup") != null || request.getParameter("partnersignup") != null) {
 			
-			LoginAuthentication(request, response);
+			response.sendRedirect("/BookLand/Register");
 		}
+		
+		// log out from home page
 		else if(request.getParameter("logout") != null) {
 			
 			request.getSession().setAttribute("name", null);
@@ -68,14 +75,13 @@ public class Login extends HttpServlet {
 			response.sendRedirect("/BookLand/Home");
 		}
 		
+		// Login From Home Page by clicking the login/register button
 		else if (request.getServletPath() != null && request.getServletPath().equals("/Login")
-				&& request.getQueryString() == null) { //
-			
-			this.login.displayLoginPage(request, response);
+				&& request.getQueryString() == null) { //			
+			request.getRequestDispatcher("/login.jspx").forward(request, response);
 		} 
 		
 		else {
-
 			// error handling
 		}
 	}
@@ -83,33 +89,20 @@ public class Login extends HttpServlet {
 	public void LoginAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, NoSuchAlgorithmException {
 
-		boolean isVisitorAuthenticated = false;
-		boolean isPartnerAuthenticated = false;
 		String email = request.getParameter("Username");
 		String password = request.getParameter("signinpassword");
 		System.out.println(email);
 		System.out.println(password);
 
 		if (email != null && password != null) {
-
-			isVisitorAuthenticated = this.login.UserLoginValidation(email, password);
-			isPartnerAuthenticated = this.login.PartnerLoginValidation(email, password);
-
-			if (isVisitorAuthenticated || isPartnerAuthenticated) {
-
-				if (isVisitorAuthenticated) {
-					String userLoginName = this.login.displayUserLoginName(email);
-					request.getSession().setAttribute("name", userLoginName); // trigger for adding to cart
-					request.getSession().setAttribute("UserType", "visitor"); // trigger for adding to cart
-				}
-
-				else {
-					String partnerLoginName = this.login.displayPartnerName(email);
-					request.getSession().setAttribute("name", partnerLoginName);
-					request.getSession().setAttribute("UserType", "partner");
-				}
-				
+			UserBean user = this.model.isUserExist(email, password);
+			
+			if (user != null) {
+				// triggers for adding to cart	
+				request.getSession().setAttribute("name", user.getFirstname());
 				request.getSession().setAttribute("useremail", email);
+				request.getSession().setAttribute("UserType", user.getUserType() == 0 ? "visitor" : "partner"); 
+				
 				
 				if (request.getSession().getAttribute("counter") == null) {
 					System.out.println("I am in 1");
@@ -123,17 +116,14 @@ public class Login extends HttpServlet {
 				
 				//request.getSession().setAttribute("counter", this.counter); // payment requests is initiated as counterbean
 
-				//request.getRequestDispatcher("/Home").forward(request, response);
 				response.sendRedirect("/BookLand/Home");
+				
 			} else {
 				request.setAttribute("loginfailed", "failed");
 				request.getRequestDispatcher("/login.jspx").forward(request, response);
-				; // display error message
-
 			}
 		}
 	}
-
 
 
 	/**
@@ -142,17 +132,12 @@ public class Login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-
 		try {
 			LoginAndLogoutFromHomPage(request, response);
 		} catch (NoSuchAlgorithmException | ServletException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//Logout(request, response);
-
-		// response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**

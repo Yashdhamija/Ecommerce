@@ -82,6 +82,10 @@ public class BookStoreModel {
 
 		this.dao.insertAdminIntoDB(email, fname, lname, password);
 	}
+	
+	public UserBean isUserExist(String email, String password) throws NoSuchAlgorithmException {
+		return this.dao.isUserExist(email, this.encryptPassword(password));
+	}
 
 	public boolean isVisitorExist(String email, String password) throws NoSuchAlgorithmException {
 		return this.dao.IsVisitorExistInDB(email, this.encryptPassword(password));

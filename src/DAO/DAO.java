@@ -267,7 +267,6 @@ public class DAO { // DB class
 		ps.close();
 		con.close();
 		return result;
-
 	}
 
 	public int insertAddress(String email, String street, String province, String country, String zip, String phone,
@@ -288,7 +287,43 @@ public class DAO { // DB class
 		con.close();
 		return result;
 	}
-
+	
+	// checks if users with given credential sexists in dB.
+	// Generic functionality, can be  used to check for all kinds of users: 
+	// customers, partners & administrators
+	// @returns - UserBean (fname, userType ) if users exists else returns null
+	public UserBean isUserExist(String email, String password) {
+		getRemoteConnection();
+		UserBean user = null;
+		String fname, lname;
+		int userType;
+		try {
+			String query = "SELECT fname, lname, usertype  FROM Users WHERE email='" + email + 
+					"' AND password='" + password + "'";
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery(query);			
+			while (rs.next()) {
+				fname = rs.getString("fname");
+				lname = rs.getString("lname");
+				userType = rs.getInt("usertype");
+				user = new UserBean(fname, lname, null, userType);
+				System.out.println("This user inside the DB: Name -> " + fname + " userType -> " + userType);
+			}
+			
+			rs.close();
+			ps.close();
+			con.close();	
+			
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return user;
+	}
+	
+	// This function shall be removed once safe to do so
 	public boolean IsVisitorExistInDB(String email, String password) { // For Signing up, if previous email exists then
 																		// it checks
 		String dbEmail = null;
@@ -772,6 +807,7 @@ public class DAO { // DB class
 		String fname;
 		String lname;
 		String e;
+		int userType;
 		UserBean user = null;
 		String query = "SELECT * FROM Users WHERE email='" + email + "'";
 
@@ -782,7 +818,8 @@ public class DAO { // DB class
 			fname = rs.getString("fname");
 			lname = rs.getString("lname");
 			e = rs.getString("email");
-			user = new UserBean(fname, lname, email);
+			userType = rs.getInt("usertype");
+			user = new UserBean(fname, lname, email, userType);
 		}
 
 		rs.close();
