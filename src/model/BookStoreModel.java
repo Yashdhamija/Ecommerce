@@ -87,15 +87,6 @@ public class BookStoreModel {
 		return this.dao.isUserExist(email, this.encryptPassword(password));
 	}
 
-	public boolean isVisitorExist(String email, String password) throws NoSuchAlgorithmException {
-		return this.dao.IsVisitorExistInDB(email, this.encryptPassword(password));
-
-	}
-
-	public boolean isPartnerExist(String email, String password) throws NoSuchAlgorithmException {
-		return this.dao.IsPartnerExistInDB(email, this.encryptPassword(password));
-	}
-
 	public String getPassword(String password) {
 		return this.dao.retrievePassword(password);
 	}
