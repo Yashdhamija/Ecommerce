@@ -39,13 +39,10 @@ public class Cart extends HttpServlet {
 			throws ServletException, IOException {
 
 		if (request.getSession().getAttribute("shoppingcart") == null) {
-			
 			request.getSession().setAttribute("carttotal", "0");
-
 		}
 
 		request.getRequestDispatcher("/Cart.jspx").forward(request, response);
-
 	}
 
 	public void addToCart(HttpServletRequest request, HttpServletResponse response)
@@ -157,42 +154,37 @@ public class Cart extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
-		if (request.getParameter("viewcart") != null && request.getParameter("viewcart").equals("true")) {
-
-			displayCartPage(request, response);
-		} else
-			try {
-				if (request.getParameter("addtocart") != null && !this.model.retrieveBookTitle(request.getParameter("addtocart")).equals("")) {
-
-					try {
-						addToCart(request, response);
-					} catch (ServletException | IOException | SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-				else if (request.getParameter("removebook") != null) {
-
-					removeFromCart(request, response);
-
-				}
-
-				else if (request.getParameter("quantity") != null) {
-						
-					updateQuantityInCart(request,response);
-				}
-
-				else {
-
-					response.sendRedirect("ErrorPage");
-				}
-			} catch (SQLException | ServletException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		try {
+			if (request.getParameter("viewcart") != null && request.getParameter("viewcart").equals("true")) {
+				displayCartPage(request, response);
+			} 
+			
+			else if (request.getParameter("addtocart") != null 
+					&& !this.model.retrieveBookTitle(request.getParameter("addtocart")).equals("")) {
+					addToCart(request, response);
+			}
+			
+			else if (request.getParameter("removebook") != null) {
+				removeFromCart(request, response);
+			}
+			
+			else if (request.getParameter("quantity") != null) {
+				
+				updateQuantityInCart(request,response);
 			}
 
+			else {
+
+				response.sendRedirect("ErrorPage");
+			}
+		} catch (ServletException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**

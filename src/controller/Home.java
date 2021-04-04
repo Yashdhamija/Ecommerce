@@ -53,7 +53,6 @@ public class Home extends HttpServlet {
 		else if (request.getParameter("bookinfo") != null
 				&& !this.model.retrieveBookTitle(request.getParameter("bookinfo")).equals("")) {
 			openIndividualBook(request, response);
-
 		}
 		// This is called when user submits review in the bookinformation.jspx page
 		else if (request.getParameter("submitreview") != null) {
@@ -69,9 +68,7 @@ public class Home extends HttpServlet {
 		// This is for displaying the books based on category
 		else if (request.getParameter("category") != null
 				&& this.model.retrieveBooksUsingCategory(request.getParameter("category")).size() > 0) {
-
 			displayBooksInCategory(request, response);
-
 		}
 		// This is for searching the books
 		else if (request.getParameter("search") != null) {

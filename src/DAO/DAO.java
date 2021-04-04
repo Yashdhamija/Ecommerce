@@ -494,9 +494,7 @@ public class DAO { // DB class
 					rs.getString("title"),
 					rs.getInt("price"),
 					rs.getString("category"),
-					rs.getString("imageurl"));
-			
-			
+					rs.getString("imageurl"));				
 		}
 
 		rs.close();
