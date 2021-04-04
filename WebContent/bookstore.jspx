@@ -11,8 +11,10 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Canada's Biggest BookStore</title>
+<title>BookLand</title>
 <link rel="StyleSheet" href="style/ui.css" type="text/css"
+	title="cse4413" media="screen, print" />
+<link rel="StyleSheet" href="style/header.css" type="text/css"
 	title="cse4413" media="screen, print" />
 
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -31,6 +33,12 @@
 				aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
+			
+			
+
+			
+			
+
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item"><a class="nav-link active"
@@ -42,30 +50,28 @@
 						data-bs-toggle="dropdown" aria-expanded="false"> Books </a>
 						<ul class="dropdown-menu"
 							aria-labelledby="navbarScrollingDropdown">
-							<li><a class="dropdown-item"
-								href="Home">All</a></li>
-							<li><a class="dropdown-item"
-								href="Home?category=Fiction">Fiction</a></li>
-							<li><a class="dropdown-item"
-								href="Home?category=Science">Science</a></li>
-							<li><a class="dropdown-item"
-								href="Home?category=Sci-fi">Sci-fi</a></li>
+							<li><a class="dropdown-item" href="Home">All</a></li>
+							<li><a class="dropdown-item" href="Home?category=Fiction">Fiction</a></li>
+							<li><a class="dropdown-item" href="Home?category=Science">Science</a></li>
+							<li><a class="dropdown-item" href="Home?category=Sci-fi">Sci-fi</a></li>
 							<li><a class="dropdown-item" href="Home?category=Crime">Crime</a></li>
 							<li><a class="dropdown-item" href="Home?category=Arts">Arts</a></li>
-							<li><a class="dropdown-item"
-								href="Home?category=Romance">Romance</a></li>
-							<li><a class="dropdown-item"
-								href="Home?category=History">History</a></li>
-							<li><a class="dropdown-item"
-								href="Home?category=Literacy">Literacy</a></li>
+							<li><a class="dropdown-item" href="Home?category=Romance">Romance</a></li>
+							<li><a class="dropdown-item" href="Home?category=History">History</a></li>
+							<li><a class="dropdown-item" href="Home?category=Literacy">Literacy</a></li>
 						</ul></li>
 
-				<c:choose>
-						<c:when test="${sessionScope.partnerButton eq 'present'}">
+					<c:choose>
+						<c:when test="${sessionScope.UserType eq 'partner'}">
 
 
 							<li class="nav-item"><a class="nav-link active"
-								aria-current="page" href="Home?restcall=true">RestCall</a></li>
+								aria-current="page" href="Home?restcall=true">Rest API</a></li>
+
+
+
+
+
 						</c:when>
 
 						<c:otherwise>
@@ -76,7 +82,54 @@
 					</c:choose>
 
 
+
+
+
+					<c:choose>
+						<c:when test="${sessionScope.adminValidated eq 'validated'}">
+							<li class="nav-item"><a class="nav-link active"
+								aria-current="page"
+								href="/BookLand/AdministratorLoginPage?adminReport=true">Admin
+									Report</a></li>
+						</c:when>
+
+						<c:otherwise>
+
+
+						</c:otherwise>
+
+					</c:choose>
+
+
+
+
+
+
 				</ul>
+
+
+				<li class="nav-item"><c:choose>
+						<c:when test="${name ne null}">
+
+							<p id="welcometext" style="color: white;">Welcome ${name}</p>
+
+						</c:when>
+					</c:choose></li>
+					
+					
+							<li class="nav-item"><c:choose>
+						<c:when test="${adminValidated eq 'validated'}">
+
+							<p id="welcometext" style="color: white;">Welcome Admin</p>
+
+						</c:when>
+					</c:choose></li>
+					
+					
+					
+					
+
+
 				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
 						type="search" placeholder="Search" aria-label="Search"
@@ -89,15 +142,31 @@
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">
 
-						<form action="Home" class="d-flex" method="POST">
+						<form action="Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
-						
+
 						<div class="thecart">
-							<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+								class="material-icons">shopping_cart</i></a>
 						</div>
 					</c:when>
+
+
+					<c:when test="${sessionScope.adminValidated eq 'validated'}">
+
+						<form action="Login" class="d-flex" method="POST">
+							<button class="btn btn-outline-success" id="logout" name="logout"
+								value="true">LogOut</button>
+						</form>
+
+						<div class="thecart">
+							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+								class="material-icons">shopping_cart</i></a>
+						</div>
+					</c:when>
+
 
 					<c:otherwise>
 
@@ -105,7 +174,8 @@
 							href="/BookLand/Login">LogIn/Register</a>
 
 
-						<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+							class="material-icons">shopping_cart</i></a>
 
 					</c:otherwise>
 
@@ -120,15 +190,6 @@
 
 
 
-	<c:choose>
-		<c:when test="${name ne null}">
-			
-			Welcome  ${name}
-			
-	</c:when>
-	</c:choose>
-
-
 
 
 
@@ -136,10 +197,10 @@
 	<c:choose>
 		<c:when test="${found eq 'true'}">
 			<div class="searchresults">
-					<label id="label1">${numberofresults}</label>
+				<label id="label1">${numberofresults}</label>
 			</div>
-			
-			<div class="container1">				
+
+			<div class="container1">
 
 				<c:forEach var="result" items="${bookfound}">
 
@@ -153,9 +214,10 @@
 						</form>
 
 						<p class="bookprice">$${result.getPrice()}</p>
-						<form action="Home" class="d-flex" method="GET">
-							<button name="addtocart" id="addtocart" value="${result.getBid()}" class="btn btn-outline-primary btn-sm">Add
-							to Cart</button>
+						<form action="/BookLand/Cart" class="d-flex" method="GET">
+							<button name="addtocart" id="addtocart"
+								value="${result.getBid()}"
+								class="btn btn-outline-primary btn-sm">Add to Cart</button>
 						</form>
 					</div>
 
@@ -167,29 +229,29 @@
 		<c:when test="${category ne null}">
 			<div class="container">
 				<c:forEach var="books" items="${category}">
-				
+
 					<div class="item" id="${books.getBid()}">
 
 						<img id="images" src="images/${books.getUrl()}"></img>
-						
-						
+
+
 						<form action="Home" class="d-flex" method="POST">
 							<Button id="bookinfo" name="bookinfo" value="${books.getBid()}">${books.getTitle()}</Button>
 						</form>
-						
+
 						<p class="bookprice">$${books.getPrice()}</p>
-						
-						
-						<form action="Home" class="d-flex" method="GET">
-							<button name="addtocart" id="addtocart" value="${books.getBid()}" class="btn btn-outline-primary btn-sm">Add
-							to Cart</button>
+
+
+						<form action="/BookLand/Cart" class="d-flex" method="GET">
+							<button name="addtocart" id="addtocart" value="${books.getBid()}"
+								class="btn btn-outline-primary btn-sm">Add to Cart</button>
 						</form>
 					</div>
-				
+
 				</c:forEach>
 			</div>
 		</c:when>
-		
+
 
 		<c:otherwise>
 			<div class="container">
@@ -207,7 +269,7 @@
 
 						<p class="bookprice">$${book.getPrice()}</p>
 
-						<form action="Home" class="d-flex" method="GET">
+						<form action="/BookLand/Cart" class="d-flex" method="GET">
 							<button class="btn btn-outline-primary btn-sm" id="addtocart"
 								name="addtocart" value="${book.getBid()}">Add to Cart</button>
 						</form>

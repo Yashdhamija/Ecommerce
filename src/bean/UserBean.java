@@ -4,42 +4,64 @@ public class UserBean {
 	String fname;
 	String lname;
 	String email;
-	
-	
-	public UserBean(String fname, String lname, String email) {
+	String password;
+	int customerId;
+	int userType;
+	// For Partners and Customers
+	public UserBean(String fname, String lname, String email, String password, int customerId, int userType) {
 		this.fname = fname;
 		this.lname = lname;
 		this.email = email;
+		this.password = password;
+		this.customerId = customerId;
+		this.userType = userType;
+
+	}
+	//For Administrator
+	public UserBean(String fname, String lname, String email, String password) {
+		this.fname = fname;
+		this.lname = lname;
+		this.email = email;
+		this.password = password;
+
 	}
 
+	
 
-	public String getFname() {
+
+	public String getFirstname() {
 		return fname;
 	}
 
-
-	public void setFname(String fname) {
+	public void setFirstname(String fname) { // If you change your name then makes sense
 		this.fname = fname;
 	}
 
-
-	public String getLname() {
+	public String getLastname() {
 		return lname;
 	}
 
-
-	public void setLname(String lname) {
+	public void setLastname(String lname) { // If you change your name then makes sense
 		this.lname = lname;
 	}
-
 
 	public String getEmail() {
 		return email;
 	}
 
+	public int getUserType() {
 
-	public void setEmail(String email) {
-		this.email = email;
+		return this.userType;
 	}
-	
+
+	public String getPassword() {
+
+		return this.password;// encrypt it
+	}
+
+	public void setPassword(String password) {
+
+		this.password = password;
+	}
+
 }

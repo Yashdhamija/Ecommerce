@@ -22,6 +22,48 @@
       <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
   
+
+
+
+
+
+ <servlet>
+    <servlet-name>Login</servlet-name>
+    <servlet-class>Login.controller</servlet-class>
+</servlet>
+
+
+ <servlet>
+    <servlet-name>Register</servlet-name>
+    <servlet-class>Register.controller</servlet-class>
+</servlet>
+
+ <servlet>
+    <servlet-name>Cart</servlet-name>
+    <servlet-class>Cart.controller</servlet-class>
+</servlet>
+
+ <servlet>
+    <servlet-name>Payment</servlet-name>
+    <servlet-class>Payment.controller</servlet-class>
+</servlet>
+
+ <servlet>
+    <servlet-name>Admin</servlet-name>
+    <servlet-class>Admin.controller</servlet-class>
+</servlet>
+
+ <servlet>
+    <servlet-name>Analytics</servlet-name>
+    <servlet-class>Analytics.controller</servlet-class>
+</servlet>
+
+
+
+
+
+
+
   <display-name>BookLand</display-name>
   
   
@@ -33,6 +75,17 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
+  
+  <error-page>
+ <error-code>404</error-code>
+ <location>/404.jspx</location>
+ </error-page>
+ <error-page>
+ <exception-type>java.lang.Exception</exception-type>
+ <location>/Exception.jspx</location>
+</error-page>
+  
   
 
   

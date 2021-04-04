@@ -68,7 +68,7 @@
 
 				</form>
 
-				<a href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+				
 
 
 
@@ -82,11 +82,11 @@
 		<div class="row justify-content-center">
 			<fieldset class="col-6">
 				<legend>Sign In As Administrator</legend>
-				<form action="" method="POST" class="loginForm">
+				<form action="/BookLand/AdministratorLoginPage" method="POST" class="loginForm" >
 					<div class="mb-4">
-						<label for="adminEmail" class="form-label">Email address </label> <input
-							name="adminEmail" type="text" class="form-control" id="adminEmail"
-							required="required"></input>
+						<label for="adminEmail" class="form-label">Email address </label>
+						<input name="adminEmail" type="text" class="form-control"
+							id="adminEmail" required="required"></input>
 
 					</div>
 					<div class="mb-4">
@@ -96,7 +96,7 @@
 					</div>
 
 					<c:choose>
-						<c:when test="${loginfailed eq 'failed'}">
+						<c:when test="${adminLoginFailed eq 'failed'}">
 							<p style="color: red;">Incorrect Email and or password, not
 								enough access rights</p>
 						</c:when>
@@ -108,11 +108,16 @@
 					<div class="invalid-feedback">Please choose a username.</div>
 
 
-					<button name="adminButton" id="adminButton" value="true"
+					<button name="adminLogin" id="adminButton" value="true"
 						type="submit" class="mt-3 me-2 btn btn-dark">Login</button>
+						
+					 <a href="/BookLand/AdministratorLoginPage?adminSignUp=true"
+						class="mt-3 me-2 btn btn-dark">Sign Up</a>
 
 
 				</form>
+				
+			
 			</fieldset>
 		</div>
 	</div>

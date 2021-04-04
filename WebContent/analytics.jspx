@@ -11,7 +11,7 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Insert title here</title>
+<title>Analytics</title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet"></link>
 <link
@@ -28,9 +28,13 @@
 </head>
 <body>
 
+
+
+
+
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="#">Navbar</a>
+			<a class="navbar-brand" href="Home"><i class="material-icons">menu_book</i></a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -39,26 +43,86 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<li class="home"><a class="nav-link active"
-						aria-current="page" href="BookStore">Home</a></li>
-					<li class="about"><a class="nav-link" href="#">About</a></li>
+					<li class="nav-item"><a class="nav-link active"
+						aria-current="page" href="Home">Home</a></li>
 
-					<li class="contact"><a class="nav-link" href="#">Contact
-							Us</a></li>
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#"
+						id="navbarScrollingDropdown" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"> Books </a>
+						<ul class="dropdown-menu"
+							aria-labelledby="navbarScrollingDropdown">
+							<li><a class="dropdown-item" href="Home">All</a></li>
+							<li><a class="dropdown-item" href="Home?category=Fiction">Fiction</a></li>
+							<li><a class="dropdown-item" href="Home?category=Science">Science</a></li>
+							<li><a class="dropdown-item" href="Home?category=Sci-fi">Sci-fi</a></li>
+							<li><a class="dropdown-item" href="Home?category=Crime">Crime</a></li>
+							<li><a class="dropdown-item" href="Home?category=Arts">Arts</a></li>
+							<li><a class="dropdown-item" href="Home?category=Romance">Romance</a></li>
+							<li><a class="dropdown-item" href="Home?category=History">History</a></li>
+							<li><a class="dropdown-item" href="Home?category=Literacy">Literacy</a></li>
+						</ul></li>
 
 				</ul>
-				<form action="BookStore" class="d-flex" method="GET">
+				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
-						type="search" placeholder="Search" aria-label="Search"></input>
+						type="search" placeholder="Search" aria-label="Search"
+						required="true" oninvalid="return false;"></input>
 					<button class="btn btn-outline-success" id="btnsubmit"
 						action="submit" value="true">Search</button>
 
 				</form>
 
+				<c:choose>
+					<c:when test="${sessionScope.name ne null}">
+
+						<form action="Login" class="d-flex" method="POST">
+							<button class="btn btn-outline-success" id="logout" name="logout"
+								value="true">LogOut</button>
+						</form>
+
+						<div class="thecart">
+							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+								class="material-icons">shopping_cart</i></a>
+						</div>
+					</c:when>
+
+
+					<c:when test="${sessionScope.adminValidated eq 'validated'}">
+
+						<form action="Login" class="d-flex" method="POST">
+							<button class="btn btn-outline-success" id="logout" name="logout"
+								value="true">LogOut</button>
+						</form>
+
+						<div class="thecart">
+							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+								class="material-icons">shopping_cart</i></a>
+						</div>
+					</c:when>
+
+
+					<c:otherwise>
+
+						<a class="btn btn-outline-success" id="login" name="login"
+							href="/BookLand/Login">LogIn/Register</a>
+
+
+						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+							class="material-icons">shopping_cart</i></a>
+
+					</c:otherwise>
+
+				</c:choose>
+
+
 			</div>
 		</div>
 	</nav>
-	<!-- top 10 books of all time -->
+
+
+
+<!-- top 10 books of all time -->
 	<div class="number-of-each-book">
 		<table>
 			<caption>Top 10 Books Sold Of All Time</caption>
@@ -81,7 +145,7 @@
 	</div>
 
 	<!-- top books sold for a month -->
-	<form class="topMonth">
+	<form action="Analytics" class="topMonth">
 		<label for="topMonth">Most sold for: </label> <select name="topMonth"
 			id="topMonth">
 			<c:forEach var="result" items="${topMonthList}">
@@ -127,16 +191,17 @@
 
 			<tbody>
 				<c:forEach var="userStatistic" items="${userStats}">
-						<tr>
-							<th>${userStatistic[0]}</th>
-							<th>${userStatistic[1]}</th>
-							<th>${userStatistic[2]}</th>
-						</tr>
+					<tr>
+						<th>${userStatistic[0]}</th>
+						<th>${userStatistic[1]}</th>
+						<th>${userStatistic[2]}</th>
+					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
 	</div>
 
 </body>
+<c:import url="nav.html"></c:import>
 	</html>
 </jsp:root>

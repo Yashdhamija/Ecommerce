@@ -14,7 +14,7 @@
 <head>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet"></link>
-<title>Register</title>
+<title>Administrator Registration</title>
 
 </head>
 <body>
@@ -90,89 +90,35 @@
 
 		<div class="container">
 			<div class="row justify-content-center">
-				<form  action="Register" method="POST" onsubmit="return validate();"
+				<form  action="/BookLand/AdministratorLoginPage" method="POST" onsubmit="return validate();"
 					class="row g-3">
 					<div class="col-md-6">
 						<label for="fname" class="form-label">First Name</label> <input
-							type="text" class="form-control" name="firstName" id="firstName"
+							type="text" class="form-control" name="adminfirstName" id="firstName"
 							required="required"></input>
 					</div>
 					<div class="col-md-6">
 						<label for="lname" class="form-label">Last Name</label> <input
-							type="text" class="form-control" name="lastName" id="lastName"
+							type="text" class="form-control" name="adminlastName" id="lastName"
 							required="required"></input>
 					</div>
 					<div class="col-12">
 						<label for="email" class="form-label">Email</label> <input
-							type="email" class="form-control" name="email" id="email"
+							type="email" class="form-control" name="adminEmail" id="email"
 							required="required"></input>
 					</div>
 
 					<div class="col-12">
 						<label for="password" class="form-label">Password (8 characters minimum)</label> <input
-							type="password" class="form-control" name="password" minlength="8"
+							type="password" class="form-control" name="adminPassword" minlength="8"
 							required="required" id="password"></input>
 					</div>
 
-					<div class="col-md-6">
-						<label for="street" class="form-label">Street Address</label> <input
-							type="text" class="form-control" name="street" id="street"
-							placeholder="1234 Main St" required="required"></input>
-					</div>
-					<div class="col-md-4">
-						<label for="city" class="form-label">City</label> <input
-							type="text" class="form-control" name="city" id="city"
-							required="required"></input>
-					</div>
-					<div class="col-md-2">
-						<label for="province" class="form-label">Province</label> 
-						<select  name="province" id="province" class="form-select" required="required">
-						<option selected="selected"></option>
-						<option>Alberta</option>
-						<option>British Columbia</option>
-						<option>Manitoba</option>
-						<option>New Brunswick</option>
-						<option>Newfoundland and Labrador</option>
-						<option>Nova Scotia</option>
-						<option>North West Territories</option>
-						<option>Nunavut</option>
-						<option>Ontario</option>
-						<option>Prince Edward Island</option>
-						<option>Quebec</option>
-						<option>Saskatchewan</option>
-						<option>Yukon</option>
-					</select>
-					</div>
-
-
-					
-
-					<div class="col-md-3">
-						<label for="zip" class="form-label">Zip Code</label> <input
-							type="text" class="form-control" name="zip" id="zip"
-							placeholder="XXX-XXX"
-							pattern="[A-Z]{1}[0-9]{1}[A-Z]{1}-[0-9]{1}[A-Z]{1}[0-9]{1}"
-							required="required"></input> <small>Format: XXX-XXX</small>
-					</div>
-
-					<div class="col-md-3">
-						<label for="phone" class="form-label">Phone</label> <input
-							type="tel" class="form-control" name="phone" id="phone"
-							placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-							required="required"></input> <small>Format: 123-456-7890</small>
-					</div>
-
-					<div class="col-md-4">
-						<label for="country" class="form-label">Country</label> 
-						<select  name="country" id="country" class="form-select" required="required">
-						<option selected="selected"></option>
-						<option>Canada</option>
-					</select>
-					</div>
+		
 					
 					<c:choose>
 						<c:when test="${emailexists eq true}">
-							<p style="color:red;">Email Already Exists Please try again!</p>
+							<p style="color:red;">Administrator Already Exists Please try again!</p>
 						</c:when>
 
 
@@ -182,7 +128,7 @@
 					
 
 					<div class="col-12">
-						<button name="registerbtn" value="true" type="submit"
+						<button name="adminregisterbtn" value="true" type="submit"
 							class="btn btn-dark">Sign Up</button>
 					</div>
 				</form>
