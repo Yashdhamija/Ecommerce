@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import bean.UserBean;
 import services.RegisterService;
 
 /**
@@ -79,11 +80,10 @@ public class Register extends HttpServlet {
 		String country = request.getParameter("country");
 
 		if (request.getParameter("registerbtn") != null) {
-
-			if (this.register.isVisitorRegistererInfoInDB(email, password)) {
-				
-				boolean doesVisitorEmailExist = true;
-				request.setAttribute("emailexists", doesVisitorEmailExist); // User exists
+			UserBean user = this.register.isUserExist(email, password);
+			
+			if (user != null && user.getUserType() == 0) {
+				request.setAttribute("emailexists", true); // User exists
 
 			}
 
@@ -97,11 +97,10 @@ public class Register extends HttpServlet {
 		}
 
 		if (request.getParameter("uidregister") != null) {
-
-			if (this.register.isPartnerRegistererInfoInDB(email, password)) { // Partner exists throw error message
-				
-				boolean doesPartnerEmailExist = true;
-				request.setAttribute("partnerexists", doesPartnerEmailExist);
+			UserBean user = this.register.isUserExist(email, password);
+			
+			if (user != null && user.getUserType() == 1) { // Partner exists throw error message				
+				request.setAttribute("partnerexists", true);
 			}
 
 			else {

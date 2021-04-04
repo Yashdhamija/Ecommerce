@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 import DAO.DAO;
+import bean.UserBean;
 
 public class RegisterService {
 
@@ -23,11 +24,12 @@ public class RegisterService {
 			String province, String zipCode, String phoneNumber, String country) throws SQLException, NoSuchAlgorithmException { // User
 		
 		this.book.insertUserLogin(fname, lname, email, this.book.encryptPassword(password));																								// Registration
-		this.book.insertIntoAddress(email,address, province, country, zipCode, phoneNumber, city);
-		
-		
+		this.book.insertIntoAddress(email,address, province, country, zipCode, phoneNumber, city);				
 	}
 	
+	public UserBean isUserExist(String email, String password) throws NoSuchAlgorithmException {
+		return this.book.isUserExist(email, password);
+	}
 	
 	public void PartnerRegister(String fname, String lname, String email, String password, String address, String city,
 			String province, String zipCode, String phoneNumber, String country) throws SQLException, NoSuchAlgorithmException { // User
@@ -36,22 +38,6 @@ public class RegisterService {
 		this.book.insertPartnerLogin(email, this.book.encryptPassword(password), fname, lname);
 		this.book.insertIntoAddress(email,address, province, country, zipCode, phoneNumber, city);
 	
-	}
-	
-	
-	
-	
-	
-	public boolean isVisitorRegistererInfoInDB(String email, String password) throws NoSuchAlgorithmException {
-		
-		return this.book.isVisitorExist(email, this.book.encryptPassword(password));
-		
-	}
-	
-	
-	public boolean isPartnerRegistererInfoInDB(String email,String password) throws NoSuchAlgorithmException {
-		
-		return this.book.isPartnerExist(email, this.book.encryptPassword(password));
 	}
 
 }
