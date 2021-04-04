@@ -46,7 +46,55 @@
 						aria-current="page" href="Home">Home</a></li>
 
 
+
+					<c:choose>
+						<c:when test="${name ne null}">
+
+							<li class="nav-item"><a class="nav-link active"
+								aria-current="page" href="/BookLand/Orders">Your Orders</a></li>
+						</c:when>
+
+					</c:choose>
+
+
+
+					<c:choose>
+						<c:when test="${sessionScope.UserType eq 'partner'}">
+
+
+							<li class="nav-item"><a class="nav-link active"
+								aria-current="page" href="Home?restcall=true">Rest API</a></li>
+
+
+
+
+
+						</c:when>
+
+						<c:otherwise>
+
+
+						</c:otherwise>
+
+					</c:choose>
+
+
+
 				</ul>
+
+
+
+
+
+				<c:choose>
+					<c:when test="${name ne null}">
+						<div class="nav-item">
+							<p id="welcometext" style="color: white;">Welcome ${name}</p>
+						</div>
+					</c:when>
+				</c:choose>
+
+
 				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
 						type="search" placeholder="Search" aria-label="Search"

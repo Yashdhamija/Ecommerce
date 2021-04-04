@@ -74,7 +74,7 @@
 
 				</form>
 
-				<a class="carticon" href="Home?viewcart=true"><i class="material-icons">shopping_cart</i></a>
+				<a class="carticon" href="/BookLand/Cart?viewcart=true"><i class="material-icons">shopping_cart</i></a>
 
 
 

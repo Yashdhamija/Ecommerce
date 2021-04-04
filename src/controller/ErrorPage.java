@@ -26,7 +26,7 @@ public class ErrorPage extends HttpServlet {
     
     public void displayErrorPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
-    	request.getRequestDispatcher("/errorPage.jspx").forward(request, response);
+    	request.getRequestDispatcher("/404.jspx").forward(request, response);
     }
     
 

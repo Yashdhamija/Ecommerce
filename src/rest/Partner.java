@@ -23,7 +23,7 @@ public class Partner {
 		String product = null;
 
 		BookStoreModel model = BookStoreModel.getInstance();
-		if (model.isPartnerExist(email, password)) {
+		if (model.isPartnerExist(email, password) && model.retrieveInfoOfBook(productId).size() > 0) {
 			product = model.getProductInfo(productId);
 			System.out.println("GGG");
 
@@ -46,7 +46,7 @@ public class Partner {
 		String order = null;
 		BookStoreModel model = BookStoreModel.getInstance();
 
-		if (model.isPartnerExist(email, password)) {
+		if (model.isPartnerExist(email, password) && model.retrieveInfoOfBook(productId).size() > 0) {
 			order = model.getOrdersByPartNumber(productId);
 
 		}

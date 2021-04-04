@@ -121,6 +121,13 @@ public class BookStoreModel {
 	public List<ReviewBean> retrieveLastThreeReviews(String bid) throws SQLException {
 		return this.dao.retriveReviews(bid);
 	}
+	
+	public List<ReviewBean> retrieveAllReviews() throws SQLException {
+		return this.dao.retriveAllReviews();
+	}
+	
+	
+	
 
 	public int retrievePriceofABook(String bid) throws SQLException {
 		return this.dao.retrievePriceofSingleBook(bid);
@@ -287,12 +294,28 @@ public class BookStoreModel {
 		return this.dao.getTopTenAllTime();
 	}
 
-	public LinkedHashMap<String, LinkedHashMap<String, Integer>> retrieveBooksSoldEachMonth() throws SQLException {
-		return this.dao.getBooksSoldEachMonth();
+	public ArrayList<List<String>> retrieveBooksSoldEachMonth(String date) throws SQLException {
+		return this.dao.getBooksSoldEachMonth(date);
+	}
+	
+	public ArrayList<String> getAllDates() throws SQLException {
+		return this.dao.getDates();
+	}
+	
+	public ArrayList<String> getAllUserOrderDates(String email) throws SQLException {
+		return this.dao.getAllUserOrderDates(email);
+	}
+	
+	public List<OrderBean> getOrderByDate(String date, String email) {
+		return this.dao.getOrderByDate(date, email);
 	}
 
 	public List<List<String>> retrieveUserStatistics() throws SQLException {
 		return this.dao.getUserStatistics();
+	}
+	
+	public void deleteAReview(String bid, String review) {
+		this.dao.deleteReview(bid, review);
 	}
 
 }

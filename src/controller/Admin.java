@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.CartBean;
+import bean.ReviewBean;
 import model.BookStoreModel;
 
 /**
@@ -46,18 +48,21 @@ public class Admin extends HttpServlet {
     
     public void displayAnalytics(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
 		LinkedHashMap<String, Integer> list;
-		LinkedHashMap<String, LinkedHashMap<String, Integer>> result;
+		//LinkedHashMap<String, LinkedHashMap<String, Integer>> result;
 		List<List<String>> userStats;
+		ArrayList<List<String>> result;
+		
 		
 
-		result = this.model.retrieveBooksSoldEachMonth();
-	
+		//result = this.model.retrieveBooksSoldEachMonth();
+		
+		//result = this.model.retrieveBooksSoldEachMonth();
 		
 		list = this.model.retrieveTopTenAllTime();
 		userStats = this.model.retrieveUserStatistics();
 
 		request.getSession().setAttribute("TopTen", list);
-		request.getSession().setAttribute("topMonthList", result);
+		//request.getSession().setAttribute("topMonthList", result);
 		request.getSession().setAttribute("userStats", userStats);
 		//request.getRequestDispatcher("/analytics.jspx").forward(request, response);
 		response.sendRedirect("/BookLand/Analytics");
@@ -91,6 +96,22 @@ public class Admin extends HttpServlet {
 				&& request.getParameter("adminPassword") == null && request.getQueryString() == null) {
 			adminLogin(request, response);
 		}
+	  
+	  
+	  else if(request.getParameter("getReviews") != null && request.getParameter("getReviews").equals("true") && request.getSession().getAttribute("adminValidated") != null &&
+				request.getSession().getAttribute("adminValidated").equals("validated")) {
+		 
+		  try {
+			List<ReviewBean> reviews = model.retrieveAllReviews();
+			request.getSession().setAttribute("reviews", reviews);
+			response.sendRedirect("/BookLand/EditReviews");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  
+	  }
 
 		else if (request.getParameter("adminLogin") != null) {
 
@@ -99,7 +120,10 @@ public class Admin extends HttpServlet {
 
 			try {
 				if (this.model.isValidAdmin(adminEmail, adminPassword)) {
+					
 					request.getSession().setAttribute("adminValidated", "validated");
+					System.out.println("The value of admin after login is " + request.getSession().getAttribute("adminValidated"));
+					
 					
 					response.sendRedirect("/BookLand/Home");
 					
@@ -122,6 +146,8 @@ public class Admin extends HttpServlet {
 		else if(request.getParameter("adminReport") != null && request.getSession().getAttribute("adminValidated")!= null &&
 				request.getSession().getAttribute("adminValidated").equals("validated")) {
 			
+			System.out.println("The value of admin after 2 is " + request.getSession().getAttribute("adminValidated"));
+
 			
 			try {
 				System.out.println("Hello adfaf");

@@ -356,6 +356,34 @@ public class DAO { // DB class
 		return list;
 
 	}
+	
+	public List<ReviewBean> retriveAllReviews() throws SQLException {
+
+		getRemoteConnection();
+		List<ReviewBean> list = new ArrayList<ReviewBean>();
+
+		String query = "SELECT * FROM Review";
+
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			String fname = rs.getString("fname");
+			String lname = rs.getString("lname");
+			String bookid = rs.getString("bid");
+			String review = rs.getString("review");
+			String title = rs.getString("title");
+			list.add(new ReviewBean(fname, lname, bookid, review, title));
+
+		}
+
+		rs.close();
+		ps.close();
+		con.close();
+		return list;
+
+	}
+	
 
 	public int retrieveOrderIdFromPO(String email) throws SQLException {
 
@@ -584,7 +612,7 @@ public class DAO { // DB class
 			date = rs.getString("date");
 			quantity = rs.getInt("quantity");
 			unitPrice = rs.getInt("price");
-			OrderBean order = new OrderBean(orderId, quantity, unitPrice, lname, fname, status, customerId, date);
+			OrderBean order = new OrderBean(orderId, quantity, unitPrice, lname, fname, status, customerId, date, rs.getString("bid"), "");
 			orderList.add(order);
 
 		}
@@ -855,43 +883,77 @@ public class DAO { // DB class
 		return list;
 	}
 
-	public LinkedHashMap<String, LinkedHashMap<String, Integer>> getBooksSoldEachMonth() throws SQLException {
+	
+	
+	public ArrayList<List<String>> getBooksSoldEachMonth(String date) throws SQLException {
 		getRemoteConnection();
-		LinkedHashMap<String, LinkedHashMap<String, Integer>> result = new LinkedHashMap<String, LinkedHashMap<String, Integer>>();
-		LinkedHashMap<String, Integer> list = new LinkedHashMap<String, Integer>();
-
-		String query = "select PO.orderid,substring(`date`,1,7) as dates,POItem.bid,POItem.price,sum(quantity) as quantities, title from (POItem inner join PO on POItem.orderid=PO.orderid) join Book on POItem.bid = Book.bid group by POItem.bid order by dates, quantities desc;";
+		String solddate ;
+		String quantity;
+		String title;
+		ArrayList<List<String>> arr = new ArrayList<List<String>>();;
+		List <String> l;
+		
+		String query = "select  concat(year(date), '-',  month(date)) as dates, sum(quantity) as quantity, title from PO p , POItem item, Book b where concat(year(date), '-',  month(date))='" + date + "'" +"AND p.orderid = item.orderid AND item.bid = b.bid GROUP BY dates, title ORDER BY quantity desc" ; 
 		PreparedStatement ps = con.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
-
-		rs.next();
-		String date = rs.getString("dates");
-		list.put(rs.getString("title"), rs.getInt("quantities"));
-		while (rs.next()) {
-			if (!rs.getString("dates").equals(date)) {
-				if (date.endsWith("-")) {
-					result.put(date.substring(0, date.length() - 1), list);
-				} else {
-					result.put(date, list);
-				}
-
-				date = rs.getString("dates");
-				list = new LinkedHashMap<String, Integer>();
-				list.put(rs.getString("title"), rs.getInt("quantities"));
-			} else {
-				list.put(rs.getString("title"), rs.getInt("quantities"));
-			}
+		
+		while(rs.next()) {
+			solddate = rs.getString("dates");
+			quantity = rs.getString("quantity");
+			title = rs.getString("title");
+			l = new ArrayList<>();
+			l.add(solddate);
+			l.add(quantity);
+			l.add(title);
+			arr.add(l);
+					
 		}
-
-		if (!list.isEmpty()) {
-			if (date.endsWith("-")) {
-				result.put(date.substring(0, date.length() - 1), list);
-			} else {
-				result.put(date, list);
-			}
+		
+		return arr;
+		
+	}
+	
+	
+	
+	public ArrayList<String> getDates() throws SQLException {
+		
+		getRemoteConnection();
+		String date;
+		ArrayList<String> arr = new ArrayList<String>();
+		
+		String query = "select distinct concat(year(date), '-',  month(date)) as dates from PO ORDER BY dates desc";
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+		
+		while(rs.next()) {
+			date = rs.getString("dates");	
+			arr.add(date);		
 		}
+		
 		rs.close();
-		return result;
+		ps.close();
+		con.close();
+		return arr;
+		
+	}
+	
+	public ArrayList<String> getAllUserOrderDates(String email) throws SQLException {
+		getRemoteConnection();
+		String dates = null;
+		ArrayList<String> arr = new ArrayList<String>();
+		String query = "Select distinct date from PO inner join POItem item ON PO.orderid = item.orderid INNER JOIN Address a ON a.cid = PO.cid INNER JOIN Users u ON u.customerid = a.cid AND email='" + email + "'order by date desc";
+		PreparedStatement ps = con.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+		
+		while(rs.next()) {
+			dates = rs.getString("date");
+			arr.add(dates);
+		}
+		
+		rs.close();
+		ps.close();
+		con.close();
+		return arr;
 	}
 
 	public List<List<String>> getUserStatistics() throws SQLException {
@@ -899,7 +961,7 @@ public class DAO { // DB class
 		List<List<String>> result = new ArrayList<List<String>>();
 		List<String> current = new ArrayList<String>();
 
-		String query = "select PO.lname as lname, PO.fname as fname, sum(POItem.price*POItem.quantity) as total, Address.zip as zip from (PO join POItem on PO.orderid=POItem.orderid) join Address on Address.cid=PO.cid group by PO.fname, PO.lname";
+		String query = "select PO.lname as lname, PO.fname as fname, sum(POItem.price*POItem.quantity) as total, Address.zip as zip from (PO join POItem on PO.orderid=POItem.orderid) join Address on Address.cid=PO.cid group by PO.fname, PO.lname order by total desc";
 		PreparedStatement ps = con.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
 
@@ -910,7 +972,10 @@ public class DAO { // DB class
 			result.add(current);
 			current = new ArrayList<String>();
 		}
-
+		
+		rs.close();
+		ps.close();
+		con.close();
 		return result;
 	}
 
@@ -936,6 +1001,7 @@ public class DAO { // DB class
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return p;
 	}
 
@@ -961,5 +1027,69 @@ public class DAO { // DB class
 		}
 		return p;
 	}
+	
+	public void deleteReview(String bid, String review) {
+		getRemoteConnection();
+		try {
+			this.stmt = this.con.createStatement();
+			String query = "DELETE FROM Review WHERE bid='" + bid + "' AND review='" + review + "'";
+			PreparedStatement ps = con.prepareStatement(query);
+			int rs = ps.executeUpdate(query);
+			
+			
+			
+			con.close();
 
-}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	public List<OrderBean>  getOrderByDate(String date, String email) {
+		getRemoteConnection();
+		String orderId;
+		String status;
+		int customerId = 0;
+		String d;
+		int quantity;
+		int unitPrice;
+		String bid;
+		String url;
+		List<OrderBean> orderList = new ArrayList<>();
+		try {
+			this.stmt = this.con.createStatement();
+			String query = "Select b.imageurl, PO.orderid, date, b.bid, status,item.price, quantity from PO inner join POItem item ON PO.orderid = item.orderid INNER JOIN Address a ON a.cid = PO.cid INNER JOIN Users u ON u.customerid = a.cid AND email='" + email + "'" + "INNER JOIN Book b ON b.bid = item.bid AND date='" + date + "'";;
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery(query);
+			
+			while(rs.next()) {
+				orderId = rs.getString("orderid");
+				quantity = rs.getInt("quantity");
+				unitPrice = rs.getInt("price");
+				status = rs.getString("status");
+				d = rs.getString("date");
+				bid = rs.getString("bid");
+				url = rs.getString("imageurl");
+				orderList.add(new OrderBean(orderId, quantity, unitPrice, "", "", status, customerId, date, bid, url));
+				
+			}
+			
+			rs.close();
+			con.close();
+			
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return orderList;
+	}
+	
+	
+
+}                

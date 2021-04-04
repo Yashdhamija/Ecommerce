@@ -74,6 +74,12 @@ public class Home extends HttpServlet {
 			}
 
 		}
+		
+		
+//		else if(request.getServletPath() != null &&  request.getServletPath().equals("/Orders") && request.getSession().getAttribute("UserType") != null) {
+//			response.sendRedirect("/BookLand/Orders");
+//		}
+		
 		// This is triggered when the bookTitle is clicked in the bookstore.jspx
 		else if (request.getParameter("bookinfo") != null
 				&& !this.model.retrieveBookTitle(request.getParameter("bookinfo")).equals("")) {

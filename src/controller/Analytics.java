@@ -2,7 +2,9 @@ package controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -35,25 +37,27 @@ public class Analytics extends HttpServlet {
 	 */
     
     
-	public void displayTopMonthlyBooks(HttpServletRequest request, HttpServletResponse response)
+	public void displayTopMonthlyBooks(HttpServletRequest request, HttpServletResponse response, String date)
 			throws ServletException, IOException {
-		LinkedHashMap<String, LinkedHashMap<String, Integer>> result = null;
+		//LinkedHashMap<String, LinkedHashMap<String, Integer>> result = null;
+		ArrayList<List<String>> result;
+		
+		
+		
+		
 		try {
-			result = this.model.retrieveBooksSoldEachMonth();
-			LinkedHashMap<String, Integer> newResult;
+			//result = this.model.retrieveBooksSoldEachMonth();
+			//LinkedHashMap<String, Integer> newResult;
 
-			for (Map.Entry<String, LinkedHashMap<String, Integer>> entry : result.entrySet()) {
-				newResult = entry.getValue();
-				for (Map.Entry<String, Integer> entry2 : newResult.entrySet()) {
-
-					System.out.println("This is the key" + entry2.getKey() + "this is the value" + entry2.getValue());
-
-				}
-
-			}
-
-			request.setAttribute("topMonthResult", result.get(request.getParameter("topMonth")));
-			request.setAttribute("chosenMonth", request.getParameter("topMonth"));
+			result = this.model.retrieveBooksSoldEachMonth(date);
+			System.out.println(result);
+			
+			request.setAttribute("topMonthResult", result);
+			request.getSession().setAttribute("chosenMonth", request.getParameter("topMonth"));
+			
+			System.out.println("The dates are " + model.getAllDates());
+			
+			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -63,12 +67,28 @@ public class Analytics extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		if (request.getParameter("topMonth") != null) {
-			System.out.println("Im inside the top month");
-			displayTopMonthlyBooks(request, response);
-
-		}
+		
+		if(request.getSession().getAttribute("adminValidated") != null && request.getSession().getAttribute("adminValidated").equals("validated")) {
+			try {
+				request.setAttribute("date", model.getAllDates());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (request.getParameter("topMonth") != null ) {
+				System.out.println("Im inside the top month");
+				
+				String date = request.getParameter("topMonth");
+				displayTopMonthlyBooks(request, response, date);
+	
+			}
 		request.getRequestDispatcher("/analytics.jspx").forward(request, response);
+		
+		}
+		
+		else {
+			response.sendRedirect("/BookLand/ErrorPage");
+		}
 	}
 
 	/**

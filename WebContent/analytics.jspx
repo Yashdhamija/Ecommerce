@@ -64,6 +64,9 @@
 						</ul></li>
 
 				</ul>
+
+
+
 				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
 						type="search" placeholder="Search" aria-label="Search"
@@ -72,6 +75,8 @@
 						action="submit" value="true">Search</button>
 
 				</form>
+
+
 
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">
@@ -121,84 +126,123 @@
 	</nav>
 
 
+	<div class="container">
+		<!-- top 10 books of all time -->
+		<div class="row">
 
-<!-- top 10 books of all time -->
-	<div class="number-of-each-book">
-		<table>
-			<caption>Top 10 Books Sold Of All Time</caption>
-			<thead>
-				<tr>
-					<th>Book ID</th>
-					<th>Quantity</th>
-				</tr>
-			</thead>
-
-			<tbody>
-				<c:forEach var="result" items="${TopTen}">
-					<tr>
-						<th>${result.key}</th>
-						<th>${result.value}</th>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
-	</div>
-
-	<!-- top books sold for a month -->
-	<form action="Analytics" class="topMonth">
-		<label for="topMonth">Most sold for: </label> <select name="topMonth"
-			id="topMonth">
-			<c:forEach var="result" items="${topMonthList}">
-				<option>${result.key}</option>
-			</c:forEach>
-		</select> <br></br> <input type="submit" value="Submit" />
-	</form>
-	<c:choose>
-		<c:when test="${topMonthResult ne null}">
-			<div class="topMonthRes">
-				<table>
-					<caption>Top Books Sold in ${chosenMonth}</caption>
-					<thead>
-						<tr>
-							<th>Book ID</th>
-							<th>Quantity</th>
-						</tr>
-					</thead>
-					<tbody>
-						<c:forEach var="result" items="${topMonthResult}">
+			<div class="col">
+				<div class="number-of-each-book">
+					<table class="table">
+						<h3 style="color:black;">Top 10 Books Sold Of All Time</h3>
+						<thead>
 							<tr>
-								<th>${result.key}</th>
-								<th>${result.value}</th>
+								<th>Book ID</th>
+								<th>Quantity</th>
 							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
+						</thead>
+
+						<tbody>
+							<c:forEach var="result" items="${TopTen}">
+								<tr>
+									<td>${result.key}</td>
+									<td>${result.value}</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</div>
 			</div>
-		</c:when>
-	</c:choose>
 
-	<!-- All time user statistics -->
-	<div class="user-statistics">
-		<table>
-			<caption>User Statistics</caption>
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Zip Code</th>
-					<th>Total Spent</th>
-				</tr>
-			</thead>
+			<!-- top books sold for a month -->
 
-			<tbody>
-				<c:forEach var="userStatistic" items="${userStats}">
-					<tr>
-						<th>${userStatistic[0]}</th>
-						<th>${userStatistic[1]}</th>
-						<th>${userStatistic[2]}</th>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
+			<div class="col">
+
+
+
+				<div class="col">
+
+					<c:choose>
+						<c:when test="${topMonthResult ne null}">
+							<div class="topMonthRes">
+								<table class="table">
+									<h3 style="color:black">Top Books Sold in ${chosenMonth}</h3>
+									<thead>
+										<tr>
+											<th>Book ID</th>
+											<th>Quantity</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach var="result" items="${topMonthResult}">
+											<tr>
+												<td>${result.get(2)}</td>
+												<td>${result.get(1)}</td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+						</c:when>
+					</c:choose>
+
+
+				</div>
+
+				<div class="col">
+					<form action="Analytics" class="topMonth">
+						<label for="topMonth">Most sold for: </label> 
+						<select class="form-select" name="topMonth" id="topMonth">
+							<c:forEach var="result2" items="${date}">
+								<option>${result2}</option>
+							</c:forEach>
+						</select> <br></br> <input class="btn btn-dark" type="submit"
+							value="Submit" />
+					</form>
+
+				</div>
+
+
+
+
+			</div>
+			
+			<script>
+			
+				document.getElementById("topMonth").value = "${param.topMonth}"
+			
+			</script>
+
+
+
+			<!-- All time user statistics -->
+
+			<div class="col">
+				<div class="user-statistics">
+					<table class="table">
+						<h3 style="color:black">User Statistics</h3>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Zip Code</th>
+								<th>Total Spent</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<c:forEach var="userStatistic" items="${userStats}">
+								<tr>
+									<td>${userStatistic[0]}</td>
+									<td>${userStatistic[1]}</td>
+									<td>$ ${userStatistic[2]}</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+
 	</div>
 
 </body>
