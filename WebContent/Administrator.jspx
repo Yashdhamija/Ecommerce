@@ -112,8 +112,6 @@
 					<button name="adminLogin" id="adminButton" value="true"
 						type="submit" class="mt-3 me-2 btn btn-dark">Login</button>
 						
-					 <a href="/BookLand/AdministratorLoginPage?adminSignUp=true"
-						class="mt-3 me-2 btn btn-dark">Sign Up</a>
 
 
 				</form>

@@ -48,41 +48,20 @@ public class Admin extends HttpServlet {
     
     public void displayAnalytics(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
 		LinkedHashMap<String, Integer> list;
-		//LinkedHashMap<String, LinkedHashMap<String, Integer>> result;
 		List<List<String>> userStats;
 		ArrayList<List<String>> result;
 		
-		
 
-		//result = this.model.retrieveBooksSoldEachMonth();
-		
-		//result = this.model.retrieveBooksSoldEachMonth();
 		
 		list = this.model.retrieveTopTenAllTime();
 		userStats = this.model.retrieveUserStatistics();
 
 		request.getSession().setAttribute("TopTen", list);
-		//request.getSession().setAttribute("topMonthList", result);
 		request.getSession().setAttribute("userStats", userStats);
-		//request.getRequestDispatcher("/analytics.jspx").forward(request, response);
 		response.sendRedirect("/BookLand/Analytics");
 
     }
     
-	public void adminRegistration(String fname, String lname, String email, String password) throws SQLException {
-
-		
-		this.model.insertAdmin(fname, lname, email, password);
-		
-
-	}
-    
-    
-    
-    
-    
-
-
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -185,35 +164,7 @@ public class Admin extends HttpServlet {
 			}
 			
 		}
-	  
-		else if(request.getParameter("adminSignUp") != null) {
-			
-			request.getRequestDispatcher("/AdminRegistration.jspx").forward(request, response);
-		}
-	  
-		else if(request.getParameter("adminregisterbtn") != null) {
-			
-	
-			try {
-				String fname =  request.getParameter("adminfirstName");
-				String lname = request.getParameter("adminlastName");
-				String email = request.getParameter("adminEmail");
-				String password = this.model.encryptPassword(request.getParameter("adminPassword"));
-				adminRegistration(fname,lname,email,password);
-				response.sendRedirect("/BookLand/AdministratorLoginPage");
-				
-			
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-	
-		}
-		  
+	    
 		else {
 			
 			 response.sendRedirect("/BookLand/Home");
