@@ -92,17 +92,12 @@
 							<p id="welcometext" style="color: white;">Welcome ${name}</p>
 						</div>
 					</c:when>
-				</c:choose>
-
-
-				<c:choose>
 
 					<c:when test="${sessionScope.adminValidated eq 'validated'}">
 						<div class="nav-item">
 							<p id="welcometext" style="color: white;">Welcome Admin</p>
 						</div>
 					</c:when>
-
 				</c:choose>
 
 				<form action="Home" class="d-flex" method="GET">
@@ -134,6 +129,7 @@
 					<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
 						class="material-icons">shopping_cart</i></a>
 				</div>
+				
 			</div>
 		</div>
 	</nav>
