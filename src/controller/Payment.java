@@ -130,15 +130,10 @@ public class Payment extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		
-		System.out.println("The servlet path for payment is"+request.getServletPath());
-		System.out.println("Order confirmed 1" + request.getParameter("orderconfirmed"));
 		
 		if (request.getServletPath() != null && request.getServletPath().equals("/Payment") &&
 		 request.getSession().getAttribute("cartsize") != null && (Integer) 
 		 request.getSession().getAttribute("cartsize") == 0) {
-			System.out.println("Order confirmed 2" + request.getParameter("orderconfirmed"));
 			response.sendRedirect("/BookLand/Cart?viewcart=true");
 		}
 
@@ -146,7 +141,6 @@ public class Payment extends HttpServlet {
 				&& request.getSession().getAttribute("cartsize") != null &&
 				(Integer) request.getSession().getAttribute("cartsize") != 0 && 
 				request.getParameter("orderconfirmed") == null) {
-			
 			
 			System.out.println("Order confirmed 3" + request.getParameter("orderconfirmed"));
 			if (request.getSession().getAttribute("UserType") != null) {
