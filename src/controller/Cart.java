@@ -89,7 +89,7 @@ public class Cart extends HttpServlet {
 					if (this.cart.containsKey(bookId)) {
 						this.cart.get(bookId).setQuantity(cart.get(bookId).getQuantity() + 1);
 						total = this.model.cartTotal(cart);
-						request.getSession().setAttribute("carttotal", total);
+						request.getSession().setAttribute("carttotal", String.valueOf(total));
 						request.getSession().setAttribute("quantity", cart.get(bookId).getQuantity() + 1);
 						request.getSession().setAttribute("shoppingcart", cart);
 					}
@@ -100,7 +100,7 @@ public class Cart extends HttpServlet {
 						System.out.println("cart items are " + this.cart);
 						total = this.model.cartTotal(this.cart);
 						request.getSession().setAttribute("cartsize", cart.size());
-						request.getSession().setAttribute("carttotal", total);
+						request.getSession().setAttribute("carttotal", String.valueOf(total));
 						request.getSession().setAttribute("shoppingcart", cart);
 						request.getSession().setAttribute("iscart", "clicked");
 					}
@@ -112,7 +112,6 @@ public class Cart extends HttpServlet {
 
 				request.getRequestDispatcher("/Home").forward(request, response);
 				// response.sendRedirect("/BookLand/Home");
-
 			}
 
 		}
@@ -156,42 +155,37 @@ public class Cart extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-
-		if (request.getParameter("viewcart") != null && request.getParameter("viewcart").equals("true")) {
-
-			displayCartPage(request, response);
-		} else
-			try {
-				if (request.getParameter("addtocart") != null && !this.model.retrieveBookTitle(request.getParameter("addtocart")).equals("")) {
-
-					try {
-						addToCart(request, response);
-					} catch (ServletException | IOException | SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-				else if (request.getParameter("removebook") != null) {
-
-					removeFromCart(request, response);
-
-				}
-
-				else if (request.getParameter("quantity") != null) {
-						
-					updateQuantityInCart(request,response);
-				}
-
-				else {
-
-					response.sendRedirect("ErrorPage");
-				}
-			} catch (SQLException | ServletException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	
+		try {
+			if (request.getParameter("viewcart") != null && request.getParameter("viewcart").equals("true")) {
+				displayCartPage(request, response);
+			} 
+			
+			else if (request.getParameter("addtocart") != null 
+					&& !this.model.retrieveBookTitle(request.getParameter("addtocart")).equals("")) {
+					addToCart(request, response);
 			}
+			
+			else if (request.getParameter("removebook") != null) {
+				removeFromCart(request, response);
+			}
+			
+			else if (request.getParameter("quantity") != null) {
+				
+				updateQuantityInCart(request,response);
+			}
+
+			else {
+
+				response.sendRedirect("ErrorPage");
+			}
+		} catch (ServletException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
