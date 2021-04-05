@@ -106,7 +106,15 @@ public class Admin extends HttpServlet {
 		 
 		  try {
 			List<ReviewBean> reviews = model.retrieveAllReviews();
+			
+			if(reviews.size() == 0) {
+				request.getSession().setAttribute("allreviews", "empty");
+			}
+			else {
+			System.out.println("i am not 0");
+			request.getSession().removeAttribute("allreviews");
 			request.getSession().setAttribute("reviews", reviews);
+			}
 			response.sendRedirect("/BookLand/EditReviews");
 			
 		} catch (SQLException e) {

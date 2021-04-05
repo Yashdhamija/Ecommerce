@@ -92,6 +92,13 @@
 							<p id="welcometext" style="color: white;">Welcome ${name}</p>
 						</div>
 					</c:when>
+
+
+					<c:when test="${adminValidated eq 'validated'}">
+						<div class="nav-item">
+							<p id="welcometext" style="color: white;">Welcome Admin</p>
+						</div>
+					</c:when>
 				</c:choose>
 
 
@@ -112,6 +119,7 @@
 								value="true">Logout</button>
 						</form>
 					</c:when>
+
 
 					<c:when test="${sessionScope.adminValidated eq 'validated'}">
 
@@ -245,5 +253,7 @@
 
 
 </body>
+
+<c:import url="nav.html"></c:import>
 	</html>
 </jsp:root>

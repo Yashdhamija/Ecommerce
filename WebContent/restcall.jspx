@@ -54,7 +54,13 @@
 				</ul>
 
 
-
+				<c:choose>
+					<c:when test="${name ne null}">
+						<div class="nav-item">
+							<p id="welcometext" style="color: white;">Welcome ${name}</p>
+						</div>
+					</c:when>
+				</c:choose>
 
 				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"

@@ -22,7 +22,7 @@ public class EditReviews extends HttpServlet {
 	private BookStoreModel model;
 
 	/**
-	 * @throws ClassNotFoundException 
+	 * @throws ClassNotFoundException
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public EditReviews() throws ClassNotFoundException {
@@ -39,33 +39,44 @@ public class EditReviews extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 
-		if (request.getServletPath().equals("/EditReviews") && request.getQueryString() == null && request.getSession().getAttribute("adminValidated") != null && request.getSession().getAttribute("adminValidated").equals("validated")) {
+		if (request.getServletPath().equals("/EditReviews") && request.getQueryString() == null
+				&& request.getSession().getAttribute("adminValidated") != null
+				&& request.getSession().getAttribute("adminValidated").equals("validated")) {
 			System.out.println("The value of admin after 3 is " + request.getSession().getAttribute("adminValidated"));
+			System.out.println("i am here 1");
 
 			request.getRequestDispatcher("/EditAllReviews.jspx").forward(request, response);
-		}
-		else if(request.getParameter("removereview") != null && request.getSession().getAttribute("adminValidated") != null && request.getSession().getAttribute("adminValidated").equals("validated") ) {
-			
+		} else if (request.getParameter("removereview") != null
+				&& request.getSession().getAttribute("adminValidated") != null
+				&& request.getSession().getAttribute("adminValidated").equals("validated")) {
+
 			System.out.println("The value of admin after 4 is " + request.getSession().getAttribute("adminValidated"));
 
 			String bid = request.getParameter("removereview");
 			String review = request.getParameter("bookreview");
-			
-			
+
 			List<ReviewBean> reviews;
 			try {
 				model.deleteAReview(bid, review);
 				reviews = model.retrieveAllReviews();
-				request.getSession().setAttribute("reviews", reviews);
+
+				if (reviews.size() == 0) {
+					request.getSession().setAttribute("allreviews", "empty");
+				}
+
+				else {
+
+					request.getSession().setAttribute("reviews", reviews);
+				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			request.getRequestDispatcher("/EditAllReviews.jspx").forward(request, response);
-			
+
 		}
-		
+
 		else {
 			response.sendRedirect("/BookLand/ErrorPage");
 		}

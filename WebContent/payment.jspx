@@ -64,13 +64,13 @@
 
 				</ul>
 
-				<li class="nav-item"><c:choose>
-						<c:when test="${name ne null}">
-
+				<c:choose>
+					<c:when test="${name ne null}">
+						<div class="nav-item">
 							<p id="welcometext" style="color: white;">Welcome ${name}</p>
-
-						</c:when>
-					</c:choose></li>
+						</div>
+					</c:when>
+				</c:choose>
 
 				<form action="Home" class="d-flex" method="GET">
 					<input name="search" id="search" class="form-control me-2"
@@ -334,8 +334,6 @@
 	margin: 0;
 	margin-right: 7px;
 }
-
-
 </style>
 
 <c:import url="nav.html"></c:import>
