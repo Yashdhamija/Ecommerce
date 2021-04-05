@@ -14,11 +14,6 @@ public class BookBean {
 		this.category = category;
 		this.url = url;
 	}
-	
-	public BookBean() {
-		
-		
-	}
 
 	public String getBid() {
 		return bid;

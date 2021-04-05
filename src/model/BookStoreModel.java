@@ -110,11 +110,11 @@ public class BookStoreModel {
 		return this.dao.getPartnerName(email);
 	}
 
-	public List<BookBean> retrieveBookRecords(String bid) throws SQLException {
-		return this.dao.retreivebookrecord(bid);
+	public List<BookBean> retrieveBookRecords() throws SQLException {
+		return this.dao.retrieveAllBooks();
 	}
 
-	public List<BookBean> retrieveInfoOfBook(String bid) throws SQLException {
+	public BookBean retrieveInfoOfBook(String bid) throws SQLException {
 		return this.dao.retrievebookinfo(bid);
 	}
 
@@ -155,10 +155,6 @@ public class BookStoreModel {
 
 	public List<BookBean> getSearchedBook(String title) throws SQLException {
 		return this.dao.retreivebook(title);
-	}
-
-	public String searchResultsCount(String title) throws SQLException {
-		return this.dao.numberOfSearchResults(title);
 	}
 
 	public String encryptPassword(String password) throws NoSuchAlgorithmException {

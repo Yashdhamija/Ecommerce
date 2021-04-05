@@ -52,17 +52,12 @@
 							<li><a class="dropdown-item" href="Home?category=Literacy">Literacy</a></li>
 						</ul></li>
 
-
-
 					<c:choose>
 						<c:when test="${name ne null}">
 							<li class="nav-item"><a class="nav-link active"
 								aria-current="page" href="/BookLand/Orders">Your Orders</a></li>
 						</c:when>
-
 					</c:choose>
-
-
 
 					<c:choose>
 						<c:when test="${sessionScope.UserType eq 'partner'}">
@@ -83,7 +78,6 @@
 									Reviews</a></li>
 						</c:when>
 					</c:choose>
-					
 				</ul>
 
 				<c:choose>
@@ -134,10 +128,8 @@
 		</div>
 	</nav>
 
-
 	<div style="display: none;" class="alert alert-primary alert-dismissible fade show"
 		role="alert" id="alert">Item added to cart successfully</div>
-
 
 	<c:choose>
 	    <c:when test="${found eq 'true'}">

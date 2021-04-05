@@ -23,7 +23,7 @@ public class Partner {
 		String product = null;
 
 		BookStoreModel model = BookStoreModel.getInstance();
-		if (model.isPartnerExist(email, password) && model.retrieveInfoOfBook(productId).size() > 0) {
+		if (model.isPartnerExist(email, password) && model.retrieveInfoOfBook(productId) != null) {
 			product = model.getProductInfo(productId);
 			System.out.println("GGG");
 
@@ -46,18 +46,15 @@ public class Partner {
 		String order = null;
 		BookStoreModel model = BookStoreModel.getInstance();
 
-		if (model.isPartnerExist(email, password) && model.retrieveInfoOfBook(productId).size() > 0) {
+		if (model.isPartnerExist(email, password) && model.retrieveInfoOfBook(productId) != null) {
 			order = model.getOrdersByPartNumber(productId);
 
 		}
 
 		else {
-
 			order = model.jsonErrorMessage();
-
 		}
 
 		return order;
-
 	}
 }

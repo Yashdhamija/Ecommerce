@@ -443,7 +443,6 @@ public class DAO { // DB class
 		ps.close();
 		con.close();
 		return orderId;
-
 	}
 
 	public String retrievePassword(String password) {
@@ -542,11 +541,11 @@ public class DAO { // DB class
 
 	// Don't forgot to change this as someone can put the bid that isn't right by
 	// means of a subset of actual bid
-	public List<BookBean> retreivebookrecord(String bid) throws SQLException { // This is for search functionality improve this
+	public List<BookBean> retrieveAllBooks() throws SQLException { // This is for search functionality improve this
 		getRemoteConnection();
 		List<BookBean> l = new ArrayList<BookBean>();
 
-		String query = "SELECT * FROM Book WHERE bid LIKE '%" + bid + "%'";
+		String query = "SELECT * FROM Book";
 
 		PreparedStatement ps = con.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
@@ -558,7 +557,6 @@ public class DAO { // DB class
 			String category = rs.getString("category");
 			String url = rs.getString("imageurl");
 			l.add(new BookBean(bookid, btitle, bprice, category, url));
-
 		}
 
 		rs.close();
@@ -602,9 +600,7 @@ public class DAO { // DB class
 					rs.getString("title"),
 					rs.getInt("price"),
 					rs.getString("category"),
-					rs.getString("imageurl"));
-			
-			
+					rs.getString("imageurl"));			
 		}
 
 		rs.close();
@@ -615,10 +611,7 @@ public class DAO { // DB class
 
 
 	public BookBean getProductJSON(String productId) throws SQLException {
-		List<BookBean> l = new ArrayList<BookBean>();
-		l = retreivebookrecord(productId);
-		return l.get(0);
-
+		return retrievebookinfo(productId);
 	}
 
 	public List<OrderBean> getOrdersByPartNumber(String bid) throws SQLException {
@@ -661,30 +654,23 @@ public class DAO { // DB class
 
 	}
 
-	public List<BookBean> retrievebookinfo(String bid) throws SQLException {
-
+	public BookBean retrievebookinfo(String bid) throws SQLException {
 		getRemoteConnection();
-		List<BookBean> list = new ArrayList<BookBean>();
-
+		BookBean bookinfo = null;
 		String query = "SELECT * FROM Book WHERE bid='" + bid + "'";
 
 		PreparedStatement ps = con.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
-			String bookid = rs.getString("bid");
-			String btitle = rs.getString("title");
-			int bprice = Integer.parseInt(rs.getString("price"));
-			String category = rs.getString("category");
-			String url = rs.getString("imageurl");
-			list.add(new BookBean(bookid, btitle, bprice, category, url));
-
+			bookinfo = new BookBean(rs.getString("bid"), rs.getString("title"),
+					rs.getInt("price"), rs.getString("category"), rs.getString("imageurl"));
 		}
 
 		rs.close();
 		ps.close();
 		con.close();
-		return list;
+		return bookinfo;
 
 	}
 
@@ -704,7 +690,6 @@ public class DAO { // DB class
 			String category = rs.getString("category");
 			String url = rs.getString("imageurl");
 			l.add(new BookBean(bookid, btitle, bprice, category, url));
-
 		}
 
 		rs.close();
@@ -830,7 +815,6 @@ public class DAO { // DB class
 		getRemoteConnection();
 		String fname;
 		String lname;
-		String e;
 		int userType, customerId;
 		UserBean user = null;
 		String query = "SELECT * FROM Users WHERE email='" + email + "'";
@@ -841,7 +825,6 @@ public class DAO { // DB class
 		while (rs.next()) {
 			fname = rs.getString("fname");
 			lname = rs.getString("lname");
-			e = rs.getString("email");
 			userType = rs.getInt("userType");
 			customerId = rs.getInt("customerid");
 			user = new UserBean(fname, lname, email, userType, customerId);
@@ -864,39 +847,12 @@ public class DAO { // DB class
 
 		while (rs.next()) {
 			url = rs.getString("imageurl");
-
 		}
 
 		rs.close();
 		ps.close();
 		con.close();
 		return url;
-
-	}
-
-	public String numberOfSearchResults(String title) throws SQLException {
-		getRemoteConnection();
-		List<BookBean> l = new ArrayList<BookBean>();
-		String s;
-		String query = "SELECT * FROM Book WHERE title LIKE '%" + title + "%'";
-
-		PreparedStatement ps = con.prepareStatement(query);
-		ResultSet rs = ps.executeQuery();
-
-		while (rs.next()) {
-			String bookid = rs.getString("bid");
-			String btitle = rs.getString("title");
-			int bprice = Integer.parseInt(rs.getString("price"));
-			String category = rs.getString("category");
-			String url = rs.getString("imageurl");
-			l.add(new BookBean(bookid, btitle, bprice, category, url));
-
-		}
-		s = l.size() + " search results found";
-		rs.close();
-		ps.close();
-		con.close();
-		return s;
 	}
 
 	public LinkedHashMap<String, Integer> getTopTenAllTime() throws SQLException {
@@ -1123,7 +1079,4 @@ public class DAO { // DB class
 		}
 		return orderList;
 	}
-	
-	
-
 }                

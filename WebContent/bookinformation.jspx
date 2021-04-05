@@ -12,9 +12,14 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
-<c:forEach var="book" items="${bookinfo}">
-	<title>${book.getTitle()}</title>
-</c:forEach>
+	<c:choose>
+		<c:when test="${bookinfo ne null}">
+			<title>booinfo.getTitle()</title>
+		</c:when>
+		<c:otherwise>
+			<title>Book Information</title>
+		</c:otherwise>
+	</c:choose>
 
 
 <link rel="stylesheet"
@@ -45,56 +50,42 @@
 					<li class="home"><a class="nav-link active"
 						aria-current="page" href="Home">Home</a></li>
 
-
-
 					<c:choose>
 						<c:when test="${name ne null}">
-
 							<li class="nav-item"><a class="nav-link active"
 								aria-current="page" href="/BookLand/Orders">Your Orders</a></li>
 						</c:when>
-
 					</c:choose>
-
-
 
 					<c:choose>
 						<c:when test="${sessionScope.UserType eq 'partner'}">
-
-
 							<li class="nav-item"><a class="nav-link active"
 								aria-current="page" href="Home?restcall=true">Rest API</a></li>
 
-
-
-
-
 						</c:when>
 
-						<c:otherwise>
+						<c:when test="${sessionScope.adminValidated eq 'validated'}">
+							<li class="nav-item"><a class="nav-link active"
+								aria-current="page"
+								href="/BookLand/AdministratorLoginPage?adminReport=true">Admin
+									Report</a></li>
 
-
-						</c:otherwise>
-
+							<li class="nav-item"><a class="nav-link active"
+								aria-current="page"
+								href="/BookLand/AdministratorLoginPage?getReviews=true">Edit
+									Reviews</a></li>
+						</c:when>
 					</c:choose>
-
-
-
 				</ul>
 
-
-
-
-
 				<c:choose>
-					<c:when test="${name ne null}">
+					<c:when test="${sessionScope.name ne null}">
 						<div class="nav-item">
 							<p id="welcometext" style="color: white;">Welcome ${name}</p>
 						</div>
 					</c:when>
 
-
-					<c:when test="${adminValidated eq 'validated'}">
+					<c:when test="${sessionScope.adminValidated eq 'validated'}">
 						<div class="nav-item">
 							<p id="welcometext" style="color: white;">Welcome Admin</p>
 						</div>
@@ -111,115 +102,82 @@
 
 				</form>
 
-
+				<!-- login/logout -->
 				<c:choose>
-					<c:when test="${sessionScope.name ne null}">
-						<form action="Login" class="d-flex" method="POST">
-							<button class="btn btn-outline-success" id="logout" name="logout"
-								value="true">Logout</button>
-						</form>
-					</c:when>
-
-
-					<c:when test="${sessionScope.adminValidated eq 'validated'}">
-
+					<c:when test="${sessionScope.name ne null || sessionScope.adminValidated eq 'validated'}">
 						<form action="Login" class="d-flex" method="POST">
 							<button class="btn btn-outline-success" id="logout" name="logout"
 								value="true">LogOut</button>
 						</form>
-
-						<div class="thecart">
-							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
-								class="material-icons">shopping_cart</i></a>
-						</div>
 					</c:when>
 
-
 					<c:otherwise>
-						<form action="/BookLand/Login" class="d-flex" method="POST">
-							<button class="btn btn-outline-success" id="login" name="login"
-								value="true">Login/Register</button>
-						</form>
-
-						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
-							class="material-icons">shopping_cart</i></a>
-
+						<a class="btn btn-outline-success" id="login" name="login"
+							href="/BookLand/Login">LogIn/Register</a>
 					</c:otherwise>
-
 				</c:choose>
+				
+				<!-- shopping cart -->
+				<div class="thecart">
+					<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+						class="material-icons">shopping_cart</i></a>
+				</div>
+				
 			</div>
 		</div>
 	</nav>
 
+	<div style="display: none;" class="alert alert-primary alert-dismissible fade show"
+		role="alert" id="alert">Item added to cart successfully</div>
 
-	<c:forEach var="book" items="${bookinfo}">
+	<c:set var="book" value="${bookinfo}" scope="page"/>
+	
+	<div class="item" id="${book.getBid()}">
+		<img id="singleimage" src="images/${book.getUrl()}"></img>
 
+		<div class="all">
+			<p id="ptitle">Book Title: ${book.getTitle()}</p>
 
-
-		<div class="item" id="${book.getBid()}">
-			<img id="singleimage" src="images/${book.getUrl()}"></img>
-
-
-			<div class="all">
-				<p id="ptitle">Book Title: ${book.getTitle()}</p>
-
-				<p id="pprice">Price: $ ${book.getPrice()}</p>
-
-
-				<form action="/BookLand/Cart" class="d-flex" method="GET">
-					<button class="btn btn-outline-primary btn-me" id="addtocart"
-						name="addtocart" value="${book.getBid()}">Add to Cart</button>
-				</form>
+			<p id="pprice">Price: $ ${book.getPrice()}</p>
 
 
-				<c:choose>
-					<c:when test="${review eq 'true'}">
-						<form action="Home" method="POST">
-							<label for="fname">First Name</label> <input type="text"
-								id="fname" name="fname" required="required"
-								placeholder="Your first name"></input><label for="lname">Last
-								Name</label> <input type="text" id="lname" name="lname"
-								required="required" placeholder="Your last name.."></input> <label
-								for="reviewtitle">Title of Review</label> <input type="text"
-								id="reviewtitle" name="reviewtitle" required="required"
-								placeholder="Your title"></input> <label for="writereview">Write
-								a Review</label>
-							<textarea id="writereview" name="writereview" type="text"
-								required="required" style="height: 200px"> <jsp:text /> </textarea>
-							<button id="submitreview" name="submitreview" value="true">
-								Submit a Review</button>
-
-						</form>
-					</c:when>
+			<form action="/BookLand/Cart" class="d-flex" method="GET">
+				<button class="btn btn-outline-primary btn-me" id="addtocart"
+					name="addtocart" value="${book.getBid()}">Add to Cart</button>
+			</form>
 
 
-					<c:otherwise>
-						<form action="Home">
-							<button class="btn btn-outline-dark btn-sm" id="reviewform"
-								name="reviewform" value="${book.getBid()}">Write a
-								Review</button>
-						</form>
+			<c:choose>
+				<c:when test="${review eq 'true'}">
+					<form action="Home" method="POST">
+						<label for="fname">First Name</label> 
+						<input type="text" id="fname" name="fname" required="required"
+							placeholder="Your first name"></input>
+						<label for="lname">Last Name</label> 
+						<input type="text" id="lname" name="lname"
+							required="required" placeholder="Your last name.."></input> 
+						<label for="reviewtitle">Title of Review</label> 
+						<input type="text" id="reviewtitle" name="reviewtitle" required="required"
+							placeholder="Your title"></input> 
+						<label for="writereview">Write a Review</label>
+						<textarea id="writereview" name="writereview" type="text"
+							required="required" style="height: 200px"> <jsp:text /> </textarea>
+						<button id="submitreview" name="submitreview" value="true">
+							Submit a Review</button>
+					</form>
+				</c:when>
 
-					</c:otherwise>
 
-
-				</c:choose>
-
-
-
-
-			</div>
-
-
+				<c:otherwise>
+					<form action="Home">
+						<button class="btn btn-outline-dark btn-sm" id="reviewform"
+							name="reviewform" value="${book.getBid()}">Write a Review</button>
+					</form>
+				</c:otherwise>
+			</c:choose>
 
 		</div>
-
-
-	</c:forEach>
-
-
-
-
+	</div>
 
 	<h2 class="reviewheading">Customer Reviews</h2>
 	<br></br>
@@ -238,22 +196,24 @@
 				<p class="allreviews">${review.getReview()}</p>
 				<hr></hr>
 			</c:forEach>
-
 		</c:otherwise>
-
 	</c:choose>
 
-
-
-
-
 	<hr style="border: 3px solid #f1f1f1"></hr>
-
-
-
+	
+	<script>
+		const url = window.location.href
+	
+		if(url.includes("addtocart")) {
+			
+			document.getElementById("alert").style.display = "block"
+			
+		    setTimeout(function(){ document.getElementById("alert").style.display = "none";}, 3000);
+		}
+	</script>
 
 </body>
 
-<c:import url="nav.html"></c:import>
-	</html>
+	<c:import url="nav.html"></c:import>
+</html>
 </jsp:root>
