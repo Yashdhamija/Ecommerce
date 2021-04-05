@@ -8,6 +8,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
+import bean.UserBean;
 import model.BookStoreModel;
 
 @Path("partner")
@@ -21,9 +23,10 @@ public class Partner {
 			throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 
 		String product = null;
-
 		BookStoreModel model = BookStoreModel.getInstance();
-		if (model.isPartnerExist(email, password) && model.retrieveInfoOfBook(productId) != null) {
+		UserBean partner = model.isUserExist(email, password);
+		
+		if (partner != null && partner.getUserType() == 1 && model.retrieveInfoOfBook(productId) != null) {
 			product = model.getProductInfo(productId);
 			System.out.println("GGG");
 
@@ -31,6 +34,8 @@ public class Partner {
 			product = model.jsonErrorMessage();
 
 		}
+		
+
 
 		return product;
 
@@ -45,10 +50,10 @@ public class Partner {
 
 		String order = null;
 		BookStoreModel model = BookStoreModel.getInstance();
-
-		if (model.isPartnerExist(email, password) && model.retrieveInfoOfBook(productId) != null) {
+		UserBean partner = model.isUserExist(email, password);
+		
+		if (partner != null && partner.getUserType() == 1 && model.retrieveInfoOfBook(productId) != null) {
 			order = model.getOrdersByPartNumber(productId);
-
 		}
 
 		else {

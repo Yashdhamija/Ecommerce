@@ -83,17 +83,12 @@ public class BookStoreModel {
 		this.dao.insertAdminIntoDB(email, fname, lname, password);
 	}
 	
+	public boolean isEmailTaken(String email) {
+		return this.dao.isEmailTaken(email);
+	}
+	
 	public UserBean isUserExist(String email, String password) throws NoSuchAlgorithmException {
 		return this.dao.isUserExist(email, this.encryptPassword(password));
-	}
-
-	public boolean isVisitorExist(String email, String password) throws NoSuchAlgorithmException {
-		return this.dao.IsVisitorExistInDB(email, this.encryptPassword(password));
-
-	}
-
-	public boolean isPartnerExist(String email, String password) throws NoSuchAlgorithmException {
-		return this.dao.IsPartnerExistInDB(email, this.encryptPassword(password));
 	}
 
 	public String getPassword(String password) {

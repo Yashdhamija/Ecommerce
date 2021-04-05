@@ -289,6 +289,33 @@ public class DAO { // DB class
 		return result;
 	}
 	
+	public boolean isEmailTaken(String email) {
+		getRemoteConnection();
+		int userType = -1;
+		
+		try {
+			String query = "SELECT fname, usertype FROM Users WHERE email='" + email + "'";
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery(query);		
+			
+			while (rs.next()) {
+				userType = rs.getInt("usertype");
+				System.out.println("This user inside the DB: Name -> " + rs.getString("fname") + " userType -> " + userType);
+			}
+			
+			rs.close();
+			ps.close();
+			con.close();	
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return userType != -1;
+	}
+	
 	// checks if users with given credential sexists in dB.
 	// Generic functionality, can be  used to check for all kinds of users: 
 	// customers, partners & administrators
@@ -323,47 +350,6 @@ public class DAO { // DB class
 		}
 
 		return user;
-	}
-
-	public boolean IsVisitorExistInDB(String email, String password) { // For Signing up, if previous email exists then
-																		// it checks
-		String dbEmail = null;
-		String dbPassword = null;
-		boolean visitorExist = false;
-		getRemoteConnection();
-		try {
-
-			this.stmt = this.con.createStatement();
-			String query = "SELECT email,password FROM Users WHERE email='" + email + "' AND password='" + password
-					+ "' AND usertype=0";
-			PreparedStatement ps = con.prepareStatement(query);
-			ResultSet rs = ps.executeQuery(query);
-
-			while (rs.next()) {
-				dbEmail = rs.getString("email");
-				dbPassword = rs.getString("password");
-				System.out.println("This value inside the DB" + dbEmail);
-				System.out.println("This value inside the DB" + dbPassword);
-				// System.out.println(e);
-			}
-			if (dbEmail != null && dbPassword != null) {
-
-				visitorExist = true;
-			}
-
-			rs.close();
-			ps.close();
-			con.close();
-
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		return visitorExist;
 	}
 
 	public List<ReviewBean> retriveReviews(String bid) throws SQLException {
@@ -500,43 +486,6 @@ public class DAO { // DB class
 		ps.close();
 		con.close();
 		return price;
-	}
-
-	public boolean IsPartnerExistInDB(String email, String password) {
-
-		String dbEmail = null;
-		String dbPassword = null;
-		boolean partnerExist = false;
-		getRemoteConnection();
-		try {
-			this.stmt = this.con.createStatement();
-			String query = "SELECT email,password FROM Users WHERE password='" + password + "' AND email='" + email
-					+ "' AND usertype=1";
-			PreparedStatement ps = con.prepareStatement(query);
-			ResultSet rs = ps.executeQuery(query);
-
-			while (rs.next()) {
-				dbPassword = rs.getString("password");
-				dbEmail = rs.getString("email");
-
-			}
-			if (dbEmail != null && dbPassword != null) {
-				partnerExist = true;
-			}
-			rs.close();
-			ps.close();
-			con.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return partnerExist;
-
 	}
 
 	// Don't forgot to change this as someone can put the bid that isn't right by

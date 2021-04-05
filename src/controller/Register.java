@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import bean.UserBean;
+import model.BookStoreModel;
 import services.RegisterService;
 
 /**
@@ -20,6 +22,7 @@ import services.RegisterService;
 public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private RegisterService register;
+	private BookStoreModel model;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -28,6 +31,7 @@ public class Register extends HttpServlet {
 		super();
 		try {
 			this.register = new RegisterService();
+			this.model = BookStoreModel.getInstance();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -64,7 +68,7 @@ public class Register extends HttpServlet {
 	}
 
 	public void insertUserRegistration(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, NoSuchAlgorithmException, IOException {
+			throws SQLException, NoSuchAlgorithmException, IOException, ServletException {
 
 		String fname = request.getParameter("firstName");
 		String lname = request.getParameter("lastName");
@@ -79,16 +83,14 @@ public class Register extends HttpServlet {
 		String country = request.getParameter("country");
 
 		if (request.getParameter("registerbtn") != null) {
-
-			if (this.register.isVisitorRegistererInfoInDB(email, password)) {
-				
-				boolean doesVisitorEmailExist = true;
-				request.setAttribute("emailexists", doesVisitorEmailExist); // User exists
-
+			
+			if (this.model.isEmailTaken(email)) {
+				// User exists
+				request.setAttribute("emailexists", true); 
+				request.getRequestDispatcher("/register.jspx").forward(request, response);
 			}
 
 			else {
-
 				this.register.UserRegister(fname, lname, email, password, street, city, province, zipCode, phone,
 						country); // inserted new user into User DB
 				response.sendRedirect("Login");
@@ -97,20 +99,18 @@ public class Register extends HttpServlet {
 		}
 
 		if (request.getParameter("uidregister") != null) {
-
-			if (this.register.isPartnerRegistererInfoInDB(email, password)) { // Partner exists throw error message
-				
-				boolean doesPartnerEmailExist = true;
-				request.setAttribute("partnerexists", doesPartnerEmailExist);
+			
+			if (this.model.isEmailTaken(email)) { 
+				// Partner exists throw error message
+				request.setAttribute("partnerexists", true);
+				request.getRequestDispatcher("/partners.jspx").forward(request, response);
 			}
 
 			else {
-
 				this.register.PartnerRegister(fname, lname, email, password, street, city, province, zipCode, phone,
 						country);
 				response.sendRedirect("Login");
 			}
-
 		}
 
 	}

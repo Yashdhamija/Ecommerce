@@ -22,30 +22,9 @@ public class LoginService {
 
 	}
 	
-	//Validate each method using javascript
-
-	public boolean UserLoginValidation(String email, String password) throws NoSuchAlgorithmException { // User Login
-	
-		
-		 return this.book.isVisitorExist(email, password);
-
-	
-	}
-	
-	
-	public boolean PartnerLoginValidation(String email, String password) throws NoSuchAlgorithmException { // Partner Login
-		
-		
-		 return this.book.isPartnerExist(email, password);
-		 
-	
-	}
-	
 	public void displayLoginPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { // Initially displays login page
 		
-		
 		request.getRequestDispatcher("/login.jspx").forward(request, response);
-		
 	}
 	
 	

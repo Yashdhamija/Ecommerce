@@ -20,8 +20,8 @@ public class RegisterService {
 	}
 
 	public void UserRegister(String fname, String lname, String email, String password, String address, String city,
-			String province, String zipCode, String phoneNumber, String country) throws SQLException, NoSuchAlgorithmException { // User
-		
+			String province, String zipCode, String phoneNumber, String country) throws SQLException, NoSuchAlgorithmException { 
+		// User
 		this.book.insertUserLogin(fname, lname, email, this.book.encryptPassword(password));																								// Registration
 		this.book.insertIntoAddress(email,address, province, country, zipCode, phoneNumber, city);
 		
@@ -30,28 +30,12 @@ public class RegisterService {
 	
 	
 	public void PartnerRegister(String fname, String lname, String email, String password, String address, String city,
-			String province, String zipCode, String phoneNumber, String country) throws SQLException, NoSuchAlgorithmException { // User
-																										// Registration
+			String province, String zipCode, String phoneNumber, String country) throws SQLException, NoSuchAlgorithmException { 
+		// User Registration
 		
 		this.book.insertPartnerLogin(email, this.book.encryptPassword(password), fname, lname);
 		this.book.insertIntoAddress(email,address, province, country, zipCode, phoneNumber, city);
 	
-	}
-	
-	
-	
-	
-	
-	public boolean isVisitorRegistererInfoInDB(String email, String password) throws NoSuchAlgorithmException {
-		
-		return this.book.isVisitorExist(email, this.book.encryptPassword(password));
-		
-	}
-	
-	
-	public boolean isPartnerRegistererInfoInDB(String email,String password) throws NoSuchAlgorithmException {
-		
-		return this.book.isPartnerExist(email, this.book.encryptPassword(password));
 	}
 
 }

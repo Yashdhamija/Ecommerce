@@ -197,12 +197,10 @@
 
 
 					<c:choose>
-						<c:when test="${partnerexists eq 'yes'}">
+						<c:when test="${partnerexists eq true}">
 							<p style="color: red;">Email Address Already Exists Please
 								try again!</p>
 						</c:when>
-
-
 					</c:choose>
 
 
@@ -213,11 +211,6 @@
 				</form>
 			</div>
 		</div>
-
-
-
-
-
 
 		<div id="result"></div>
 

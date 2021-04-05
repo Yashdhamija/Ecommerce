@@ -48,9 +48,14 @@ public class Login extends HttpServlet {
 		}
 		
 		// sign up from login page
-		else if (request.getParameter("signup") != null || request.getParameter("partnersignup") != null) {
+		else if (request.getParameter("signup") != null) {
 			
 			response.sendRedirect("/BookLand/Register");
+		}
+		
+		else if (request.getParameter("partnersignup") != null) {
+			
+			response.sendRedirect("/BookLand/PartnerRegister");
 		}
 		
 		else if(request.getParameter("logout") != null && request.getSession().getAttribute("UserType") != null) {

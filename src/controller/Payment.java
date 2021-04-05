@@ -130,15 +130,10 @@ public class Payment extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		
-		System.out.println("The servlet path for payment is"+request.getServletPath());
-		System.out.println("Order confirmed 1" + request.getParameter("orderconfirmed"));
 		
 		if (request.getServletPath() != null && request.getServletPath().equals("/Payment") &&
 		 request.getSession().getAttribute("cartsize") != null && (Integer) 
 		 request.getSession().getAttribute("cartsize") == 0) {
-			System.out.println("Order confirmed 2" + request.getParameter("orderconfirmed"));
 			response.sendRedirect("/BookLand/Cart?viewcart=true");
 		}
 
@@ -159,10 +154,8 @@ public class Payment extends HttpServlet {
 			
 		}
 			
-			System.out.println("Order confirmed 3" + request.getParameter("orderconfirmed"));
 		  if (request.getSession().getAttribute("UserType") != null) {
 				try {
-					System.out.println("Order confirmed 4" + request.getParameter("orderconfirmed"));
 					retrieveUserInformation(request, response);
 					
 				} catch (SQLException e) {
@@ -188,34 +181,22 @@ public class Payment extends HttpServlet {
 					
 					
 					CounterBean counter = (CounterBean) request.getSession().getAttribute("counter");
-					if(counter != null) {
-						
-		
+					if(counter != null) {		
 						counter.updateCounter();
 						System.out.println("The value of counter is" + counter.getCounter());
-						
-
 					}
 					
-			
-
 				if (counter != null
 						&&  counter.getCounter() < 3) {
 					
 					System.out.println("Order confirmed 5" + request.getParameter("orderconfirmed"));
-					paymentSuccessful(request, response);
-					
-				
-					 
+					paymentSuccessful(request, response);			 
 				}
 
 				else {
 					System.out.println("Order confirmed 6" + request.getParameter("orderconfirmed"));
 					paymentDeclined(request, response);
 					//CounterBean counter  = ((CounterBean) request.getSession().getAttribute("counter"));
-					
-				
-					
 				}
 
 			}
@@ -226,11 +207,6 @@ public class Payment extends HttpServlet {
 				response.sendRedirect("/BookLand/Login");
 
 			}
-		
-		
-
-		
-
 	}
 
 	/**
