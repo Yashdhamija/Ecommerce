@@ -27,6 +27,26 @@ function validate() {
 
 
 
+function adminValidate(isloggedIn) {
+
+
+ if(isloggedIn ==  'true') {
+ alert("You are already logged in, please log out");
+ return false;
+ }
+ else {
+ var adminUserName = document.getElementById("adminEmail").value
+ var adminPassword = document.getElementById("adminPassword").value
+ 
+ 
+ if(parseInt(adminUserName)) 
+ 
+ 	return true;
+ }
+ 
+
+}
+
 
 
 function partnerValidation() { //For uid validation to be exactly 8 numbers

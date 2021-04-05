@@ -44,7 +44,7 @@ public class EditReviews extends HttpServlet {
 
 			request.getRequestDispatcher("/EditAllReviews.jspx").forward(request, response);
 		}
-		else if(request.getParameter("removeview") != null && request.getSession().getAttribute("adminValidated") != null && request.getSession().getAttribute("adminValidated").equals("validated") ) {
+		else if(request.getParameter("removereview") != null && request.getSession().getAttribute("adminValidated") != null && request.getSession().getAttribute("adminValidated").equals("validated") ) {
 			
 			System.out.println("The value of admin after 4 is " + request.getSession().getAttribute("adminValidated"));
 

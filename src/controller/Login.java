@@ -56,7 +56,7 @@ public class Login extends HttpServlet {
 			
 			LoginAuthentication(request, response);
 		}
-		else if(request.getParameter("logout") != null) {
+		else if(request.getParameter("logout") != null && request.getSession().getAttribute("UserType") != null) {
 			
 			request.getSession().setAttribute("name", null);
 			request.getSession().removeAttribute("UserType");
@@ -64,7 +64,16 @@ public class Login extends HttpServlet {
 			request.getSession().removeAttribute("cartsize");
 			request.getSession().removeAttribute("carttotal");
 			request.getSession().removeAttribute("shoppingcart");
+			response.sendRedirect("/BookLand/Home");
+		}
+		
+		
+		else if(request.getParameter("logout") != null && request.getSession().getAttribute("adminValidated") != null) {
+			
 			request.getSession().removeAttribute("adminValidated");
+			request.getSession().removeAttribute("cartsize");
+			request.getSession().removeAttribute("carttotal");
+			request.getSession().removeAttribute("shoppingcart");
 			response.sendRedirect("/BookLand/Home");
 		}
 		
@@ -109,6 +118,11 @@ public class Login extends HttpServlet {
 					request.getSession().setAttribute("name", partnerLoginName);
 					request.getSession().setAttribute("UserType", "partner");
 
+				}
+				
+				if(request.getSession().getAttribute("adminValidated") != null) {
+					
+					request.getSession().removeAttribute("adminValidated");
 				}
 				
 				request.getSession().setAttribute("useremail", email);

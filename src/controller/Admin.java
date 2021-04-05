@@ -91,9 +91,12 @@ public class Admin extends HttpServlet {
 		// TODO Auto-generated method stub
 		
 		System.out.println("Register button is " + request.getParameter("adminRegister") != null);
-		
-	  if (request.getServletPath().equals("/AdministratorLoginPage") && request.getParameter("adminEmail") == null
-				&& request.getParameter("adminPassword") == null && request.getQueryString() == null) {
+
+
+		System.out.println("The value of admin is" +request.getSession().getAttribute("adminValidated"));
+		 if ( request.getParameter("adminEmail") == null
+				&& request.getParameter("adminPassword") == null && request.getQueryString() == null &&
+				request.getSession().getAttribute("adminValidated") == null) {
 			adminLogin(request, response);
 		}
 	  
@@ -112,11 +115,27 @@ public class Admin extends HttpServlet {
 		}
 		  
 	  }
+	  
+
+	
 
 		else if (request.getParameter("adminLogin") != null) {
 
 			String adminPassword = request.getParameter("adminPassword");
 			String adminEmail = request.getParameter("adminEmail");
+			
+			
+			if( request.getSession().getAttribute("UserType") != null) {
+			  	
+				request.getSession().setAttribute("name", null);
+				request.getSession().removeAttribute("UserType");
+				// clearing the cart after logout is pressed
+				request.getSession().removeAttribute("cartsize");
+				request.getSession().removeAttribute("carttotal");
+				request.getSession().removeAttribute("shoppingcart");
+				
+				
+			}
 
 			try {
 				if (this.model.isValidAdmin(adminEmail, adminPassword)) {
@@ -124,7 +143,7 @@ public class Admin extends HttpServlet {
 					request.getSession().setAttribute("adminValidated", "validated");
 					System.out.println("The value of admin after login is " + request.getSession().getAttribute("adminValidated"));
 					
-					
+					request.getSession().setAttribute("logged", "true");
 					response.sendRedirect("/BookLand/Home");
 					
 					//displayAnalytics(request,response);
@@ -185,6 +204,11 @@ public class Admin extends HttpServlet {
 			}
 			
 	
+		}
+		  
+		else {
+			
+			 response.sendRedirect("/BookLand/Home");
 		}
 		
 	

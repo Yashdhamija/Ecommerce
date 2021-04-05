@@ -82,7 +82,8 @@
 		<div class="row justify-content-center">
 			<fieldset class="col-6">
 				<legend>Sign In As Administrator</legend>
-				<form action="/BookLand/AdministratorLoginPage" method="POST" class="loginForm" >
+				<form action="/BookLand/AdministratorLoginPage" method="POST" class="loginForm"
+				>
 					<div class="mb-4">
 						<label for="adminEmail" class="form-label">Email address </label>
 						<input name="adminEmail" type="text" class="form-control"

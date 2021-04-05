@@ -81,18 +81,6 @@
 
 						</c:when>
 
-						<c:otherwise>
-
-
-						</c:otherwise>
-
-					</c:choose>
-
-
-
-
-
-					<c:choose>
 						<c:when test="${sessionScope.adminValidated eq 'validated'}">
 							<li class="nav-item"><a class="nav-link active"
 								aria-current="page"
@@ -111,6 +99,11 @@
 						</c:otherwise>
 
 					</c:choose>
+
+
+
+
+
 
 
 				</ul>

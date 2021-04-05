@@ -145,11 +145,22 @@ public class Payment extends HttpServlet {
 		else if (request.getServletPath() != null && request.getServletPath().equals("/Payment")
 				&& request.getSession().getAttribute("cartsize") != null &&
 				(Integer) request.getSession().getAttribute("cartsize") != 0 && 
-				request.getParameter("orderconfirmed") == null) {
+				request.getParameter("orderconfirmed") == null ) {
 			
+			
+		 if(request.getSession().getAttribute("adminValidated") != null) {
+			 
+			 	request.getSession().removeAttribute("adminValidated");
+			 	request.getSession().removeAttribute("cartsize");
+			 	request.getSession().removeAttribute("carttotal");
+				request.getSession().removeAttribute("shoppingcart");
+				
+			
+			
+		}
 			
 			System.out.println("Order confirmed 3" + request.getParameter("orderconfirmed"));
-			if (request.getSession().getAttribute("UserType") != null) {
+		  if (request.getSession().getAttribute("UserType") != null) {
 				try {
 					System.out.println("Order confirmed 4" + request.getParameter("orderconfirmed"));
 					retrieveUserInformation(request, response);
@@ -166,7 +177,8 @@ public class Payment extends HttpServlet {
 				response.sendRedirect("/BookLand/Login");
 			}
 		}
-			
+		
+					
 			else if (request.getServletPath() != null && request.getServletPath().equals("/Payment")
 					&& request.getSession().getAttribute("cartsize") != null 
 					&& (Integer) request.getSession().getAttribute("cartsize") != 0
