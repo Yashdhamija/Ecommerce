@@ -18,45 +18,50 @@ public class Partner {
 	@GET
 	@Path("/read/getProductInfo")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getProductInfo(@QueryParam("productId") String productId)
+	public String getProductInfo(@QueryParam("email") String email, @QueryParam("password") String password, @QueryParam("productId") String productId)
 			throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 
 		String product = null;
 		BookStoreModel model = BookStoreModel.getInstance();
-	    
+		UserBean user = model.isUserExist(email, password);
 		
-		if (model.retrieveInfoOfBook(productId) != null) {
-			product = model.getProductInfo(productId);
+		if (user != null && user.getUserType() == 1) {
+		    
+			if (model.retrieveInfoOfBook(productId) != null) {
+				product = model.getProductInfo(productId);				
+			} else {
+				product = model.jsonErrorMessage();
+			}
 			
-
 		} else {
-			product = model.jsonErrorMessage();
-
+			product = "Sorry we could not authetnticate your partner logins. Try Again!\n";
 		}
 		
-
-
 		return product;
-
 	}
 	
 
 	@GET
 	@Path("/read/getOrdersByPartNumber")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getOrdersByPartNumber(@QueryParam("productId") String productId)
+	public String getOrdersByPartNumber(@QueryParam("email") String email, @QueryParam("password") String password, @QueryParam("productId") String productId)
 			throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 
 		String order = null;
 		BookStoreModel model = BookStoreModel.getInstance();
+		UserBean user = model.isUserExist(email, password);
 		
-		
-		if (model.retrieveInfoOfBook(productId) != null) {
-			order = model.getOrdersByPartNumber(productId);
+		if (user != null && user.getUserType() == 1) {
+			
+			if (model.retrieveInfoOfBook(productId) != null) {
+				order = model.getOrdersByPartNumber(productId);
+			} else {
+				order = model.jsonErrorMessage();
+			}
 		}
 
 		else {
-			order = model.jsonErrorMessage();
+			order = "Sorry we could not authetnticate your partner logins. Try Again!\n";
 		}
 
 		return order;

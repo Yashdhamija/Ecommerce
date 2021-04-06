@@ -10,10 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import rest.Partner;
 import bean.BookBean;
-import bean.CounterBean;
-import bean.ReviewBean;
 import model.BookStoreModel;
 
 /**
@@ -88,36 +85,41 @@ public class Home extends HttpServlet {
 		// This is for rest calls for Partners
 		else if (request.getParameter("restcall") != null && request.getParameter("restcall").equals("true")
 				&& request.getSession().getAttribute("UserType") != null
-				&& request.getSession().getAttribute("UserType").equals("partner")) { // This is for clicking the rest
-																						// API for partners
-
-		request.getRequestDispatcher("/PartnerUI.jspx").forward(request, response);
+				&& request.getSession().getAttribute("UserType").equals("partner")) { 
+			
+			// This is for clicking the rest API for partners
+			clearPartnerRestCall(request, response);
+			request.getRequestDispatcher("/PartnerUI.jspx").forward(request, response);
 
 		}
 		
-		else if(request.getParameter("orderbutton") != null) {
+		else if(request.getParameter("orderbutton") != null || request.getParameter("productbutton") != null) {
 			clearPartnerRestCall(request,response);
-			Partner partner = new Partner();
-			request.getSession().setAttribute("orderinfo", partner.getOrdersByPartNumber(request.getParameter("order_search")));
+
+			String output = null;
+			String productId = request.getParameter("product_search");
+			
+			if (model.retrieveInfoOfBook(productId) != null) {
+				
+				if (request.getParameter("orderbutton") != null) {
+					output = this.model.getOrdersByPartNumber(productId);
+					request.getSession().setAttribute("orderinfo", output);
+				} 
+				else {
+					output = this.model.getProductInfo(productId);
+					request.getSession().setAttribute("productinfo", output);
+				}
+			} else {
+				output = "Sorry, product with given productId not found!";
+			}
+			
 			request.getRequestDispatcher("/PartnerUI.jspx").forward(request, response);
-			
-			
-		}
-		
-		
-		
-		else if(request.getParameter("productbutton") != null) {
-			clearPartnerRestCall(request,response);
-			Partner partner = new Partner();
-			request.getSession().setAttribute("productinfo", partner.getProductInfo(request.getParameter("product_search")));
-			request.getRequestDispatcher("/PartnerUI.jspx").forward(request, response);
-			
+						
 		}
 
 		else {
 			// Error Page
 			response.sendRedirect("/BookLand/ErrorPage");
-
 		}
 
 	}
@@ -162,7 +164,6 @@ public class Home extends HttpServlet {
 	public void displayBooksInCategory(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		
 			String category = request.getParameter("category");
 			List<BookBean> books = null;
 			try {
@@ -179,7 +180,6 @@ public class Home extends HttpServlet {
 	public void searchForBooks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String search = request.getParameter("search");
-		System.out.println(search);
 		try {
 			// Improve this to add for more searches like category
 			List<BookBean> searchedBooks = this.model.getSearchedBook(search);

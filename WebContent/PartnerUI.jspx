@@ -119,96 +119,65 @@
 		</div>
 	</nav>
 
-
-           <div>
-				<form action="/BookLand/Home" class="d-flex" method="GET">
-					<button class="btn btn-outline-success" name="productbutton" 
-					 id="btnsubmit" action="submit" value="true">Search Products</button>
-					<input name="product_search" id="search" class="form-control me-2"
-						type="productsearch" placeholder="Search" aria-label="Search"
-						required="true" ></input>
-					
-				</form>
-			</div>
-			
-			
+ 
+<!--           <div>
+			<form action="/BookLand/Home" class="d-flex" method="GET">
+				<button class="btn btn-outline-success" name="productbutton" 
+				 id="btnsubmit" action="submit" value="true">Search Products</button>
+				<input name="product_search" id="search" class="form-control me-2"
+					type="productsearch" placeholder="Search" aria-label="Search"
+					required="true" ></input>
+			</form>
+		</div>
+		
+		
 			 <div>
-				<form action="/BookLand/Home" class="d-flex" method="GET">
-				<button class="btn btn-outline-success" id="btnsubmit"
-						name="orderbutton" action="submit" value="true">Search Orders</button>
-					<input name="order_search" id="search" class="form-control me-2"
-						type="search" placeholder="Search" aria-label="Search"
-						required="true" ></input>
-				
+			<form action="/BookLand/Home" class="d-flex" method="GET">
+			<button class="btn btn-outline-success" id="btnsubmit"
+					name="orderbutton" action="submit" value="true">Search Orders</button>
+				<input name="order_search" id="search" class="form-control me-2"
+					type="search" placeholder="Search" aria-label="Search"
+					required="true" ></input>
+			</form>
+		</div> 
+		
+		<small>Format: 111-1-1111-1111-1</small> -->
+		
+		<div class="container">
+			<div class="row justify-content-center">
+				<form action="/BookLand/Home" method="GET" class="row g-3">
+
+					<div class="col-12">
+						<label for="product_search" class="form-label">ProductId</label> 
+						<input type="search" placeholder="111-1-1111-1111-1" class="form-control" name="product_search" id="product_search"
+							required="required"></input><small>Format: 111-1-1111-1111-1</small>
+					</div>
+							
+					<div class="col-md-3">
+						<button name="productbutton" value="true" type="submit"
+							class="btn btn-dark">Get Product Info</button>
+					</div>
+					
+					<div class="col-md-3">
+						<button name="orderbutton" value="true" type="submit"
+							class="btn btn-dark">Get Product Orders</button>
+					</div>
 				</form>
 			</div>
-
-
-
-
-				
-				
-					<c:choose>
-						<c:when
-							test="${orderinfo eq 'Error Message:, This information cannot be accessed.'}">
-							<div>${orderinfo}</div>
-						</c:when>
-				
-						<c:otherwise>
-							<div>${orderinfo}</div>
-						</c:otherwise>
-				
-					</c:choose>
-				
-
-
-
-						<c:choose>
-						<c:when
-							test="${productinfo eq 'Error Message:, This information cannot be accessed.'}">
-							<div>${productinfo}</div>
-						</c:when>
-				
-						<c:otherwise>
-							<div>${productinfo}</div>
-						</c:otherwise>
-					</c:choose>
-				
-				
-				
-				
-				
-				
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		</div>
+		
+		<c:choose>
+			<c:when
+				test="${orderinfo ne null}">
+				<div>${orderinfo}</div>
+			</c:when>
+	
+			<c:when
+				test="${productinfo ne null}">
+				<div>${productinfo}</div>
+			</c:when>
+		</c:choose>
+								
 </body>
 <c:import url="nav.html"></c:import>
 </html>

@@ -502,7 +502,7 @@ public class DAO { // DB class
 		while (rs.next()) {
 			String bookid = rs.getString("bid");
 			String btitle = rs.getString("title");
-			int bprice = Integer.parseInt(rs.getString("price"));
+			int bprice = rs.getInt("price");
 			String category = rs.getString("category");
 			String url = rs.getString("imageurl");
 			l.add(new BookBean(bookid, btitle, bprice, category, url));
@@ -511,7 +511,6 @@ public class DAO { // DB class
 		rs.close();
 		ps.close();
 		con.close();
-		System.out.println(l.get(0).getBid());
 		return l;
 	}
 

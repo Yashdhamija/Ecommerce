@@ -119,9 +119,9 @@
 	</nav>
 
 
-	GET (or READ) curl -X GET     http://localhost:8080/BookLand/rest/partner/read/getProductInfo?email=jkrowling@yahoo.com&amp;password=12345678&amp;productId=121-3-3434-4545-5
+	GET (or READ) curl -X GET 'http://localhost:8080/BookLand/rest/partner/read/getProductInfo?email=jkrowling@yahoo.com&amp;password=12345678&amp;productId=121-3-3434-4545-5'
 	<br/>
-	GET (or READ) curl -X GET     http://localhost:8080/BookLand/rest/partner/read/getOrdersByPartNumber?email=jkrowling@yahoo.com&amp;password=12345678&amp;productId=232-2-4342-2343-3
+	GET (or READ) curl -X GET 'http://localhost:8080/BookLand/rest/partner/read/getOrdersByPartNumber?email=jkrowling@yahoo.com&amp;password=12345678&amp;productId=232-2-4342-2343-3'
 </body>
 
 <c:import url="nav.html"></c:import>
