@@ -224,7 +224,7 @@ public class BookStoreModel {
 		// TODO validate product id
 		BookBean book = this.instance.dao.getProductJSON(productId);
 		JsonObjectBuilder bookJSON = Json.createObjectBuilder();
-		bookJSON.add("BookTitle", book.getBid()).add("Title", book.getTitle()).add("Price", book.getPrice())
+		bookJSON.add("BookId", book.getBid()).add("Title", book.getTitle()).add("Price", book.getPrice())
 				.add("Category", book.getCategory());
 		JsonObject value = bookJSON.build();
 		String serializedBookJson = value.toString();
@@ -233,7 +233,7 @@ public class BookStoreModel {
 
 	public String jsonErrorMessage() {
 		JsonObjectBuilder bookJSON = Json.createObjectBuilder();
-		bookJSON.add("Error Message:", "This information cannot be accessed.");
+		bookJSON.add("Error Message:", "This information cannot be accessed. Please provide a valid product Id!");
 		JsonObject value = bookJSON.build();
 		String serializedBookJson = value.toString();
 		return serializedBookJson;
@@ -264,10 +264,7 @@ public class BookStoreModel {
 		for (OrderBean order : orders) {
 			
 			AddressBean userAddress = this.getUserAddress(order.getCid());
-			BookBean userbook =  this.getSingleBookInfo(productId);		
-			
-			
-			
+			BookBean userbook =  this.getSingleBookInfo(productId);					
 			
 			result.add(Json.createObjectBuilder().add("orderDate", order.getDate())
 					.add("name", order.getFname() + order.getLname())
