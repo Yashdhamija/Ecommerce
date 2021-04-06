@@ -5,12 +5,14 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import bean.BookBean;
+import bean.ReviewBean;
 import model.BookStoreModel;
 
 /**
@@ -35,8 +37,13 @@ public class Home extends HttpServlet {
 	public Home() throws ClassNotFoundException {
 		super();
 		this.model = BookStoreModel.getInstance();
-		// TODO Auto-generated constructor stub
 	}
+	
+	@Override
+    public void init(ServletConfig config) throws ServletException{
+    	super.init(config);
+    	this.getServletContext().setAttribute("counter", 0);
+    }
 
 	public void Dispatcher(HttpServletRequest request, HttpServletResponse response)
 			throws ClassNotFoundException, ServletException, IOException, SQLException, NoSuchAlgorithmException {

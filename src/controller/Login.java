@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.CounterBean;
 import bean.UserBean;
 
 import javax.servlet.ServletConfig;
@@ -112,8 +111,6 @@ public class Login extends HttpServlet {
 					request.getSession().removeAttribute("adminValidated");
 				}
 				
-				//request.getSession().setAttribute("counter", this.counter); // payment requests is initiated as counterbean
-
 				//request.getRequestDispatcher("/Home").forward(request, response);
 				response.sendRedirect("/BookLand/Home");
 			} else {
