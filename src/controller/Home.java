@@ -103,16 +103,17 @@ public class Home extends HttpServlet {
 				
 				if (request.getParameter("orderbutton") != null) {
 					output = this.model.getOrdersByPartNumber(productId);
-					request.getSession().setAttribute("orderinfo", output);
+					
 				} 
 				else {
 					output = this.model.getProductInfo(productId);
-					request.getSession().setAttribute("productinfo", output);
+					
 				}
 			} else {
 				output = "Sorry, product with given productId not found!";
-			}
 			
+			}
+			request.getSession().setAttribute("productinfo", output);
 			request.getRequestDispatcher("/PartnerUI.jspx").forward(request, response);
 						
 		}
@@ -143,7 +144,7 @@ public class Home extends HttpServlet {
 	
 	public void clearPartnerRestCall(HttpServletRequest request, HttpServletResponse response) {
 		
-		request.getSession().removeAttribute("orderinfo");
+		
 		request.getSession().removeAttribute("productinfo");
 	}
 
