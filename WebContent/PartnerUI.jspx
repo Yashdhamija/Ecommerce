@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	<jsp:directive.page contentType="text/html; charset=ISO-8859-1"
+		pageEncoding="ISO-8859-1" session="true" />
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+		<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Insert title here</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet"></link>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://unpkg.com/purecss@2.0.5/build/pure-min.css"
+	integrity="sha384-LTIDeidl25h2dPxrB2Ekgc9c7sEC3CWGM6HeFmuDNUjX76Ert4Z4IY714dhZHPLd"
+	crossorigin="anonymous" />
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="Home"><i class="material-icons">menu_book</i></a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link active"
+						aria-current="page" href="Home">Home</a></li>
+
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#"
+						id="navbarScrollingDropdown" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"> Books </a>
+						<ul class="dropdown-menu"
+							aria-labelledby="navbarScrollingDropdown">
+							<li><a class="dropdown-item" href="Home">All</a></li>
+							<li><a class="dropdown-item" href="Home?category=Fiction">Fiction</a></li>
+							<li><a class="dropdown-item" href="Home?category=Science">Science</a></li>
+							<li><a class="dropdown-item" href="Home?category=Sci-fi">Sci-fi</a></li>
+							<li><a class="dropdown-item" href="Home?category=Crime">Crime</a></li>
+							<li><a class="dropdown-item" href="Home?category=Arts">Arts</a></li>
+							<li><a class="dropdown-item" href="Home?category=Romance">Romance</a></li>
+							<li><a class="dropdown-item" href="Home?category=History">History</a></li>
+							<li><a class="dropdown-item" href="Home?category=Literacy">Literacy</a></li>
+						</ul></li>
+
+				</ul>
+
+
+
+				<form action="Home" class="d-flex" method="GET">
+					<input name="search" id="search" class="form-control me-2"
+						type="search" placeholder="Search" aria-label="Search"
+						required="true" oninvalid="return false;"></input>
+					<button class="btn btn-outline-success" id="btnsubmit"
+						action="submit" value="true">Search</button>
+
+				</form>
+
+
+
+				<c:choose>
+					<c:when test="${sessionScope.name ne null}">
+
+						<form action="Login" class="d-flex" method="POST">
+							<button class="btn btn-outline-success" id="logout" name="logout"
+								value="true">LogOut</button>
+						</form>
+
+						<div class="thecart">
+							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+								class="material-icons">shopping_cart</i></a>
+						</div>
+					</c:when>
+
+
+					<c:when test="${sessionScope.adminValidated eq 'validated'}">
+
+						<form action="Login" class="d-flex" method="POST">
+							<button class="btn btn-outline-success" id="logout" name="logout"
+								value="true">LogOut</button>
+						</form>
+
+						<div class="thecart">
+							<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+								class="material-icons">shopping_cart</i></a>
+						</div>
+					</c:when>
+
+
+					<c:otherwise>
+
+						<a class="btn btn-outline-success" id="login" name="login"
+							href="/BookLand/Login">LogIn/Register</a>
+
+
+						<a class="carticon" href="/BookLand/Cart?viewcart=true"><i
+							class="material-icons">shopping_cart</i></a>
+
+					</c:otherwise>
+
+				</c:choose>
+
+
+			</div>
+		</div>
+	</nav>
+
+
+           <div>
+				<form action="/BookLand/Home" class="d-flex" method="GET">
+					<button class="btn btn-outline-success" name="productbutton" 
+					 id="btnsubmit" action="submit" value="true">Search Products</button>
+					<input name="product_search" id="search" class="form-control me-2"
+						type="productsearch" placeholder="Search" aria-label="Search"
+						required="true" ></input>
+					
+				</form>
+			</div>
+			
+			
+			 <div>
+				<form action="/BookLand/Home" class="d-flex" method="GET">
+				<button class="btn btn-outline-success" id="btnsubmit"
+						name="orderbutton" action="submit" value="true">Search Orders</button>
+					<input name="order_search" id="search" class="form-control me-2"
+						type="search" placeholder="Search" aria-label="Search"
+						required="true" ></input>
+				
+				</form>
+			</div>
+
+
+
+
+				
+				
+					<c:choose>
+						<c:when
+							test="${orderinfo eq 'Error Message:, This information cannot be accessed.'}">
+							<div>${orderinfo}</div>
+						</c:when>
+				
+						<c:otherwise>
+							<div>${orderinfo}</div>
+						</c:otherwise>
+				
+					</c:choose>
+				
+
+
+
+						<c:choose>
+						<c:when
+							test="${productinfo eq 'Error Message:, This information cannot be accessed.'}">
+							<div>${productinfo}</div>
+						</c:when>
+				
+						<c:otherwise>
+							<div>${productinfo}</div>
+						</c:otherwise>
+					</c:choose>
+				
+				
+				
+				
+				
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+<c:import url="nav.html"></c:import>
+</html>
+</jsp:root>

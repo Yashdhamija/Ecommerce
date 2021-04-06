@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import rest.Partner;
 import bean.BookBean;
 import bean.CounterBean;
 import bean.ReviewBean;
@@ -41,7 +42,7 @@ public class Home extends HttpServlet {
 	}
 
 	public void Dispatcher(HttpServletRequest request, HttpServletResponse response)
-			throws ClassNotFoundException, ServletException, IOException, SQLException {
+			throws ClassNotFoundException, ServletException, IOException, SQLException, NoSuchAlgorithmException {
 
 		// This is for when user clicks the write a review button on the
 		// bookinformation.jspx page
@@ -90,8 +91,27 @@ public class Home extends HttpServlet {
 				&& request.getSession().getAttribute("UserType").equals("partner")) { // This is for clicking the rest
 																						// API for partners
 
-			request.getRequestDispatcher("/restcall.jspx").forward(request, response);
+		request.getRequestDispatcher("/PartnerUI.jspx").forward(request, response);
 
+		}
+		
+		else if(request.getParameter("orderbutton") != null) {
+			clearPartnerRestCall(request,response);
+			Partner partner = new Partner();
+			request.getSession().setAttribute("orderinfo", partner.getOrdersByPartNumber(request.getParameter("order_search")));
+			request.getRequestDispatcher("/PartnerUI.jspx").forward(request, response);
+			
+			
+		}
+		
+		
+		
+		else if(request.getParameter("productbutton") != null) {
+			clearPartnerRestCall(request,response);
+			Partner partner = new Partner();
+			request.getSession().setAttribute("productinfo", partner.getProductInfo(request.getParameter("product_search")));
+			request.getRequestDispatcher("/PartnerUI.jspx").forward(request, response);
+			
 		}
 
 		else {
@@ -106,6 +126,7 @@ public class Home extends HttpServlet {
 		
 		request.getSession().setAttribute("reviewbookid", request.getParameter("reviewform"));
 		
+		
 		if (request.getSession().getAttribute("name") != null) {
 			
 			request.setAttribute("review", "true");
@@ -115,6 +136,13 @@ public class Home extends HttpServlet {
 		else {
 			response.sendRedirect("/BookLand/Login");
 		}
+	}
+	
+	
+	public void clearPartnerRestCall(HttpServletRequest request, HttpServletResponse response) {
+		
+		request.getSession().removeAttribute("orderinfo");
+		request.getSession().removeAttribute("productinfo");
 	}
 
 	public void HomePage(HttpServletRequest request, HttpServletResponse response)
@@ -232,6 +260,9 @@ public class Home extends HttpServlet {
 		} catch (ClassNotFoundException | ServletException | IOException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

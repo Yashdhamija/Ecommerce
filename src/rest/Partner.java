@@ -2,7 +2,7 @@ package rest;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -18,17 +18,16 @@ public class Partner {
 	@GET
 	@Path("/read/getProductInfo")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getProductInfo(@QueryParam("email") String email, @QueryParam("password") String password,
-			@QueryParam("productId") String productId)
+	public String getProductInfo(@QueryParam("productId") String productId)
 			throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 
 		String product = null;
 		BookStoreModel model = BookStoreModel.getInstance();
-		UserBean partner = model.isUserExist(email, password);
+	    
 		
-		if (partner != null && partner.getUserType() == 1 && model.retrieveInfoOfBook(productId) != null) {
+		if (model.retrieveInfoOfBook(productId) != null) {
 			product = model.getProductInfo(productId);
-			System.out.println("GGG");
+			
 
 		} else {
 			product = model.jsonErrorMessage();
@@ -40,19 +39,19 @@ public class Partner {
 		return product;
 
 	}
+	
 
 	@GET
 	@Path("/read/getOrdersByPartNumber")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getOrdersByPartNumber(@QueryParam("email") String email, @QueryParam("password") String password,
-			@QueryParam("productId") String productId)
+	public String getOrdersByPartNumber(@QueryParam("productId") String productId)
 			throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 
 		String order = null;
 		BookStoreModel model = BookStoreModel.getInstance();
-		UserBean partner = model.isUserExist(email, password);
 		
-		if (partner != null && partner.getUserType() == 1 && model.retrieveInfoOfBook(productId) != null) {
+		
+		if (model.retrieveInfoOfBook(productId) != null) {
 			order = model.getOrdersByPartNumber(productId);
 		}
 
