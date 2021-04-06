@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.UserBean;
 import bean.CartBean;
-import bean.CounterBean;
 import model.BookStoreModel;
 
 /**
@@ -95,10 +94,7 @@ public class Payment extends HttpServlet {
 		request.getSession().removeAttribute("shoppingcart");
 		request.getSession().removeAttribute("carttotal");
 		request.getSession().removeAttribute("cartsize");
-		CounterBean counter = (CounterBean) request.getSession().getAttribute("counter");
 
-		request.getSession().setAttribute("counter", counter);
-;
 		response.sendRedirect("/BookLand/OrderConfirmation");
 
 	}
@@ -117,10 +113,7 @@ public class Payment extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		CounterBean counter =  (CounterBean) request.getSession().getAttribute("counter");
 		
-		counter.resetCounter(); 
-		request.getSession().setAttribute("counter", counter);
 		request.setAttribute("authorization", "failed");
 		request.getRequestDispatcher("/payment.jspx").forward(request, response);
 
@@ -174,35 +167,22 @@ public class Payment extends HttpServlet {
 			else if (request.getServletPath() != null && request.getServletPath().equals("/Payment")
 					&& request.getSession().getAttribute("cartsize") != null 
 					&& (Integer) request.getSession().getAttribute("cartsize") != 0
-					&& request.getParameter("orderconfirmed") != null) {
-				
-					System.out.println("FF");
+					&& request.getParameter("orderconfirmed") != null) {					
 					
+					int counter = (Integer) request.getServletContext().getAttribute("counter");
 					
-					CounterBean counter = (CounterBean) request.getSession().getAttribute("counter");
-					if(counter != null) {		
-						counter.updateCounter();
-						
-					}
-					
-				if (counter != null
-						&&  counter.getCounter() < 3) {
-					
-					
-					paymentSuccessful(request, response);			 
+				if (counter < 2) {
+					paymentSuccessful(request, response);	
+					request.getServletContext().setAttribute("counter", counter+1);
 				}
 
 				else {
-					
 					paymentDeclined(request, response);
-					//CounterBean counter  = ((CounterBean) request.getSession().getAttribute("counter"));
-				}
-
+					request.getServletContext().setAttribute("counter", 0);				}
 			}
 
-			else {// Go Back to Login Page
-				
-				
+			else {
+				// Go Back to Login Page
 				response.sendRedirect("/BookLand/Login");
 
 			}
