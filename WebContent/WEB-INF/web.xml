@@ -53,6 +53,17 @@
     <servlet-class>Admin.controller</servlet-class>
 </servlet>
 
+
+<filter>
+ <filter-name>Annomized</filter-name>
+ <filter-class>filter.Annomized</filter-class>
+</filter>
+
+<filter-mapping>
+<filter-name>Annomized</filter-name>
+<url-pattern>/AdministratorLoginPage</url-pattern>
+</filter-mapping>
+
  <servlet>
     <servlet-name>Analytics</servlet-name>
     <servlet-class>Analytics.controller</servlet-class>

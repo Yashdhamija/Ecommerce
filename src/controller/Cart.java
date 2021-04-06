@@ -62,7 +62,7 @@ public class Cart extends HttpServlet {
 
 			else {
 
-				System.out.println("This is the bookId" + "and this is cart"); // from session
+		
 
 				String bookId = request.getParameter("addtocart");
 				int price;
@@ -70,7 +70,7 @@ public class Cart extends HttpServlet {
 				int quantity = 1;
 
 				if (request.getSession().getAttribute("shoppingcart") == null) {
-					System.out.println("Cart is empty");
+				
 					this.cart = new HashMap<String, CartBean>();
 					request.getSession().setAttribute("shoppingcart", this.cart);
 				} else {
@@ -79,9 +79,9 @@ public class Cart extends HttpServlet {
 
 				try {
 					String bookTitle = this.model.retrieveBookTitle(bookId);
-					System.out.println(bookTitle);
+					
 					price = this.model.retrievePriceofABook(bookId);
-					System.out.println("The price is" + price);
+					
 
 					String imageurl = model.retrieveBookUrl(bookId);
 					CartBean bookCart = new CartBean(bookId, price, bookTitle, quantity, imageurl);
@@ -95,9 +95,9 @@ public class Cart extends HttpServlet {
 					}
 
 					else {
-						System.out.println("This is the bookId" + bookId + "and this is cart" + bookCart);
+						
 						this.cart.put(bookId, bookCart);
-						System.out.println("cart items are " + this.cart);
+					
 						total = this.model.cartTotal(this.cart);
 						request.getSession().setAttribute("cartsize", cart.size());
 						request.getSession().setAttribute("carttotal", String.valueOf(total));
@@ -119,10 +119,7 @@ public class Cart extends HttpServlet {
 
 	public void removeFromCart(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println(request.getParameter("removebook"));
-
-		System.out.println("I removed");
-
+	
 		Map<String, CartBean> cartItems = (HashMap) request.getSession().getAttribute("shoppingcart");
 		request.getSession().setAttribute("shoppingcart",
 				this.model.remove(request.getParameter("removebook"), cartItems));

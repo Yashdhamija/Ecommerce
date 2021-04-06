@@ -42,15 +42,15 @@ public class EditReviews extends HttpServlet {
 		if (request.getServletPath().equals("/EditReviews") && request.getQueryString() == null
 				&& request.getSession().getAttribute("adminValidated") != null
 				&& request.getSession().getAttribute("adminValidated").equals("validated")) {
-			System.out.println("The value of admin after 3 is " + request.getSession().getAttribute("adminValidated"));
-			System.out.println("i am here 1");
+		
+		
 
 			request.getRequestDispatcher("/EditAllReviews.jspx").forward(request, response);
 		} else if (request.getParameter("removereview") != null
 				&& request.getSession().getAttribute("adminValidated") != null
 				&& request.getSession().getAttribute("adminValidated").equals("validated")) {
 
-			System.out.println("The value of admin after 4 is " + request.getSession().getAttribute("adminValidated"));
+			
 
 			String bid = request.getParameter("removereview");
 			String review = request.getParameter("bookreview");

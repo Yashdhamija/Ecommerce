@@ -96,8 +96,7 @@ public class Login extends HttpServlet {
 
 		String email = request.getParameter("Username");
 		String password = request.getParameter("signinpassword");
-		System.out.println(email);
-		System.out.println(password);
+
 
 		if (email != null && password != null) {
 			UserBean user = this.model.isUserExist(email, password);

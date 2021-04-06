@@ -45,7 +45,7 @@ public class Orders extends HttpServlet {
 			if(request.getParameter("shipping-address") != null && request.getParameter("shipping-address").equals("true")) {
 				 
 				request.getSession().setAttribute("showaddress", "allowed");
-				System.out.println("Address is " + this.model.retrieveAddress((String) request.getSession().getAttribute("useremail")));
+				
 				request.getSession().setAttribute("fulladdress", this.model.retrieveAddress((String) request.getSession().getAttribute("useremail")));	
 				
 				request.getRequestDispatcher("/Orders.jspx").forward(request, response);
@@ -55,7 +55,7 @@ public class Orders extends HttpServlet {
 					&& request.getParameter("date") != null
 					&& model.getAllUserOrderDates((String) request.getSession().getAttribute("useremail"))
 							.contains(request.getParameter("date"))) {
-				System.out.println("1");
+				
 				String date = request.getParameter("date");
 				String email = (String) request.getSession().getAttribute("useremail");
 				List<OrderBean> orderitems = model.getOrderByDate(date, email);
@@ -70,7 +70,7 @@ public class Orders extends HttpServlet {
 				request.getSession().setAttribute("orderhistory", "allowed");
 				try {
 					
-					System.out.println("2");
+					
 					request.getSession().removeAttribute("orderview");
 					request.getSession().removeAttribute("showaddress");
 					request.getSession().setAttribute("dates",
@@ -84,7 +84,7 @@ public class Orders extends HttpServlet {
 			}
 
 			else {
-				System.out.println("3");
+				
 				
 				if(request.getSession().getAttribute("UserType") != null) {
 					request.getSession().removeAttribute("showaddress");
