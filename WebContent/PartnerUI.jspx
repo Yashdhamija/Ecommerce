@@ -11,7 +11,7 @@
 		omit-xml-declaration="true" />
 		<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Insert title here</title>
+<title>Partner API</title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet"></link>
 <link
@@ -69,8 +69,6 @@
 						action="submit" value="true">Search</button>
 
 				</form>
-
-
 
 				<c:choose>
 					<c:when test="${sessionScope.name ne null}">

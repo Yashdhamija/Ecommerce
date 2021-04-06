@@ -93,7 +93,9 @@ public class Register extends HttpServlet {
 			else {
 				this.register.UserRegister(fname, lname, email, password, street, city, province, zipCode, phone,
 						country); // inserted new user into User DB
-				response.sendRedirect("Login");
+				request.setAttribute("registerSuccess", true);
+				request.getRequestDispatcher("/login.jspx").forward(request, response);
+//				response.sendRedirect("Login");
 			}
 
 		}
@@ -109,7 +111,9 @@ public class Register extends HttpServlet {
 			else {
 				this.register.PartnerRegister(fname, lname, email, password, street, city, province, zipCode, phone,
 						country);
-				response.sendRedirect("Login");
+				request.setAttribute("registerSuccess", true);
+				request.getRequestDispatcher("/login.jspx").forward(request, response);
+//				response.sendRedirect("Login");
 			}
 		}
 
