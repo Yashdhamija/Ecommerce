@@ -82,8 +82,7 @@ public class Payment extends HttpServlet {
 
 			for (Map.Entry<String, CartBean> entry : cart.entrySet()) {
 
-				System.out.println(
-						"This is the  email" + (String) request.getSession().getAttribute("useremail").toString());
+				
 				this.model.insertPOItem(orderId, entry.getValue().getBookid(), entry.getValue().getPrice(),
 						entry.getValue().getQuantity());
 			}
@@ -99,7 +98,7 @@ public class Payment extends HttpServlet {
 		CounterBean counter = (CounterBean) request.getSession().getAttribute("counter");
 
 		request.getSession().setAttribute("counter", counter);
-		System.out.println("The value of counter is" + counter.getCounter());
+;
 		response.sendRedirect("/BookLand/OrderConfirmation");
 
 	}
@@ -119,7 +118,7 @@ public class Payment extends HttpServlet {
 			e.printStackTrace();
 		}
 		CounterBean counter =  (CounterBean) request.getSession().getAttribute("counter");
-		System.out.println("The value of counter is" + counter.getCounter());
+		
 		counter.resetCounter(); 
 		request.getSession().setAttribute("counter", counter);
 		request.setAttribute("authorization", "failed");
@@ -176,25 +175,25 @@ public class Payment extends HttpServlet {
 					&& request.getSession().getAttribute("cartsize") != null 
 					&& (Integer) request.getSession().getAttribute("cartsize") != 0
 					&& request.getParameter("orderconfirmed") != null) {
-				System.out.println("Order confirmed 4" + request.getParameter("orderconfirmed"));
+				
 					System.out.println("FF");
 					
 					
 					CounterBean counter = (CounterBean) request.getSession().getAttribute("counter");
 					if(counter != null) {		
 						counter.updateCounter();
-						System.out.println("The value of counter is" + counter.getCounter());
+						
 					}
 					
 				if (counter != null
 						&&  counter.getCounter() < 3) {
 					
-					System.out.println("Order confirmed 5" + request.getParameter("orderconfirmed"));
+					
 					paymentSuccessful(request, response);			 
 				}
 
 				else {
-					System.out.println("Order confirmed 6" + request.getParameter("orderconfirmed"));
+					
 					paymentDeclined(request, response);
 					//CounterBean counter  = ((CounterBean) request.getSession().getAttribute("counter"));
 				}
@@ -202,8 +201,8 @@ public class Payment extends HttpServlet {
 			}
 
 			else {// Go Back to Login Page
-				System.out.println("Order confirmed 7" + request.getParameter("orderconfirmed"));
-				System.out.println("This is on line 70");
+				
+				
 				response.sendRedirect("/BookLand/Login");
 
 			}

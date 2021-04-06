@@ -50,12 +50,12 @@ public class Analytics extends HttpServlet {
 			//LinkedHashMap<String, Integer> newResult;
 
 			result = this.model.retrieveBooksSoldEachMonth(date);
-			System.out.println(result);
+			
 			
 			request.setAttribute("topMonthResult", result);
 			request.getSession().setAttribute("chosenMonth", request.getParameter("topMonth"));
 			
-			System.out.println("The dates are " + model.getAllDates());
+		
 			
 			
 
@@ -76,7 +76,7 @@ public class Analytics extends HttpServlet {
 				e.printStackTrace();
 			}
 			if (request.getParameter("topMonth") != null ) {
-				System.out.println("Im inside the top month");
+				
 				
 				String date = request.getParameter("topMonth");
 				displayTopMonthlyBooks(request, response, date);

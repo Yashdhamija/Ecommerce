@@ -905,7 +905,8 @@ public class DAO { // DB class
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
-			current.add("****      ***");
+			//current.add("****      ***");
+			current.add(rs.getString("fname")+rs.getString("lname"));
 			current.add(rs.getString("zip"));
 			current.add(rs.getString("total"));
 			result.add(current);

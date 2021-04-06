@@ -107,7 +107,7 @@ public class Home extends HttpServlet {
 		request.getSession().setAttribute("reviewbookid", request.getParameter("reviewform"));
 		
 		if (request.getSession().getAttribute("name") != null) {
-			System.out.println("ReviewForm requested: Bid is " + (String) request.getSession().getAttribute("bookid"));
+			
 			request.setAttribute("review", "true");
 			request.getRequestDispatcher("/bookinformation.jspx").forward(request, response);
 		}

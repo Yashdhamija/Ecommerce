@@ -54,10 +54,11 @@ public class Admin extends HttpServlet {
 
 		
 		list = this.model.retrieveTopTenAllTime();
-		userStats = this.model.retrieveUserStatistics();
+		//userStats = this.model.retrieveUserStatistics();
 
 		request.getSession().setAttribute("TopTen", list);
-		request.getSession().setAttribute("userStats", userStats);
+		//request.getSession().setAttribute("userStats", userStats);
+		request.getSession().setAttribute("userStats", request.getAttribute("annomized"));
 		response.sendRedirect("/BookLand/Analytics");
 
     }
@@ -69,10 +70,10 @@ public class Admin extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
-		System.out.println("Register button is " + request.getParameter("adminRegister") != null);
+		
 
 
-		System.out.println("The value of admin is" +request.getSession().getAttribute("adminValidated"));
+		
 		 if ( request.getParameter("adminEmail") == null
 				&& request.getParameter("adminPassword") == null && request.getQueryString() == null &&
 				request.getSession().getAttribute("adminValidated") == null) {
@@ -90,7 +91,7 @@ public class Admin extends HttpServlet {
 				request.getSession().setAttribute("allreviews", "empty");
 			}
 			else {
-			System.out.println("i am not 0");
+			
 			request.getSession().removeAttribute("allreviews");
 			request.getSession().setAttribute("reviews", reviews);
 			}
@@ -128,7 +129,7 @@ public class Admin extends HttpServlet {
 				if (this.model.isValidAdmin(adminEmail, adminPassword)) {
 					
 					request.getSession().setAttribute("adminValidated", "validated");
-					System.out.println("The value of admin after login is " + request.getSession().getAttribute("adminValidated"));
+					
 					
 					request.getSession().setAttribute("logged", "true");
 					response.sendRedirect("/BookLand/Home");
@@ -152,11 +153,11 @@ public class Admin extends HttpServlet {
 		else if(request.getParameter("adminReport") != null && request.getSession().getAttribute("adminValidated")!= null &&
 				request.getSession().getAttribute("adminValidated").equals("validated")) {
 			
-			System.out.println("The value of admin after 2 is " + request.getSession().getAttribute("adminValidated"));
+			
 
 			
 			try {
-				System.out.println("Hello adfaf");
+				
 				displayAnalytics(request,response);
 			} catch (SQLException | ServletException | IOException e) {
 				// TODO Auto-generated catch block
