@@ -82,7 +82,7 @@
 	<c:choose>
 		<c:when test="${registerSuccess eq true}">
 			<div class="alert alert-primary alert-dismissible fade show" 
-			role="alert" id="alert">Successfully Registered. You can now login using your credentials!</div>
+			role="alert" id="alert">Successfully Registered. You can now login using your credentials now!</div>
 		</c:when>
 	</c:choose>
 
