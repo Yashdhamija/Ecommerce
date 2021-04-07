@@ -74,7 +74,7 @@
 						<textarea id="writereview" name="writereview" type="text"
 							required="required" style="height: 200px"> <jsp:text /> </textarea>
 						<button id="submitreview" name="submitreview" value="true">
-							Submit a Review</button>
+							Submit Review</button>
 					</form>
 				</c:when>
 
