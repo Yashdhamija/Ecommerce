@@ -6,14 +6,26 @@ public class ReviewBean {
 	String bid;
 	String review;
 	String title;
+	int rating;
 	
-	public ReviewBean(String fname, String lname, String bid, String review, String title) {
+	public ReviewBean(String fname, String lname, String bid, String review, String title, int rating) {
 		this.firstName = fname;
 		this.lastname = lname;
 		this.bid = bid;
 		this.review = review;
 		this.title = title;
+		this.rating = rating;
 	}
+	
+	public int getRating() {
+		return rating;
+	}
+
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+
+	
 
 	public String getFirstName() {
 		return firstName;

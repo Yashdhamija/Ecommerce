@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	<jsp:directive.page contentType="text/html; charset=ISO-8859-1" 
+		pageEncoding="ISO-8859-1" session="true"/>
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Insert title here</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"></link>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+
+
+</head>
+<body>
+<jsp:directive.include file="navigation.jspx"/>
+	
+	
+	
+	
+	
+	<label for="customRange1" class="form-label">Example range</label>
+<form action="" method="GET"> 
+	<input name="range" type="range" class="form-range" id="range" min="0" max="5"></input>
+	<button id="submitreview" name="submitreview" value="true">Submit Review</button>
+</form>	
+	
+	
+<br></br><br></br>	
+	
+	
+	
+
+<h2>Star Rating</h2>
+<c:forEach var = "i" begin = "1" end = "5">
+	<c:choose>
+	  <c:when test="${i le 3}">
+	  	
+	  	<span style="color: orange;" class="material-icons">star</span>
+	  </c:when>
+	  
+	  <c:otherwise>
+	  	<span class="material-icons">star</span>     	   
+	  </c:otherwise>
+	
+	
+	</c:choose>
+    
+</c:forEach>
+
+
+
+
+
+
+</body>
+
+<style>
+.checked {
+  color: orange;
+}
+</style>
+
+</html>
+</jsp:root>

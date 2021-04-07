@@ -206,11 +206,11 @@ public class DAO { // DB class
 
 	}
 
-	public int insertReview(String fname, String lname, String bid, String review, String title) throws SQLException {
+	public int insertReview(String fname, String lname, String bid, String review, String title, int rating) throws SQLException {
 
 		getRemoteConnection();
 
-		String query = "INSERT INTO Review VALUES(?,?,?,?,?,?)";
+		String query = "INSERT INTO Review VALUES(?,?,?,?,?,?,?)";
 
 		PreparedStatement ps = con.prepareStatement(query);
 
@@ -220,6 +220,7 @@ public class DAO { // DB class
 		ps.setString(4, review);
 		ps.setString(5, null);
 		ps.setString(6, title);
+		ps.setInt(7, rating);
 		int result = ps.executeUpdate();
 		ps.close();
 		con.close();
@@ -368,7 +369,8 @@ public class DAO { // DB class
 			String bookid = rs.getString("bid");
 			String review = rs.getString("review");
 			String title = rs.getString("title");
-			list.add(new ReviewBean(fname, lname, bookid, review, title));
+			int rating = rs.getInt("rating");
+			list.add(new ReviewBean(fname, lname, bookid, review, title, rating));
 
 		}
 
@@ -395,7 +397,8 @@ public class DAO { // DB class
 			String bookid = rs.getString("bid");
 			String review = rs.getString("review");
 			String title = rs.getString("title");
-			list.add(new ReviewBean(fname, lname, bookid, review, title));
+			int rating = rs.getInt("rating");
+			list.add(new ReviewBean(fname, lname, bookid, review, title, rating));
 
 		}
 

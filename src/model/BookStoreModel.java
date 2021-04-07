@@ -59,8 +59,8 @@ public class BookStoreModel {
 
 	}
 
-	public int insertAReview(String fname, String lname, String bid, String review, String title) throws SQLException {
-		return this.dao.insertReview(fname, lname, bid, review, title);
+	public int insertAReview(String fname, String lname, String bid, String review, String title, int rating) throws SQLException {
+		return this.dao.insertReview(fname, lname, bid, review, title, rating);
 	}
 
 	public int insertIntoAddress(String email, String street, String province, String country, String zip, String phone,
