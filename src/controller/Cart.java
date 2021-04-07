@@ -27,9 +27,10 @@ public class Cart extends HttpServlet {
 
 	/**
 	 * @throws ClassNotFoundException
+	 * @throws SQLException 
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Cart() throws ClassNotFoundException {
+	public Cart() throws ClassNotFoundException, SQLException {
 		super();
 		this.model = BookStoreModel.getInstance();
 		// TODO Auto-generated constructor stub

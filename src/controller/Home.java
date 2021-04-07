@@ -32,9 +32,10 @@ public class Home extends HttpServlet {
 
 	/**
 	 * @throws ClassNotFoundException
+	 * @throws SQLException 
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Home() throws ClassNotFoundException {
+	public Home() throws ClassNotFoundException, SQLException {
 		super();
 		this.model = BookStoreModel.getInstance();
 	}

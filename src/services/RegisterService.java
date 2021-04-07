@@ -13,7 +13,7 @@ public class RegisterService {
 
 	private BookStoreModel book;
 
-	public RegisterService() throws ClassNotFoundException {
+	public RegisterService() throws ClassNotFoundException, SQLException {
 
 		this.book = BookStoreModel.getInstance();
 

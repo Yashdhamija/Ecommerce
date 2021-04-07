@@ -23,7 +23,7 @@ public class Annomized implements Filter {
      * Default constructor. 
      */
 	private BookStoreModel bookstore;
-    public Annomized() throws ClassNotFoundException {
+    public Annomized() throws ClassNotFoundException, SQLException {
         // TODO Auto-generated constructor stub
     	bookstore = BookStoreModel.getInstance();
     }

@@ -27,9 +27,10 @@ public class Admin extends HttpServlet {
 	private BookStoreModel model;
     /**
      * @throws ClassNotFoundException 
+     * @throws SQLException 
      * @see HttpServlet#HttpServlet()
      */
-    public Admin() throws ClassNotFoundException {
+    public Admin() throws ClassNotFoundException, SQLException {
     	
         super();
         this.model = BookStoreModel.getInstance();

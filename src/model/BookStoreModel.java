@@ -25,21 +25,50 @@ import bean.OrderBean;
 import bean.ReviewBean;
 import bean.UserBean;
 
+import DAO.BookDAO;
+import DAO.AddressDAO;
+import DAO.AdminDAO;
+import DAO.PODAO;
+import DAO.POItemDAO;
+import DAO.ReviewDAO;
+import DAO.UserDAO;
+
+
 public class BookStoreModel {
 
 	private static BookStoreModel instance;
 	private DAO dao;
 	private ArrayList<Integer> orderNumber = null;
 	private int paymentCounter;
+	
+	
+	private BookDAO book;
+	private AddressDAO address;
+	private AdminDAO admin;
+	private PODAO po;
+	private POItemDAO poitem;
+	private ReviewDAO review;
+	private UserDAO user;
+	
 
-	public BookStoreModel() {
+	public BookStoreModel() throws SQLException {
 
 		this.dao = new DAO();
+		
+		// New DAO
+		this.book =  new BookDAO();
+		this.address = new AddressDAO();
+		this.admin = new AdminDAO();
+		this.po = new PODAO();
+		 this.poitem = new POItemDAO();
+		 this.review = new ReviewDAO();
+		this.user =  new UserDAO();
+		////
 		this.orderNumber = new ArrayList<Integer>();
 		this.paymentCounter = 0;
 	}
 
-	public static BookStoreModel getInstance() throws ClassNotFoundException {
+	public static BookStoreModel getInstance() throws ClassNotFoundException, SQLException {
 		if (instance == null) {
 			instance = new BookStoreModel();
 			instance.dao = new DAO();
@@ -49,107 +78,127 @@ public class BookStoreModel {
 
 	public int insertUserLogin(String fname, String lname, String email, String password) throws SQLException {
 
-		return this.dao.insertUserDB(fname, lname, email, password);
-
+		//return this.dao.insertUserDB(fname, lname, email, password);
+        return this.user.insertUserDB(fname, lname, email, password);
 	}
 
 	public int insertPartnerLogin(String email, String password, String fname, String lname) throws SQLException {
 
-		return this.dao.insertPartnerDB(fname, lname, email, password);
-
+		//return this.dao.insertPartnerDB(fname, lname, email, password);
+		return this.user.insertPartnerDB(fname, lname, email, password);
 	}
 
 	public int insertAReview(String fname, String lname, String bid, String review, String title) throws SQLException {
-		return this.dao.insertReview(fname, lname, bid, review, title);
+		//return this.dao.insertReview(fname, lname, bid, review, title);
+		return this.review.insertReview(fname, lname, bid, review, title);
 	}
 
 	public int insertIntoAddress(String email, String street, String province, String country, String zip, String phone,
 			String city) throws SQLException {
-		return this.dao.insertAddress(email, street, province, country, zip, phone, city);
+		//return this.dao.insertAddress(email, street, province, country, zip, phone, city);
+		return this.address.insertAddress(email, street, province, country, zip, phone, city);
 	}
 
 	public void insertPO(int orderId, String fname, String lname, String status, String email) throws SQLException {
-		this.dao.insertPurchaseOrder(orderId, fname, lname, status, email);
+		//this.dao.insertPurchaseOrder(orderId, fname, lname, status, email);
+		this.po.insertPurchaseOrder(orderId, fname, lname, status, email);
 	}
 
 	public int insertPOItem(int orderId, String bid, int price, int quantity) throws SQLException {
 
-		return this.dao.insertPurchaseOrderItem(orderId, bid, price, quantity);
-
+		//return this.dao.insertPurchaseOrderItem(orderId, bid, price, quantity);
+		return this.poitem.insertPurchaseOrderItem(orderId, bid, price, quantity);
 	}
 
 	public void insertAdmin(String email, String lname, String fname, String password) throws SQLException {
 
-		this.dao.insertAdminIntoDB(email, fname, lname, password);
+		//this.dao.insertAdminIntoDB(email, fname, lname, password);
+		this.admin.insertAdminIntoDB(email, fname, lname, password);
 	}
 	
 	public boolean isEmailTaken(String email) {
-		return this.dao.isEmailTaken(email);
+		//return this.dao.isEmailTaken(email);
+		return this.user.isEmailTaken(email);
 	}
 	
 	public UserBean isUserExist(String email, String password) throws NoSuchAlgorithmException {
-		return this.dao.isUserExist(email, this.encryptPassword(password));
+		//return this.dao.isUserExist(email, this.encryptPassword(password));
+		 return this.user.isUserExist(email, this.encryptPassword(password));
 	}
 
 	public String getPassword(String password) {
-		return this.dao.retrievePassword(password);
+		//return this.dao.retrievePassword(password);
+		return this.user.retrievePassword(password);
 	}
 
 	public String getCustomerName(String email) {
 
-		return this.dao.getCustomerName(email);
+		//return this.dao.getCustomerName(email);
+		return this.user.getCustomerName(email);
 	}
 
 	public String getPartnerName(String email) {
 
-		return this.dao.getPartnerName(email);
+		//return this.dao.getPartnerName(email);
+		 return this.user.getPartnerName(email);
 	}
 
 	public List<BookBean> retrieveBookRecords() throws SQLException {
-		return this.dao.retrieveAllBooks();
+		//return this.dao.retrieveAllBooks();
+		 return this.book.retrieveAllBooks();
 	}
 
 	public BookBean retrieveInfoOfBook(String bid) throws SQLException {
-		return this.dao.retrievebookinfo(bid);
+		//return this.dao.retrievebookinfo(bid);
+		return this.book.retrievebookinfo(bid);
 	}
 
 	public List<BookBean> retrieveBooksUsingCategory(String category) throws SQLException {
-		return this.dao.retriveBookFromCategory(category);
+		//return this.dao.retriveBookFromCategory(category);
+		 return this.book.retriveBookFromCategory(category);
 	}
 
 	public List<ReviewBean> retrieveLastThreeReviews(String bid) throws SQLException {
-		return this.dao.retriveReviews(bid);
+		//return this.dao.retriveReviews(bid);
+		 return this.review.retriveReviews(bid);
 	}
 	
 	public List<ReviewBean> retrieveAllReviews() throws SQLException {
-		return this.dao.retriveAllReviews();
+		//return this.dao.retriveAllReviews();
+		 return this.review.retriveAllReviews();
 	}
 	
 	
 	
 
 	public int retrievePriceofABook(String bid) throws SQLException {
-		return this.dao.retrievePriceofSingleBook(bid);
+		//return this.dao.retrievePriceofSingleBook(bid);
+		 return this.book.retrievePriceofSingleBook(bid);
 	}
 
 	public String retrieveBookTitle(String bid) throws SQLException {
-		return this.dao.retrieveSingleBookTitle(bid);
+		//return this.dao.retrieveSingleBookTitle(bid);
+		 return this.book.retrieveSingleBookTitle(bid);
 	}
 
 	public AddressBean retrieveAddress(String email) throws SQLException {
-		return this.dao.retrieveAddressByEmail(email);
-	}
+		//return this.dao.retrieveAddressByEmail(email);
+		return this.address.retrieveAddressByEmail(email);
+	}	  
 
 	public UserBean retrieveUserInfo(String email) throws SQLException {
-		return this.dao.retrieveAllUserInfo(email);
+		//return this.dao.retrieveAllUserInfo(email);
+		return this.user.retrieveAllUserInfo(email);
 	}
 
 	public String retrieveBookUrl(String bid) throws SQLException {
-		return this.dao.retrieveUrlOfSingleBook(bid);
+		//return this.dao.retrieveUrlOfSingleBook(bid);
+		return this.book.retrieveUrlOfSingleBook(bid);
 	}
 
 	public List<BookBean> getSearchedBook(String title) throws SQLException {
-		return this.dao.retreivebook(title);
+		//return this.dao.retreivebook(title);
+		 return this.book.retreivebook(title);
 	}
 
 	public String encryptPassword(String password) throws NoSuchAlgorithmException {
@@ -206,7 +255,7 @@ public class BookStoreModel {
 		Random random = new Random();
 		int number = random.nextInt(1000000);
 		System.out.println("This is the generateed number" + number);
-		// int number = (int) (Math.random() * 1000000);
+		
 		int orderNum = 0;
 
 		if (!this.orderNumber.contains(number)) {
@@ -241,19 +290,20 @@ public class BookStoreModel {
 
 	public boolean isValidAdmin(String email, String password) throws NoSuchAlgorithmException {
 
-		return this.dao.IsAdminValidated(email, this.encryptPassword(password));
-
+		//return this.dao.IsAdminValidated(email, this.encryptPassword(password));
+		 return this.admin.IsAdminValidated(email, this.encryptPassword(password));
 	}
 	
 	public AddressBean getUserAddress(int cid) throws SQLException {
-		return this.dao.retrieveAddressByCustomerId(cid);
-		
+		//return this.dao.retrieveAddressByCustomerId(cid);
+		  return this.address.retrieveAddressByCustomerId(cid);
 		
 	}
 	
 	public BookBean getSingleBookInfo(String bid) throws SQLException {
 		
-		return this.dao.retrieveBook(bid);
+		//return this.dao.retrieveBook(bid);
+		 return this.book.retrieveBook(bid);
 	}
 
 	public String getOrdersByPartNumber(String productId) throws SQLException {
@@ -283,31 +333,38 @@ public class BookStoreModel {
 
 
 	public LinkedHashMap<String, Integer> retrieveTopTenAllTime() throws SQLException {
-		return this.dao.getTopTenAllTime();
+		//return this.dao.getTopTenAllTime();
+		 return this.poitem.getTopTenAllTime();
 	}
 
 	public ArrayList<List<String>> retrieveBooksSoldEachMonth(String date) throws SQLException {
-		return this.dao.getBooksSoldEachMonth(date);
+		//return this.dao.getBooksSoldEachMonth(date);
+		 return this.poitem.getBooksSoldEachMonth(date);
 	}
 	
 	public ArrayList<String> getAllDates() throws SQLException {
-		return this.dao.getDates();
+		//return this.dao.getDates();
+		return this.po.getDates();
 	}
 	
 	public ArrayList<String> getAllUserOrderDates(String email) throws SQLException {
-		return this.dao.getAllUserOrderDates(email);
+		//return this.dao.getAllUserOrderDates(email);
+		return this.po.getAllUserOrderDates(email);
 	}
 	
 	public List<OrderBean> getOrderByDate(String date, String email) {
-		return this.dao.getOrderByDate(date, email);
+		//return this.dao.getOrderByDate(date, email);
+		return this.po.getOrderByDate(date, email);
 	}
 
 	public List<List<String>> retrieveUserStatistics() throws SQLException {
-		return this.dao.getUserStatistics();
+		//return this.dao.getUserStatistics();
+		 return this.poitem.getUserStatistics();
 	}
 	
 	public void deleteAReview(String bid, String review) {
-		this.dao.deleteReview(bid, review);
+		//this.dao.deleteReview(bid, review);
+		  this.review.deleteReview(bid, review);
 	}
 
 }

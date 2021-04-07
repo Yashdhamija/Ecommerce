@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,9 +30,10 @@ public class Login extends HttpServlet {
 
 	/**
 	 * @throws ClassNotFoundException
+	 * @throws SQLException 
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Login() throws ClassNotFoundException {
+	public Login() throws ClassNotFoundException, SQLException {
 		super();
 		this.login = new LoginService();
 		this.model = BookStoreModel.getInstance();

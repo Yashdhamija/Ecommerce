@@ -25,9 +25,10 @@ public class Register extends HttpServlet {
 	private BookStoreModel model;
 
 	/**
+	 * @throws SQLException 
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Register() {
+	public Register() throws SQLException {
 		super();
 		try {
 			this.register = new RegisterService();
@@ -126,7 +127,13 @@ public class Register extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		Register register = new Register();
+		Register register = null;
+		try {
+			register = new Register();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 
 			register.displayRegisterPage(request, response);

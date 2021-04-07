@@ -16,7 +16,7 @@ public class LoginService {
 
 	
     private BookStoreModel book;
-	public LoginService() throws ClassNotFoundException {
+	public LoginService() throws ClassNotFoundException, SQLException {
 
 		this.book = BookStoreModel.getInstance();
 

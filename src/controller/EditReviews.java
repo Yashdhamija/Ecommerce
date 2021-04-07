@@ -23,9 +23,10 @@ public class EditReviews extends HttpServlet {
 
 	/**
 	 * @throws ClassNotFoundException
+	 * @throws SQLException 
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public EditReviews() throws ClassNotFoundException {
+	public EditReviews() throws ClassNotFoundException, SQLException {
 		super();
 		this.model = BookStoreModel.getInstance();
 		// TODO Auto-generated constructor stub
