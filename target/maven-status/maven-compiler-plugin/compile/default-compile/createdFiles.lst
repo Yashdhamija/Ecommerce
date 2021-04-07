@@ -1,13 +1,13 @@
 controller\Cart.class
 model\BookStoreModel.class
 bean\AddressBean.class
-bean\CounterBean.class
 controller\Payment.class
 DAO\DBConnect.class
 rest\Partner.class
 controller\Orders.class
 controller\Analytics.class
 bean\CartBean.class
+filter\Annomized.class
 bean\ReviewBean.class
 bean\BookBean.class
 services\RegisterService.class

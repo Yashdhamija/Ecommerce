@@ -30,24 +30,31 @@
 <body>
 
 	<jsp:directive.include file="navigation.jspx" />
-	
-	<div class="container"> 
-		<div> 	
-		 	<h3> Rest Call URLs</h3>	
-			<b>GET (or READ)</b> curl -X GET 'https://qasimahmed.me/BookLand/rest/partner/read/getProductInfo?email=Enter your email&amp;password=Enter your password&amp;productId=121-3-3434-4545-5'
-			<br/>
-			<b>GET (or READ)</b> curl -X GET 'https://qasimahmed.me/BookLand/rest/partner/read/getOrdersByPartNumber?email=Enter your email&amp;password=Enter your password&amp;productId=232-2-4342-2343-3'
+
+	<div class="container">
+		<div>
+			<h3>Rest Call URLs</h3>
+			<b>GET (or READ)</b> curl -X GET
+			'https://qasimahmed.me/BookLand/rest/partner/read/getProductInfo?email=Enter
+			your email&amp;password=Enter your
+			password&amp;productId=121-3-3434-4545-5' <br /> <b>GET (or
+				READ)</b> curl -X GET
+			'https://qasimahmed.me/BookLand/rest/partner/read/getOrdersByPartNumber?email=Enter
+			your email&amp;password=Enter your
+			password&amp;productId=232-2-4342-2343-3'
 		</div>
 	</div>
-	
-	
-		
-<div class="row justify-content-center">
+
+
+
+	<div class="container">
+		<div class="row justify-content-center">
 			<form action="/BookLand/Home" method="GET" class="row g-3">
 
 				<div class="col-12">
 					<label for="product_search" class="form-label">ProductId</label> <input
-						type="search" placeholder="111-1-1111-1111-1" class="form-control"
+						style="width: 700px;" type="search"
+						placeholder="111-1-1111-1111-1" class="form-control"
 						name="product_search" id="product_search" required="required"></input><small>Format:
 						111-1-1111-1111-1</small>
 				</div>
@@ -64,25 +71,17 @@
 			</form>
 
 
-			<div style="margin-top: 40px;"> 
+			<div style="margin-top: 40px;">
 				<c:choose>
 					<c:when test="${productinfo ne null}">
 						<div>${productinfo}</div>
 					</c:when>
 				</c:choose>
-				
-
 
 			</div>
 
 		</div>
-
-
 	</div>
-
-
-
-
 
 </body>
 <c:import url="nav.html"></c:import>
