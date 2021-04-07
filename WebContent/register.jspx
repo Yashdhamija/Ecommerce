@@ -14,6 +14,9 @@
 <head>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet"></link>
+<script type="text/javascript" src="./style/Validation.js">.</script>
+	
+
 <title>Register</title>
 
 </head>
@@ -28,10 +31,8 @@
 
 		<div class="container">
 			<div class="row justify-content-center">
-			
-				<h3 style="margin-top: 15px;"> User Registration</h3>
-				<form  action="Register" method="POST" onsubmit="return validate();"
-					class="row g-3">
+        <h3 style="margin-top: 15px;"> User Registration</h3>
+				<form  action="Register" method="POST" onsubmit="return userRegisterValidation()" class="row g-3">
 					<div class="col-md-6">
 						<label for="fname" class="form-label">First Name</label> <input
 							pattern="[a-zA-Z]+" type="text" class="form-control" name="firstName" id="firstName"
@@ -61,7 +62,7 @@
 					</div>
 					<div class="col-md-4">
 						<label for="city" class="form-label">City</label> <input
-							pattern="[a-zA-Z]+" type="text" class="form-control" name="city" id="city"
+							 type="text" class="form-control" name="city" id="city"
 							required="required"></input>
 					</div>
 					<div class="col-md-2">
@@ -122,11 +123,15 @@
 		</div>
 	</section>
 
-	<span id="result"></span>
+	<span id="result2"></span>
 
-
+    
 
 </body>
 <c:import url="nav.html"></c:import>
+
+
+
+
 	</html>
 </jsp:root>
