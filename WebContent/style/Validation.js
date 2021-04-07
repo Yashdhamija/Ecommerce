@@ -5,97 +5,115 @@
 
 
 
-function validate() {
-
-	var email = document.getElementById("Email").value;
-	if (email.match("[a-zA-Z0-9_-]@[a-z]*.com")) {
+function loginValidation() {
 
 
-		return true;
 
-	}
-	else {
+let username =  document.getElementById("Username");
+let password = document.getElementById("signinpassword");
+if(username.length > 0 && username.length <=40 &&  
+password.length > 0 && password.length <=40 ) {
+return true;
+}
 
+else {
+return false;
+}
 
-		return false;
+}
 
-
-	}
-
-
+ function unfade(element) {
+    var op = 0.1;  // initial opacity
+    element.style.display = 'block';
+    var timer = setInterval(function () {
+        if (op >= 1){
+            clearInterval(timer);
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op += op * 0.1;
+    }, 10);
 }
 
 
 
-function adminValidate(isloggedIn) {
+function userRegisterValidation() {
 
 
- if(isloggedIn ==  'true') {
- alert("You are already logged in, please log out");
- return false;
+
+let fname =  document.getElementById("firstName").value;
+let lname = document.getElementById("lastName").value;
+let email  = document.getElementById("email");
+let password  = document.getElementById("password");
+let streetAddress = document.getElementById("street");
+let city = document.getElementById("city");
+let zip = document.getElementById("zip");
+let phone = document.getElementById("phone");
+let regexNum = new RegExp("[0-9]+")
+let regexOnlyLetter =  new RegExp("/^[a-zA-Z]+$/");
+
+
+
+
+
+ if ( (fname.length > 0 &&  fname.length <= 40)  &&  (lname.length > 0 && lname.length <= 40) ) {
+ 
+  
+   return true;
  }
+   
  else {
- var adminUserName = document.getElementById("adminEmail").value
- var adminPassword = document.getElementById("adminPassword").value
  
- 
- if(parseInt(adminUserName)) 
- 
- 	return true;
+  
+	return false;
+ 	
+ }
+   
+
+
+
+
+
+}
+
+
+
+
+function paymentValidation() {
+
+let name =  document.getElementById("cc-name").value;
+
+
+
+ if( (name.length > 0 &&  name.length <= 40) ) {
+    
+    if(errorMessage) {
+       errorMessage.remove();
+     }
+    return true;
  }
  
-
-}
-
-
-
-function partnerValidation() { //For uid validation to be exactly 8 numbers
-
-	var uid = document.getElementById("uid").value
-	if (uid.toString().length != 8) {
-
-		alert("Please enter an exact 8 digit number");
-		return false;
-
-	}
-
-	else {
+ 
+  else {
 
 
-		return true;
-	}
-
+  return false;
+ 
+ }
 
 
 }
+
+
+
+
+
 
 function SignUpAjax(address) {
 
 	var request = new XMLHttpRequest();
 	var data = '';
-	/* add your code here to grab all parameters from form*/
-	data += "firstName=" + document.getElementById("firstName").value
-		+ "&";
-	data += "lastName=" + document.getElementById("lastName").value +
-		"&";
-	data += "email=" + document.getElementById("email").value +
-		"&";
-	data += "password=" + document.getElementById("password").value +
-		"&";
-	
-	data += "street=" + document.getElementById("street").value +
-		"&"; 
-	
-	data += "province=" + document.getElementById("province").value +
-		"&";
-	
-	data += "country=" + document.getElementById("country").value +
-		"&";
-	
-	data += "zip=" + document.getElementById("zip").value +
-		"&";
-	
-	data += "phone=" + document.getElementById("phone").value;
+
 
 	console.log(data);
 
@@ -109,14 +127,13 @@ function SignUpAjax(address) {
 
 
 
-	function handler(request) {
-		if ((request.readyState == 4) && (request.status == 200)) {
-			var target = document.getElementById("result");
-			target.innerHTML = request.responseText;
-			console.log(request.response);
+function handler(request) {
+	if ((request.readyState == 4) && (request.status == 200)) {
+		var target = document.getElementById("result");
+		target.innerHTML = request.responseText;
+		console.log(request.response);
 
 
-		}
-		
 	}
-	 
+
+}

@@ -113,7 +113,7 @@ public class Register extends HttpServlet {
 						country);
 				request.setAttribute("registerSuccess", true);
 				request.getRequestDispatcher("/login.jspx").forward(request, response);
-//				response.sendRedirect("Login");
+
 			}
 		}
 
