@@ -64,9 +64,9 @@ caption{
 	margin-left: -80px;
 }
 
-.all>button {
-	width: 250px;
-	margin-bottom: 40px;
+.all> form > #addtocart {
+	margin-bottom: 20px;
+	
 }
 
 #ptitle, #pprice {
@@ -94,14 +94,26 @@ caption{
 	
 }
 
-#reviewform, #submitreview {
+#reviewform {
 	
 	color: white;
 	background-color: #000;
-	width: 250px;
+	width: 110px;
 	height: 40px;
 	margin-bottom: 10px;
 }
+
+#submitreview {
+	color: white;
+	background-color: #000;
+	width: 150px;
+	height: 40px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	
+}
+
+
 
 #label1 {
 	padding-top: 90px;

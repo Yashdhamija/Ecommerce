@@ -12,6 +12,9 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Insert title here</title>
+<link rel="StyleSheet" href="style/ui.css" type="text/css"
+	title="cse4413" media="screen, print" />
+
 </head>
 <body>
 
@@ -57,7 +60,7 @@
 					<c:choose>
 						<c:when test="${sessionScope.UserType eq 'partner'}">
 							<li class="nav-item"><a class="nav-link active"
-								aria-current="page" href="Home?restcall=true">Products/Orders</a></li>
+								aria-current="page" href="Home?restcall=true">Rest API</a></li>
 
 						</c:when>
 

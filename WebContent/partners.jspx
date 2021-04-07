@@ -24,7 +24,7 @@
 	<section>
 		<div class="container">
 			<div class="row justify-content-center">
-				<p>Partner Registeration Form</p>
+				<h3>Partner Registeration</h3>
 				<form action="Register" method="POST" onsubmit="return validate();"
 					class="row g-3">
 					<div class="col-md-6">

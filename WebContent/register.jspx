@@ -31,8 +31,8 @@
 
 		<div class="container">
 			<div class="row justify-content-center">
-				<form  action="Register" method="POST" onsubmit="return userRegisterValidation()"
-					class="row g-3">
+        <h3 style="margin-top: 15px;"> User Registration</h3>
+				<form  action="Register" method="POST" onsubmit="return userRegisterValidation()" class="row g-3">
 					<div class="col-md-6">
 						<label for="fname" class="form-label">First Name</label> <input
 							pattern="[a-zA-Z]+" type="text" class="form-control" name="firstName" id="firstName"

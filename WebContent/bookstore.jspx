@@ -47,7 +47,7 @@
 			<div class="item" id="${books.getBid()}">
 				<img id="images" src="images/${books.getUrl()}"></img>
 
-				<form action="Home" class="d-flex" method="POST">
+				<form action="Home" class="d-flex" method="GET">
 					<Button id="bookinfo" name="bookinfo" value="${books.getBid()}">${books.getTitle()}</Button>
 				</form>
 
