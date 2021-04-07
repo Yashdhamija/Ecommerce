@@ -14,7 +14,7 @@ public class AddressDAO {
 	
 	public AddressDAO() throws SQLException {
 		
-		this.address =   DatabaseConnection.getInstance();
+		
 		this.user = new UserDAO();
 		
 	}

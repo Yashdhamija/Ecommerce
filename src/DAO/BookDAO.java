@@ -14,7 +14,7 @@ public class BookDAO {
 
 	public BookDAO() throws SQLException {
 
-		this.book = DatabaseConnection.getInstance();
+		
 
 	}
 
