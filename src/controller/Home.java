@@ -234,7 +234,10 @@ public class Home extends HttpServlet {
 		try {
 			this.model.insertAReview(fname, lname, bid, review, title);
 			request.getSession().setAttribute("reviews", this.model.retrieveLastThreeReviews(bid));
-			request.getRequestDispatcher("/bookinformation.jspx").forward(request,	response);
+			
+			
+			response.sendRedirect("/BookLand/Home?bookinfo="+bid);
+			//request.getRequestDispatcher("/bookinformation.jspx").forward(request,	response);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

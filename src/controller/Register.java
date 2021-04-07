@@ -94,8 +94,8 @@ public class Register extends HttpServlet {
 				this.register.UserRegister(fname, lname, email, password, street, city, province, zipCode, phone,
 						country); // inserted new user into User DB
 				request.setAttribute("registerSuccess", true);
-				request.getRequestDispatcher("/login.jspx").forward(request, response);
-//				response.sendRedirect("Login");
+				//request.getRequestDispatcher("/login.jspx").forward(request, response);
+				response.sendRedirect("/BookLand/Login");       // made a chnage
 			}
 
 		}
@@ -112,8 +112,8 @@ public class Register extends HttpServlet {
 				this.register.PartnerRegister(fname, lname, email, password, street, city, province, zipCode, phone,
 						country);
 				request.setAttribute("registerSuccess", true);
-				request.getRequestDispatcher("/login.jspx").forward(request, response);
-//				response.sendRedirect("Login");
+				//request.getRequestDispatcher("/login.jspx").forward(request, response);
+				response.sendRedirect("/BookLand/Login");
 			}
 		}
 
