@@ -612,9 +612,10 @@ public class DAO { // DB class
 		String btitle = "";
 		getRemoteConnection();
 
-		String query = "SELECT title FROM Book WHERE bid='" + bid + "'";
+		String query = "SELECT title FROM Book WHERE bid=?";
 
 		PreparedStatement ps = con.prepareStatement(query);
+		ps.setString(1, bid);
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
@@ -720,9 +721,11 @@ public class DAO { // DB class
 		getRemoteConnection();
 		List<BookBean> l = new ArrayList<BookBean>();
 
-		String query = "SELECT * FROM Book WHERE title LIKE '%" + title + "%'";
+		String query = "SELECT * FROM Book WHERE title=?";
 
 		PreparedStatement ps = con.prepareStatement(query);
+		ps.setString(1, title);
+		
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
@@ -744,9 +747,10 @@ public class DAO { // DB class
 		getRemoteConnection();
 		List<BookBean> list = new ArrayList<BookBean>();
 
-		String query = "SELECT * FROM Book WHERE category='" + category + "'";
+		String query = "SELECT * FROM Book WHERE category=?";
 
 		PreparedStatement ps = con.prepareStatement(query);
+		ps.setString(1, category);
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
