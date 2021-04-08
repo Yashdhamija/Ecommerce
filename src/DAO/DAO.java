@@ -1069,11 +1069,12 @@ public class DAO { // DB class
 		getRemoteConnection();
 		try {
 			this.stmt = this.con.createStatement();
-			String query = "DELETE FROM Review WHERE bid='" + bid + "' AND review='" + review + "'";
+			String query = "DELETE FROM Review WHERE bid=? AND review=?";
 			PreparedStatement ps = con.prepareStatement(query);
-			int rs = ps.executeUpdate(query);
-			
-			
+			ps.setString(1, bid);
+			ps.setString(2, review);
+			ps.executeUpdate();
+				
 			
 			con.close();
 
