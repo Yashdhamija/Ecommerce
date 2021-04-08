@@ -61,7 +61,7 @@ public class Register extends HttpServlet {
 		}
 
 		else {
-
+			
 			// Error handling
 		}
 
