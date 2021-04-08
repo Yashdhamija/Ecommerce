@@ -31,21 +31,24 @@
 
 	<jsp:directive.include file="navigation.jspx" />
 
+	<c:choose>
+	    <c:when test="${partnerKey ne null}">
+	    	<c:set var="key" value="${partnerKey}" scope="page"/>
+	    </c:when>
+	    <c:otherwise>
+	    	<c:set var="key" value="your unique partner key" scope="page"/>
+	    </c:otherwise>
+	</c:choose>
+
 	<div class="container">
 		<div>
 			<h3>Rest Call URLs</h3>
 			<b>GET (or READ)</b> curl -X GET
-			'https://qasimahmed.me/BookLand/rest/partner/read/getProductInfo?email=Enter
-			your email&amp;password=Enter your
-			password&amp;productId=121-3-3434-4545-5' <br /> <b>GET (or
-				READ)</b> curl -X GET
-			'https://qasimahmed.me/BookLand/rest/partner/read/getOrdersByPartNumber?email=Enter
-			your email&amp;password=Enter your
-			password&amp;productId=232-2-4342-2343-3'
+			'https://qasimahmed.me/BookLand/rest/partner/read/getProductInfo?key=${key}&amp;productId=121-3-3434-4545-5' <br /> 
+			<b>GET (or READ)</b> curl -X GET
+			'https://qasimahmed.me/BookLand/rest/partner/read/getOrdersByPartNumber?key=${key}&amp;productId=232-2-4342-2343-3'
 		</div>
 	</div>
-
-
 
 	<div class="container">
 		<div class="row justify-content-center">

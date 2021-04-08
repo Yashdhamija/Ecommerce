@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -53,10 +54,19 @@ public class BookStoreModel {
 
 	}
 
-	public int insertPartnerLogin(String email, String password, String fname, String lname) throws SQLException {
+	public void insertPartnerLogin(String email, String password, String fname, String lname) throws SQLException, NoSuchAlgorithmException {
 
-		return this.dao.insertPartnerDB(fname, lname, email, password);
+		this.dao.insertPartnerDB(fname, lname, email, password);
+		this.dao.insertPartnerKey(email);
 
+	}
+	
+	public String getpartnerKey(String email) {
+		return this.dao.getpartnerKey(email);
+	}
+	
+	public boolean isValidPartnerKey(String key) {
+		return this.dao.isValidPartnerKey(key);
 	}
 
 	public int insertAReview(String fname, String lname, String bid, String review, String title, int rating) throws SQLException {
