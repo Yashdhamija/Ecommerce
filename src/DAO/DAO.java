@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.UUID;
 
 import bean.AddressBean;
 import bean.BookBean;
@@ -190,8 +191,6 @@ public class DAO { // DB class
 		getRemoteConnection();
 
 		String query = "INSERT INTO Users VALUES(?,?,?,?,?,?)";
-		System.out.println("The length is" + fname.length());
-		System.out.println("The length is" + lname.length());
 		PreparedStatement ps = con.prepareStatement(query);
 		ps.setString(1, null);
 		ps.setString(2, fname);
@@ -204,6 +203,32 @@ public class DAO { // DB class
 		con.close();
 		return result;
 
+	}
+	
+	public int insertPartnerKey(String email) throws SQLException {
+		getRemoteConnection();
+		
+		// email already present in PartnersKeys table with associated key
+		// just reuse previously generated key
+		if (this.emailHasKey(email)) {
+			System.out.println("[dao.insertPartnerKey] A Key already exists with email: " + email);
+			return 0;
+		} else {
+			String uuid = UUID.randomUUID().toString();
+			String query = "INSERT INTO PartnerKeys VALUES(?,?)";
+			System.out.println("Inserting partner key-> partner email is: " + email + 
+					", uniquely generated key is: " + uuid);
+			
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setString(1, email);
+			ps.setString(2, uuid);
+			
+			int result = ps.executeUpdate();
+			ps.close();
+			con.close();
+			
+			return result;	
+		}
 	}
 
 	public int insertReview(String fname, String lname, String bid, String review, String title, int rating) throws SQLException {
@@ -330,7 +355,8 @@ public class DAO { // DB class
 			String query = "SELECT fname, lname, usertype, customerid FROM Users WHERE email='" + email + 
 					"' AND password='" + password + "'";
 			PreparedStatement ps = con.prepareStatement(query);
-			ResultSet rs = ps.executeQuery(query);			
+			ResultSet rs = ps.executeQuery(query);
+			
 			while (rs.next()) {
 				fname = rs.getString("fname");
 				lname = rs.getString("lname");
@@ -351,6 +377,71 @@ public class DAO { // DB class
 		}
 
 		return user;
+	}
+	
+	public boolean emailHasKey(String email) {
+		getRemoteConnection();
+		
+		try {
+			String query = "SELECT email FROM PartnerKeys WHERE email='" + email + "'";
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery(query);	
+			
+			if (rs.next()) {
+				return true;
+			}
+			
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	// returns the partner key associated with the email
+	public String getpartnerKey(String email) {
+		getRemoteConnection();
+		String key = null;
+		
+		try {
+			String query = "SELECT apikey FROM PartnerKeys WHERE email='" + email + "'";
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery(query);	
+			
+			while (rs.next()) {
+				key = rs.getString("apikey") ; 
+			}
+			
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return key;
+	}
+	
+	public boolean isValidPartnerKey(String key) {
+		getRemoteConnection();
+		
+		try {
+			String query = "SELECT * FROM PartnerKeys WHERE apikey='" + key + "'";
+			PreparedStatement ps = con.prepareStatement(query);
+			ResultSet rs = ps.executeQuery(query);	
+			
+			if (rs.next()) {
+				return true; 
+			}
+			
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return false;
 	}
 
 	public List<ReviewBean> retriveReviews(String bid) throws SQLException {

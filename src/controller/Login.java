@@ -62,10 +62,14 @@ public class Login extends HttpServlet {
 			
 			request.getSession().setAttribute("name", null);
 			request.getSession().removeAttribute("UserType");
+			if (request.getSession().getAttribute("partnerKey") != null) {
+				request.getSession().removeAttribute("partnerKey");
+			}
 			// clearing the cart after logout is pressed
 			request.getSession().removeAttribute("cartsize");
 			request.getSession().removeAttribute("carttotal");
 			request.getSession().removeAttribute("shoppingcart");
+			
 			response.sendRedirect("/BookLand/Home");
 		}
 		
@@ -108,7 +112,11 @@ public class Login extends HttpServlet {
 				// triggers for adding to cart	
 				request.getSession().setAttribute("name", user.getFirstname());
 				request.getSession().setAttribute("useremail", email);
-				request.getSession().setAttribute("UserType", user.getUserType() == 0 ? "visitor" : "partner"); 
+				request.getSession().setAttribute("UserType", user.getUserType() == 0 ? "visitor" : "partner");
+				
+				if (user.getUserType() == 1) {
+					request.getSession().setAttribute("partnerKey", this.model.getpartnerKey(user.getEmail()));
+				}
 				
 				// remove adminValidated if signed in
 				if(request.getSession().getAttribute("adminValidated") != null) {
