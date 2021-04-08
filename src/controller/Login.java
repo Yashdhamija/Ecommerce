@@ -40,6 +40,7 @@ public class Login extends HttpServlet {
 	public void LoginAndLogoutFromHomPage(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, NoSuchAlgorithmException {
 		
+		
 		// Login From Home Page by clicking the login/register button		
 		if (request.getParameter("loginButton") != null) {
 			
@@ -76,6 +77,10 @@ public class Login extends HttpServlet {
 			request.getSession().removeAttribute("carttotal");
 			request.getSession().removeAttribute("shoppingcart");
 			response.sendRedirect("/BookLand/Home");
+		}
+		
+		else if(request.getServletPath() != null && request.getQueryString() !=null && request.getQueryString().equals("registerSuccess=true")) {
+			this.login.displayLoginPage(request, response);
 		}
 		
 		else if (request.getServletPath() != null && request.getServletPath().equals("/Login")
