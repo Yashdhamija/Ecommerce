@@ -59,7 +59,7 @@ public class WebService {
 	
 	public String jsonAuthenticationErrorMessage() {
 		JsonObjectBuilder bookJSON = Json.createObjectBuilder();
-		bookJSON.add("Error Message:", "Sorry we could not verify your unique access key. Please try Again!\n");
+		bookJSON.add("Error Message:", "Sorry we could not verify your unique access key. Please try Again!");
 		JsonObject value = bookJSON.build();
 		String serializedBookJson = value.toString();
 		return serializedBookJson;
