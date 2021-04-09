@@ -28,8 +28,8 @@ To run the project on eclipse, you can right click on Home.java servlet and run 
 # Rest-Api calls for Partners
 
 The following urls can be used to access web-apis meant to be accessed by partners; 
-- getProductInfo: curl -X GET 'https://qasimahmed.me/BookLand/rest/partner/read/getProductInfo?key="PARTNERKEY"&amp;productId=121-3-3434-4545-5'
-- getOrdersByPartNumber: curl -X GET 'https://qasimahmed.me/BookLand/rest/partner/read/getOrdersByPartNumber?key="PARTNERKEY"&amp;productId=232-2-4342-2343-3'
+- getProductInfo: curl -X GET 'https://qasimahmed.me/BookLand/rest/partner/read/getProductInfo?key="PARTNERKEY"&productId=121-3-3434-4545-5'
+- getOrdersByPartNumber: curl -X GET 'https://qasimahmed.me/BookLand/rest/partner/read/getOrdersByPartNumber?key="PARTNERKEY"&productId=232-2-4342-2343-3'
 
 (Note - in the urls, key refers to the partner key, used to authenticate a partner in order to fulfill the request. A sample key :~ bc629434-da50-416f-aead-c1c492b88271)
 
