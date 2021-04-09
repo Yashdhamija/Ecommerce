@@ -19,11 +19,17 @@
 	rel="stylesheet"></link>
 </head>
 <body>
-	<jsp:directive.include file="navigation.jspx"/>
+	<jsp:directive.include file="navigation.jspx" />
 
-	<div>This page is not available error 404</div>
+	<h2 style="text-align: center;">This page is not available error
+		404</h2>
+	<div class="returnshopping">
+		<a href="Home">
+			<button class="btn btn-dark">Continue Shopping</button>
+		</a>
+	</div>
 
 </body>
 <c:import url="nav.html"></c:import>
-</html>
+	</html>
 </jsp:root>
