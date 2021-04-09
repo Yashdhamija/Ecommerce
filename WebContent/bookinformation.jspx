@@ -12,15 +12,14 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
-	<c:choose>
-		<c:when test="${bookinfo ne null}">
-			<title>${bookinfo.getTitle()}</title>
-		</c:when>
-		<c:otherwise>
-			<title>Book Information</title>
-		</c:otherwise>
-	</c:choose>
-
+<c:choose>
+	<c:when test="${bookinfo ne null}">
+		<title>${bookinfo.getTitle()}</title>
+	</c:when>
+	<c:otherwise>
+		<title>Book Information</title>
+	</c:otherwise>
+</c:choose>
 
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
@@ -36,13 +35,14 @@
 </head>
 <body>
 
-	<jsp:directive.include file="navigation.jspx"/>
+	<jsp:directive.include file="navigation.jspx" />
 
-	<div style="display: none;" class="alert alert-primary alert-dismissible fade show"
-		role="alert" id="alert">Item added to cart successfully</div>
+	<div style="display: none;"
+		class="alert alert-primary alert-dismissible fade show" role="alert"
+		id="alert">Item added to cart successfully</div>
 
-	<c:set var="book" value="${bookinfo}" scope="page"/>
-	
+	<c:set var="book" value="${bookinfo}" scope="page" />
+
 	<div class="item" id="${book.getBid()}">
 		<img id="singleimage" src="images/${book.getUrl()}"></img>
 
@@ -60,19 +60,21 @@
 
 			<c:choose>
 				<c:when test="${review eq 'true'}">
-					<form action="Home" method="POST">
-						<label for="fname">First Name</label> 
-						<input type="text" id="fname" name="fname" required="required"
-							placeholder="Your first name"></input>
-						<label for="lname">Last Name</label> 
-						<input type="text" id="lname" name="lname"
-							required="required" placeholder="Your last name.."></input> 
-						<label for="reviewtitle">Title of Review</label> 
-						<input type="text" id="reviewtitle" name="reviewtitle" required="required"
-							placeholder="Your title"></input> 
-						<label for="writereview">Write a Review</label>
+					<form action="Home" method="GET">
+						<label for="fname">First Name</label> <input type="text"
+							id="fname" name="fname" required="required"
+							placeholder="Your first name"></input> <label for="lname">Last
+							Name</label> <input type="text" id="lname" name="lname"
+							required="required" placeholder="Your last name.."></input> <label
+							for="reviewtitle">Title of Review</label> <input type="text"
+							id="reviewtitle" name="reviewtitle" required="required"
+							placeholder="Your title"></input> <label for="writereview">Write
+							a Review</label>
 						<textarea id="writereview" name="writereview" type="text"
 							required="required" style="height: 200px"> <jsp:text /> </textarea>
+						<label for="customRange1" class="form-label">Rating range</label>
+						<input name="rating" type="range" class="form-range" id="range"
+							min="0" max="5"></input>
 						<button id="submitreview" name="submitreview" value="true">
 							Submit Review</button>
 					</form>
@@ -82,7 +84,8 @@
 				<c:otherwise>
 					<form action="Home">
 						<button class="btn btn-outline-dark btn-sm" id="reviewform"
-							name="reviewform" value="${book.getBid()}">Write a Review</button>
+							name="reviewform" value="${book.getBid()}">Write a
+							Review</button>
 					</form>
 				</c:otherwise>
 			</c:choose>
@@ -100,8 +103,42 @@
 
 		<c:otherwise>
 			<c:forEach var="review" items="${reviews}">
-
-				<h4 class="allreviews">${review.getTitle()}</h4>
+				
+				
+				   <div style="display: flex; justify-content: 5px;"> 
+						<h5 class="allreviews">
+		
+							<c:forEach var="i" begin="1" end="5">
+								<c:choose>
+									<c:when test="${i le review.getRating()}">
+		
+										<span style="color: orange;" class="material-icons">star</span>
+									</c:when>
+		
+									<c:otherwise>
+										<span class="material-icons">star</span>
+									</c:otherwise>
+		
+		
+								</c:choose>
+		
+							</c:forEach>
+		
+						
+						<h5 style="margin-left: 5px;"><b>${review.getTitle()}</b></h5>
+					
+						</h5>
+				 </div>
+			 
+				
+				
+			
+			
+			
+			 
+			
+			
+		
 				<h6 class="allreviews">By ${review.getFirstName()}
 					${review.getLastname()}</h6>
 				<p class="allreviews">${review.getReview()}</p>
@@ -111,7 +148,7 @@
 	</c:choose>
 
 	<hr style="border: 3px solid #f1f1f1"></hr>
-	
+
 	<script>
 		const url = window.location.href
 	
@@ -125,6 +162,6 @@
 
 </body>
 
-	<c:import url="nav.html"></c:import>
-</html>
+<c:import url="nav.html"></c:import>
+	</html>
 </jsp:root>

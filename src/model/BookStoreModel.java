@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -40,7 +41,6 @@ public class BookStoreModel {
 	private DAO dao;
 	private ArrayList<Integer> orderNumber = null;
 	private int paymentCounter;
-	
 	
 	private BookDAO book;
 	private AddressDAO address;
@@ -82,15 +82,23 @@ public class BookStoreModel {
         return this.user.insertUserDB(fname, lname, email, password);
 	}
 
-	public int insertPartnerLogin(String email, String password, String fname, String lname) throws SQLException {
+	public void insertPartnerLogin(String email, String password, String fname, String lname) throws SQLException, NoSuchAlgorithmException {
+		this.dao.insertPartnerDB(fname, lname, email, password);
+		this.dao.insertPartnerKey(email);
 
-		//return this.dao.insertPartnerDB(fname, lname, email, password);
-		return this.user.insertPartnerDB(fname, lname, email, password);
+	}
+	
+	public String getpartnerKey(String email) {
+		return this.dao.getpartnerKey(email);
+	}
+	
+	public boolean isValidPartnerKey(String key) {
+		return this.dao.isValidPartnerKey(key);
 	}
 
-	public int insertAReview(String fname, String lname, String bid, String review, String title) throws SQLException {
-		//return this.dao.insertReview(fname, lname, bid, review, title);
-		return this.review.insertReview(fname, lname, bid, review, title);
+
+	public int insertAReview(String fname, String lname, String bid, String review, String title, int rating) throws SQLException {
+		return this.dao.insertReview(fname, lname, bid, review, title, rating);
 	}
 
 	public int insertIntoAddress(String email, String street, String province, String country, String zip, String phone,
@@ -270,7 +278,6 @@ public class BookStoreModel {
 	}
 
 	public String getProductInfo(String productId) throws SQLException {
-		// TODO validate product id
 		BookBean book = this.instance.dao.getProductJSON(productId);
 		JsonObjectBuilder bookJSON = Json.createObjectBuilder();
 		bookJSON.add("BookId", book.getBid()).add("Title", book.getTitle()).add("Price", book.getPrice())

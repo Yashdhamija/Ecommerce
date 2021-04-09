@@ -89,7 +89,7 @@
 							type="text" class="form-control" name="zip" id="zip"
 							placeholder="XXX-XXX"
 							pattern="[A-Z]{1}[0-9]{1}[A-Z]{1}-[0-9]{1}[A-Z]{1}[0-9]{1}"
-							required="required"></input> <small>Format: XXX-XXX</small>
+							required="required"></input> <small>Format: A1A-1A1</small>
 					</div>
 
 					<div class="col-md-3">

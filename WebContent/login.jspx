@@ -4,7 +4,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
 	<jsp:directive.page contentType="text/html; charset=ISO-8859-1"
-		pageEncoding="ISO-8859-1" session="false" />
+		pageEncoding="ISO-8859-1" session="true" />
 	<jsp:output doctype-root-element="html"
 		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
@@ -25,7 +25,7 @@
 
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="Home"><i class="material-icons">menu_book</i></a>
+			<a class="navbar-brand" href="/BookLand/Home"><i class="material-icons">menu_book</i></a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -35,7 +35,7 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item"><a class="nav-link active"
-						aria-current="page" href="Home">Home</a></li>
+						aria-current="page" href="/BookLand/Home">Home</a></li>
 					
 
 					<li class="nav-item dropdown"><a
@@ -80,8 +80,10 @@
 		</div>
 	</nav>
 	
+	
+	
 	<c:choose>
-		<c:when test="${registerSuccess eq true}">
+		<c:when test="${param.registerSuccess eq 'true'}">
 			<div class="alert alert-primary alert-dismissible fade show" 
 			role="alert" id="alert">Successfully Registered. You can now login using your credentials now!</div>
 		</c:when>
@@ -132,7 +134,7 @@
 				</form>
 			</fieldset>
 		</div>
-	</div>
+	</div>	
 
 </body>
 <c:import url="nav.html"></c:import>

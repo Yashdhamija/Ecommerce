@@ -231,9 +231,11 @@ public class Home extends HttpServlet {
 		String bid = (String) request.getSession().getAttribute("bookid");
 		String review = (String) request.getParameter("writereview");
 		String title = request.getParameter("reviewtitle");
+		String rating = request.getParameter("rating");
+		
 
 		try {
-			this.model.insertAReview(fname, lname, bid, review, title);
+			this.model.insertAReview(fname, lname, bid, review, title, Integer.parseInt(rating));
 			request.getSession().setAttribute("reviews", this.model.retrieveLastThreeReviews(bid));
 			
 			

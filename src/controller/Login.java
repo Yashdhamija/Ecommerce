@@ -42,6 +42,7 @@ public class Login extends HttpServlet {
 	public void LoginAndLogoutFromHomPage(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, NoSuchAlgorithmException {
 		
+		
 		// Login From Home Page by clicking the login/register button		
 		if (request.getParameter("loginButton") != null) {
 			
@@ -63,10 +64,14 @@ public class Login extends HttpServlet {
 			
 			request.getSession().setAttribute("name", null);
 			request.getSession().removeAttribute("UserType");
+			if (request.getSession().getAttribute("partnerKey") != null) {
+				request.getSession().removeAttribute("partnerKey");
+			}
 			// clearing the cart after logout is pressed
 			request.getSession().removeAttribute("cartsize");
 			request.getSession().removeAttribute("carttotal");
 			request.getSession().removeAttribute("shoppingcart");
+			
 			response.sendRedirect("/BookLand/Home");
 		}
 		
@@ -80,6 +85,10 @@ public class Login extends HttpServlet {
 			response.sendRedirect("/BookLand/Home");
 		}
 		
+		else if(request.getServletPath() != null && request.getQueryString() !=null && request.getQueryString().equals("registerSuccess=true")) {
+			this.login.displayLoginPage(request, response);
+		}
+		
 		else if (request.getServletPath() != null && request.getServletPath().equals("/Login")
 				&& request.getQueryString() == null) { //
 			
@@ -88,6 +97,7 @@ public class Login extends HttpServlet {
 		
 		else {
 			// error handling
+			response.sendRedirect("/BookLand/Login");
 		}
 
 	}
@@ -105,7 +115,11 @@ public class Login extends HttpServlet {
 				// triggers for adding to cart	
 				request.getSession().setAttribute("name", user.getFirstname());
 				request.getSession().setAttribute("useremail", email);
-				request.getSession().setAttribute("UserType", user.getUserType() == 0 ? "visitor" : "partner"); 
+				request.getSession().setAttribute("UserType", user.getUserType() == 0 ? "visitor" : "partner");
+				
+				if (user.getUserType() == 1) {
+					request.getSession().setAttribute("partnerKey", this.model.getpartnerKey(user.getEmail()));
+				}
 				
 				// remove adminValidated if signed in
 				if(request.getSession().getAttribute("adminValidated") != null) {
