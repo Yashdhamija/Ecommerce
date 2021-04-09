@@ -37,9 +37,9 @@ The Rest API page can also be accessed once a partner is logged in into BookStor
 
 # To Test/Use the project
 
-You can run the project acting as a user, business partner or as admin. You can register/signup as a customer or a partner and test or run the functionalities accessible (check access matrix).
+You can run the project acting as a customer, business partner or as an admin. You can register/signup as a customer or a partner and test or run the functionalities accessible (check access metrix).
 
-(Note - You can not sign up as a administartor, we provide a set of administrator credentials for you below to unlock functionalities available exclusively to the admin user).
+(Note - You can not sign up as a administrator, we provide a set of administrator credentials for you below to unlock functionalities available exclusively to the admin user).
 
 # Sample credentials you can use
 
