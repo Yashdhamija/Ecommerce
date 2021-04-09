@@ -15,7 +15,7 @@ The project is deployed at - https://qasimahmed.me/BookLand/Home
 - Deployment: Aws EC2
 
 # Report
-A design report for the project can be found here - https://github.com/yabokar1/Ecommerce/blob/refactored/4413%20Design%20Document.pdf
+A design report for the project can be found here - https://github.com/yabokar1/Ecommerce/blob/refactored/4413%20Design%20Document%20(1).pdf
 
 # How to run locally
 
