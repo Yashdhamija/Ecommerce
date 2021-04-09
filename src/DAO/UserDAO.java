@@ -3,12 +3,13 @@ package DAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 import bean.UserBean;
 
 public class UserDAO {
 
-	private static DatabaseConnection user;
+	private DatabaseConnection user;
 
 	public UserDAO() throws SQLException {
 
@@ -79,6 +80,7 @@ public class UserDAO {
 			}
 
 			rs.close();
+			ps.close();
 			this.user.getConnection().close();
 
 		} catch (SQLException se) {
@@ -90,6 +92,59 @@ public class UserDAO {
 		}
 		System.out.println(name);
 		return name;
+	}
+	
+	// returns the partner key associated with the email
+	public String getpartnerKey(String email) {
+		
+		String key = null;
+		
+		try {
+			this.user = DatabaseConnection.getInstance();
+			String query = "SELECT apikey FROM PartnerKeys WHERE email='" + email + "'";
+			PreparedStatement ps = this.user.getConnection().prepareStatement(query);
+			ResultSet rs = ps.executeQuery(query);	
+			
+			while (rs.next()) {
+				key = rs.getString("apikey") ; 
+			}
+			
+			rs.close();
+			ps.close();
+			this.user.getConnection().close();
+			
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return key;
+	}
+	
+	public boolean isValidPartnerKey(String key) {
+		
+		try {
+			this.user = DatabaseConnection.getInstance();
+			String query = "SELECT * FROM PartnerKeys WHERE apikey='" + key + "'";
+			PreparedStatement ps = this.user.getConnection().prepareStatement(query);
+			ResultSet rs = ps.executeQuery(query);	
+			
+			if (rs.next()) {
+				return true; 
+			}
+			
+			rs.close();
+			ps.close();
+			this.user.getConnection().close();
+			
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return false;
 	}
 
 	public int insertPartnerDB(String fname, String lname, String email, String password) throws SQLException {
@@ -107,6 +162,33 @@ public class UserDAO {
 		this.user.getConnection().close();
 		return result;
 
+	}
+	
+	public int insertPartnerKey(String email) throws SQLException {
+		
+		// email already present in PartnersKeys table with associated key
+		// just reuse previously generated key
+		if (this.emailHasKey(email)) {
+			System.out.println("[dao.insertPartnerKey] A Key already exists with email: " + email);
+			return 0;
+		} else {
+			this.user = DatabaseConnection.getInstance();
+			String uuid = UUID.randomUUID().toString();
+			String query = "INSERT INTO PartnerKeys VALUES(?,?)";
+			System.out.println("Inserting partner key-> partner email is: " + email + 
+					", uniquely generated key is: " + uuid);
+			
+			PreparedStatement ps = this.user.getConnection().prepareStatement(query);
+			ps.setString(1, email);
+			ps.setString(2, uuid);
+			
+			int result = ps.executeUpdate();
+			
+			ps.close();
+			this.user.getConnection().close();
+						
+			return result;	
+		}
 	}
 
 	public boolean isEmailTaken(String email) {
@@ -137,6 +219,31 @@ public class UserDAO {
 		}
 
 		return userType != -1;
+	}
+	
+	public boolean emailHasKey(String email) {
+		
+		try {
+			this.user = DatabaseConnection.getInstance();
+			String query = "SELECT email FROM PartnerKeys WHERE email='" + email + "'";
+			PreparedStatement ps = this.user.getConnection().prepareStatement(query);
+			ResultSet rs = ps.executeQuery(query);	
+			
+			if (rs.next()) {
+				return true;
+			}
+			
+			rs.close();
+			ps.close();
+			this.user.getConnection().close();
+			
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return false;
 	}
 
 	// checks if users with given credential sexists in dB.
