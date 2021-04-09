@@ -57,6 +57,11 @@ password: spongebobsquarepants
 
 To access the login page for administrator simply go to this link https://qasimahmed.me/BookLand/AdministratorLoginPage and login using the admin credentials given above to manage the bookstore.
 
+# How to test the rest calls/scalability
+To execute the scalability test of our application, run src/rest/PerformanceTest.java. The resulting data will be displayed in the console.
+
+To execute the test cases of the rest calls, run src/rest/RestCallClient.java. The resulting data will also be displayed in the console. There may be additional lines being output from the DAO, which could be ignored.
+
 # Future Work
 
 - Expand input validation tests (checks for XSS scripting, SQL injections)
