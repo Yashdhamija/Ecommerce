@@ -35,7 +35,6 @@ import DAO.UserDAO;
 public class BookStoreModel {
 
 	private static BookStoreModel instance;
-//	private DAO dao;
 	private ArrayList<Integer> orderNumber = null;
 	private int paymentCounter;
 	
