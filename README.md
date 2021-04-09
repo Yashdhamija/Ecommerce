@@ -33,6 +33,8 @@ The following urls can be used to access web-apis meant to be accessed by partne
 
 (Note - in the urls, key refers to the partner key, used to authenticate a partner in order to fulfill the request. A sample key :~ bc629434-da50-416f-aead-c1c492b88271)
 
+The Rest API page can also be accessed once a partner is logged in into BookStore. Once logged in as Partner, simply click on Rest API and it will take you to a page which has all the links mentioned above.
+
 # To Test/Use the project
 
 You can un the project acting as a user, business partner or as a dmin. You can register/signup as a customer or a partner and test or run the functionalities accessible (check access metrix).
