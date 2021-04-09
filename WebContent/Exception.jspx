@@ -25,7 +25,7 @@
 	<h2 style="text-align: center;">An exception occured please try
 		again</h2>
 	<div class="returnshopping">
-		<a href="Home">
+		<a href="/BookLand/Home">
 			<button class="btn btn-dark">Continue Shopping</button>
 		</a>
 	</div>

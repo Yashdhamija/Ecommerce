@@ -24,7 +24,7 @@
 	<h2 style="text-align: center;">This page is not available error
 		404</h2>
 	<div class="returnshopping">
-		<a href="Home">
+		<a href="/BookLand/Home">
 			<button class="btn btn-dark">Continue Shopping</button>
 		</a>
 	</div>
