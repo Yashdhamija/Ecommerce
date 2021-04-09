@@ -81,6 +81,14 @@ public class Login extends HttpServlet {
 			
 		}
 		
+		else if(request.getServletPath() != null && request.getServletPath().equals("/Login")
+				&& request.getQueryString() == null && request.getSession().getAttribute("UserType") != null) {
+			
+			
+			response.sendRedirect("/BookLand/Home");
+			
+		}
+		
 		else if (request.getServletPath() != null && request.getServletPath().equals("/Login")
 				&& request.getQueryString() == null) { //
 			
