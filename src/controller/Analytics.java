@@ -24,9 +24,10 @@ public class Analytics extends HttpServlet {
 	private BookStoreModel model;
     /**
      * @throws ClassNotFoundException 
+     * @throws SQLException 
      * @see HttpServlet#HttpServlet()
      */
-    public Analytics() throws ClassNotFoundException {
+    public Analytics() throws ClassNotFoundException, SQLException {
         super();
         this.model = BookStoreModel.getInstance();
         // TODO Auto-generated constructor stub

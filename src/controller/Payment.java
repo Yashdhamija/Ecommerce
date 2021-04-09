@@ -25,9 +25,10 @@ public class Payment extends HttpServlet {
 
 	/**
 	 * @throws ClassNotFoundException
+	 * @throws SQLException 
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Payment() throws ClassNotFoundException {
+	public Payment() throws ClassNotFoundException, SQLException {
 		super();
 		this.model = BookStoreModel.getInstance();
 		// TODO Auto-generated constructor stub

@@ -25,9 +25,10 @@ public class Register extends HttpServlet {
 	private BookStoreModel model;
 
 	/**
+	 * @throws SQLException 
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Register() {
+	public Register() throws SQLException {
 		super();
 		try {
 			this.register = new RegisterService();
@@ -93,8 +94,6 @@ public class Register extends HttpServlet {
 			else {
 				this.register.UserRegister(fname, lname, email, password, street, city, province, zipCode, phone,
 						country); // inserted new user into User DB
-				//request.setAttribute("registerSuccess", true);
-				//request.getRequestDispatcher("/login.jspx").forward(request, response);
 				response.sendRedirect("/BookLand/Login?registerSuccess=true");       // made a chnage
 			}
 
@@ -111,9 +110,7 @@ public class Register extends HttpServlet {
 			else {
 				this.register.PartnerRegister(fname, lname, email, password, street, city, province, zipCode, phone,
 						country);
-				request.setAttribute("registerSuccess", true);
                 response.sendRedirect("/BookLand/Login?registerSuccess=true");
-
 			}
 		}
 
@@ -126,7 +123,13 @@ public class Register extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		Register register = new Register();
+		Register register = null;
+		try {
+			register = new Register();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 
 			register.displayRegisterPage(request, response);
