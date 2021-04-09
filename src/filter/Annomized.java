@@ -3,7 +3,6 @@ package filter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import model.BookStoreModel;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -12,19 +11,18 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
+import model.AdminService;
+
 /**
  * Servlet Filter implementation class annomized
  */
 @WebFilter("/annomized")
 public class Annomized implements Filter {
+	
+	private static AdminService adminService;
 
-    /**
-     * Default constructor. 
-     */
-	private BookStoreModel bookstore;
     public Annomized() throws ClassNotFoundException, SQLException {
-        // TODO Auto-generated constructor stub
-    	bookstore = BookStoreModel.getInstance();
+    	Annomized.adminService = AdminService.getInstance();
     }
 
 	/**
@@ -40,15 +38,12 @@ public class Annomized implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		// place your code here
-		
-	       
-		
-		if(request.getParameter("adminReport") != null) {
-			
+
+		if(request.getParameter("adminReport") != null) {			
 			
 			List<List<String>> userStats;
 			try {
-				userStats = this.bookstore.retrieveUserStatistics();
+				userStats = this.adminService.retrieveUserStatistics();
 				
 				for(int i=0; i<userStats.size(); i++) {
 					
@@ -58,15 +53,10 @@ public class Annomized implements Filter {
 				}
 				
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
-		
-		
-		
-		
+
 		// pass the request along the filter chain
 		chain.doFilter(request, response);
 		
@@ -76,7 +66,7 @@ public class Annomized implements Filter {
 	 * @see Filter#init(FilterConfig)
 	 */
 	public void init(FilterConfig fConfig) throws ServletException {
-		// TODO Auto-generated method stub
+		
 	}
 
 }

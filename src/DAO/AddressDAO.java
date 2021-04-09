@@ -14,9 +14,7 @@ public class AddressDAO {
 	
 	public AddressDAO() throws SQLException {
 		
-		
-		this.user = new UserDAO();
-		
+		this.user = new UserDAO();	
 	}
 	
 	
@@ -84,16 +82,16 @@ public class AddressDAO {
 		String zip;
 		String country;
 		String phone;
-
-	
+		
 		AddressBean address = null;
 
-		String query = "SELECT * FROM Address WHERE cid=?";
-
+		String query = "SELECT * FROM Address WHERE cid = ?";
+		
+		this.address = DatabaseConnection.getInstance();
 		PreparedStatement ps = this.address.getConnection().prepareStatement(query);
 		ps.setInt(1, cid);
 		ResultSet rs = ps.executeQuery();
-
+		
 		while (rs.next()) {
 			street = rs.getString("street");
 			province = rs.getString("province");

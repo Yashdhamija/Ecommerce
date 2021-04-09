@@ -29,6 +29,7 @@ public class ReviewDAO {
 		ps.setString(5, null);
 		ps.setString(6, title);
 		ps.setInt(7, rating);
+		
 		int result = ps.executeUpdate();
 		
 		ps.close();
@@ -42,11 +43,11 @@ public class ReviewDAO {
 		List<ReviewBean> list = new ArrayList<ReviewBean>();
 
 		// TODO putting ? here
-		String query = "SELECT * FROM Review WHERE bid='" + bid + "' ORDER BY reviewid DESC limit 3";
+		String query = "SELECT * FROM Review WHERE bid = ? ORDER BY reviewid DESC limit 3";
 		
 		this.review = DatabaseConnection.getInstance();
 		PreparedStatement ps = this.review.getConnection().prepareStatement(query);
-
+		ps.setString(1, bid);
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {

@@ -12,9 +12,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.BookStoreModel;
 
 import bean.CartBean;
+import model.BookService;
+import model.OrderService;
 
 /**
  * Servlet implementation class Cart
@@ -23,7 +24,8 @@ import bean.CartBean;
 public class Cart extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Map<String, CartBean> cart;
-	private BookStoreModel model;
+	private BookService bookService;
+	private OrderService orderService;
 
 	/**
 	 * @throws ClassNotFoundException
@@ -32,8 +34,8 @@ public class Cart extends HttpServlet {
 	 */
 	public Cart() throws ClassNotFoundException, SQLException {
 		super();
-		this.model = BookStoreModel.getInstance();
-		// TODO Auto-generated constructor stub
+		this.bookService = BookService.getInstance();
+		this.orderService = OrderService.getInstance();
 	}
 
 	public void displayCartPage(HttpServletRequest request, HttpServletResponse response)
@@ -56,15 +58,12 @@ public class Cart extends HttpServlet {
 
 		if (request.getParameter("addtocart") != null) {
 
-			if (this.model.retrieveBookTitle(request.getParameter("addtocart")).equals("")) {
+			if (this.bookService.retrieveBookTitle(request.getParameter("addtocart")).equals("")) {
 
 				response.sendRedirect("/BookLand/ErrorPage");
 			}
 
 			else {
-
-		
-
 				String bookId = request.getParameter("addtocart");
 				int price;
 				int total;
@@ -79,17 +78,17 @@ public class Cart extends HttpServlet {
 				}
 
 				try {
-					String bookTitle = this.model.retrieveBookTitle(bookId);
+					String bookTitle = this.bookService.retrieveBookTitle(bookId);
 					
-					price = this.model.retrievePriceofABook(bookId);
+					price = this.bookService.retrievePriceofABook(bookId);
 					
 
-					String imageurl = model.retrieveBookUrl(bookId);
+					String imageurl = this.bookService.retrieveBookUrl(bookId);
 					CartBean bookCart = new CartBean(bookId, price, bookTitle, quantity, imageurl);
 
 					if (this.cart.containsKey(bookId)) {
 						this.cart.get(bookId).setQuantity(cart.get(bookId).getQuantity() + 1);
-						total = this.model.cartTotal(cart);
+						total = this.orderService.cartTotal(cart);
 						request.getSession().setAttribute("carttotal", String.valueOf(total));
 						request.getSession().setAttribute("quantity", cart.get(bookId).getQuantity() + 1);
 						request.getSession().setAttribute("shoppingcart", cart);
@@ -99,7 +98,7 @@ public class Cart extends HttpServlet {
 						
 						this.cart.put(bookId, bookCart);
 					
-						total = this.model.cartTotal(this.cart);
+						total = this.orderService.cartTotal(this.cart);
 						request.getSession().setAttribute("cartsize", cart.size());
 						request.getSession().setAttribute("carttotal", String.valueOf(total));
 						request.getSession().setAttribute("shoppingcart", cart);
@@ -123,11 +122,11 @@ public class Cart extends HttpServlet {
 	
 		Map<String, CartBean> cartItems = (HashMap) request.getSession().getAttribute("shoppingcart");
 		request.getSession().setAttribute("shoppingcart",
-				this.model.remove(request.getParameter("removebook"), cartItems));
+				this.orderService.remove(request.getParameter("removebook"), cartItems));
 		request.getSession().setAttribute("carttotal",
-				this.model.cartTotal(this.model.remove(request.getParameter("removebook"), cartItems)));
+				this.orderService.cartTotal(this.orderService.remove(request.getParameter("removebook"), cartItems)));
 		request.getSession().setAttribute("cartsize",
-				this.model.remove(request.getParameter("removebook"), cartItems).size());
+				this.orderService.remove(request.getParameter("removebook"), cartItems).size());
 		response.sendRedirect("/BookLand/Cart?viewcart=true");
 
 	}
@@ -140,9 +139,9 @@ public class Cart extends HttpServlet {
 		Map<String,CartBean> cart = (HashMap<String,CartBean>) request.getSession().getAttribute("shoppingcart");
 
 		
-		request.getSession().setAttribute("shoppingcart",this.model.quantityUpdate(cart, quantity, bid));
+		request.getSession().setAttribute("shoppingcart",this.orderService.quantityUpdate(cart, quantity, bid));
 		request.getSession().setAttribute("carttotal",
-				this.model.cartTotal(this.model.quantityUpdate(cart, quantity, bid)));
+				this.orderService.cartTotal(this.orderService.quantityUpdate(cart, quantity, bid)));
 		request.getRequestDispatcher("/Cart.jspx").forward(request, response);
 
 	}
@@ -160,7 +159,7 @@ public class Cart extends HttpServlet {
 			} 
 			
 			else if (request.getParameter("addtocart") != null 
-					&& !this.model.retrieveBookTitle(request.getParameter("addtocart")).equals("")) {
+					&& !this.bookService.retrieveBookTitle(request.getParameter("addtocart")).equals("")) {
 					addToCart(request, response);
 			}
 			

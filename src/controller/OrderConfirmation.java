@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.BookStoreModel;
+import model.OrderService;
 
 /**
  * Servlet implementation class OrderConfirmation
@@ -17,7 +17,6 @@ import model.BookStoreModel;
 @WebServlet("/OrderConfirmation")
 public class OrderConfirmation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private BookStoreModel model;
        
     /**
      * @throws ClassNotFoundException 
@@ -26,9 +25,6 @@ public class OrderConfirmation extends HttpServlet {
      */
     public OrderConfirmation() throws ClassNotFoundException, SQLException {
         super();
-        this.model = BookStoreModel.getInstance();
-       
-        // TODO Auto-generated constructor stub
     }
 
 

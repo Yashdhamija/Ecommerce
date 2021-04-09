@@ -28,8 +28,6 @@ public class BookDAOTest {
 		
 	}
 	
-
-
 	@Test
 	public void testRetreiveBook() throws SQLException {
 		BookDAO bookDb =  new BookDAO();
@@ -40,17 +38,7 @@ public class BookDAOTest {
 		assertEquals(bookId,book.getBid());
 		
 	}
-	
-	@Test // SQL injection test
-	public void testWrongParameterSetRetreiveBook() throws SQLException {
-		BookDAO bookDb =  new BookDAO();
-		BookBean book= null;
-		// Book inside Book db
-		String bookId = "SELECT * FROM Book WHERE bid=?"; 
-		book = bookDb.retrieveBook(bookId);
-		assertNull(book);
-		
-	}
+
 	@Test 
 	public void testretrieveBookFromCategory() throws SQLException {
 		BookDAO bookDb =  new BookDAO();
@@ -66,6 +54,9 @@ public class BookDAOTest {
 		
 		
 	}
+	
+	
+
 	
 
 	

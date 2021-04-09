@@ -25,12 +25,6 @@ public class PODAO {
 
 	}
 
-	
-	
-	
-	
-	
-	
 	public int insertPurchaseOrder(int orderId, String fname, String lname, String status, String email)
 			throws SQLException {
 		int customerId = this.user.retrieveCustomerId(email);

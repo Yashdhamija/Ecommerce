@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.CartBean;
 import bean.ReviewBean;
-import model.BookStoreModel;
+import model.AdminService;
 
 /**
  * Servlet implementation class Admin
@@ -24,17 +24,15 @@ import model.BookStoreModel;
 @WebServlet({"/AdministratorLoginPage"})
 public class Admin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private BookStoreModel model;
+	private AdminService adminService;
     /**
      * @throws ClassNotFoundException 
      * @throws SQLException 
      * @see HttpServlet#HttpServlet()
      */
-    public Admin() throws ClassNotFoundException, SQLException {
-    	
+    public Admin() throws ClassNotFoundException, SQLException {    	
         super();
-        this.model = BookStoreModel.getInstance();
-        // TODO Auto-generated constructor stub
+        this.adminService = AdminService.getInstance();
     }
     
     
@@ -54,7 +52,7 @@ public class Admin extends HttpServlet {
 		
 
 		
-		list = this.model.retrieveTopTenAllTime();
+		list = this.adminService.retrieveTopTenAllTime();
 		//userStats = this.model.retrieveUserStatistics();
 
 		request.getSession().setAttribute("TopTen", list);
@@ -86,7 +84,7 @@ public class Admin extends HttpServlet {
 				request.getSession().getAttribute("adminValidated").equals("validated")) {
 		 
 		  try {
-			List<ReviewBean> reviews = model.retrieveAllReviews();
+			List<ReviewBean> reviews = this.adminService.retrieveAllReviews();
 			
 			if(reviews.size() == 0) {
 				request.getSession().setAttribute("allreviews", "empty");
@@ -127,16 +125,12 @@ public class Admin extends HttpServlet {
 			}
 
 			try {
-				if (this.model.isValidAdmin(adminEmail, adminPassword)) {
+				if (this.adminService.isValidAdmin(adminEmail, adminPassword)) {
 					
 					request.getSession().setAttribute("adminValidated", "validated");
-					
-					
 					request.getSession().setAttribute("logged", "true");
 					response.sendRedirect("/BookLand/Home");
-					
 					//displayAnalytics(request,response);
-					
 				}
 
 				else {
@@ -154,9 +148,6 @@ public class Admin extends HttpServlet {
 		else if(request.getParameter("adminReport") != null && request.getSession().getAttribute("adminValidated")!= null &&
 				request.getSession().getAttribute("adminValidated").equals("validated")) {
 			
-			
-
-			
 			try {
 				
 				displayAnalytics(request,response);
@@ -172,7 +163,6 @@ public class Admin extends HttpServlet {
 			 response.sendRedirect("/BookLand/Home");
 		}
 		
-	
 	}
 
 	/**

@@ -21,6 +21,7 @@ public class UserDAO {
 		this.user = DatabaseConnection.getInstance();
 		String query = "INSERT INTO Users VALUES(?,?,?,?,?,?)";
 		PreparedStatement ps = this.user.getConnection().prepareStatement(query);
+		
 		ps.setString(1, null);
 		ps.setString(2, fname);
 		ps.setString(3, lname);
@@ -29,6 +30,7 @@ public class UserDAO {
 		ps.setString(6, password);
 
 		int result = ps.executeUpdate();
+		
 		ps.close();
 		this.user.getConnection().close();
 		return result;
@@ -76,7 +78,6 @@ public class UserDAO {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				name = rs.getString("fname");
-
 			}
 
 			rs.close();
@@ -101,9 +102,10 @@ public class UserDAO {
 		
 		try {
 			this.user = DatabaseConnection.getInstance();
-			String query = "SELECT apikey FROM PartnerKeys WHERE email='" + email + "'";
+			String query = "SELECT apikey FROM PartnerKeys WHERE email = ?";
 			PreparedStatement ps = this.user.getConnection().prepareStatement(query);
-			ResultSet rs = ps.executeQuery(query);	
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();	
 			
 			while (rs.next()) {
 				key = rs.getString("apikey") ; 
@@ -126,9 +128,10 @@ public class UserDAO {
 		
 		try {
 			this.user = DatabaseConnection.getInstance();
-			String query = "SELECT * FROM PartnerKeys WHERE apikey='" + key + "'";
+			String query = "SELECT * FROM PartnerKeys WHERE apikey = ?";
 			PreparedStatement ps = this.user.getConnection().prepareStatement(query);
-			ResultSet rs = ps.executeQuery(query);	
+			ps.setString(1, key);
+			ResultSet rs = ps.executeQuery();	
 			
 			if (rs.next()) {
 				return true; 
@@ -225,9 +228,10 @@ public class UserDAO {
 		
 		try {
 			this.user = DatabaseConnection.getInstance();
-			String query = "SELECT email FROM PartnerKeys WHERE email='" + email + "'";
+			String query = "SELECT email FROM PartnerKeys WHERE email = ?";
 			PreparedStatement ps = this.user.getConnection().prepareStatement(query);
-			ResultSet rs = ps.executeQuery(query);	
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();	
 			
 			if (rs.next()) {
 				return true;
@@ -334,44 +338,5 @@ public class UserDAO {
 		return user;
 
 	}
-	
-	public String retrievePassword(String password) {
-		
-		String str = null;
-		String p = null;
-		try {
-			
-			String query = "SELECT password FROM Users WHERE password = ?";
-			this.user = DatabaseConnection.getInstance();
-			PreparedStatement ps = this.user.getConnection().prepareStatement(query);
-			ps.setString(1, password);
-			ResultSet rs = ps.executeQuery();
-
-			while (rs.next()) {
-				p = rs.getString("password");
-				// System.out.println(e);
-			}
-			if (p != null) {
-				str = "password exists";
-			} else {
-				str = "password doesnt match, try again";
-			}
-
-			rs.close();
-			ps.close();
-			this.user.getConnection().close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return str;
-
-	}
-
 
 }

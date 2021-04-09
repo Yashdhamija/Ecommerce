@@ -20,11 +20,17 @@
 </head>
 <body>
 
-	<jsp:directive.include file="navigation.jspx"/>
+	<jsp:directive.include file="navigation.jspx" />
 
-	<div>An exception occured please try again </div>
+	<h2 style="text-align: center;">An exception occured please try
+		again</h2>
+	<div class="returnshopping">
+		<a href="Home">
+			<button class="btn btn-dark">Continue Shopping</button>
+		</a>
+	</div>
 
 </body>
 <c:import url="nav.html"></c:import>
-</html>
+	</html>
 </jsp:root>
