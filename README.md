@@ -41,7 +41,7 @@ You can run the project acting as a customer, business partner or as an admin. Y
 
 (Note - You can not sign up as a administrator, we provide a set of administrator credentials for you below to unlock functionalities available exclusively to the admin user).
 
-# Sample credentials you can use
+# Sample credentials you can use Login
 
 #### User:
 qasim@gmail.com
@@ -54,6 +54,8 @@ password: 12345678
 #### Administrator:
 adminofbookstore@gmail.com
 password: spongebobsquarepants
+
+To access the login page for administrator simply go to this link https://qasimahmed.me/BookLand/AdministratorLoginPage and login using the admin credentials given above to manage the bookstore.
 
 # Future Work
 
