@@ -74,30 +74,19 @@ public class WebService {
 			AddressBean userAddress = WebService.userService.getUserAddress(order.getCid());
 			BookBean userbook =  WebService.bookService.getSingleBookInfo(productId);	
 			
-			JsonObjectBuilder obj = Json.createObjectBuilder().add("orderDate", order.getDate())
-					.add("name", order.getFname() + order.getLname());
+			result.add(Json.createObjectBuilder().add("orderDate", order.getDate())
+					.add("name", order.getFname() + order.getLname()));
 			
 			if (userAddress != null) {
-				obj.add("street", userAddress.getStreet()).add("city", userAddress.getCity())
-					.add("Province", userAddress.getProvince()).add("zipcode", userAddress.getZip());
+				result.add(Json.createObjectBuilder().add("street", userAddress.getStreet()).add("city", userAddress.getCity())
+					.add("Province", userAddress.getProvince()).add("zipcode", userAddress.getZip()));
 			}
 			
 			if (userbook != null) {
-				obj.add("book", Json.createObjectBuilder().add("title", userbook.getTitle())
+				result.add(Json.createObjectBuilder().add("book", Json.createObjectBuilder().add("title", userbook.getTitle())
 						.add("bookId", userbook.getBid()).add("category", userbook.getCategory())
-						.add("quantity", order.getQuantity()).add("price", order.getPrice()));
+						.add("quantity", order.getQuantity()).add("price", order.getPrice())));
 			}
-			
-			result.add(obj);
-			
-//			result.add(Json.createObjectBuilder().add("orderDate", order.getDate())
-//					.add("name", order.getFname() + order.getLname())
-//					.add("street", userAddress.getStreet()).add("city", userAddress.getCity())
-//					.add("Province", userAddress.getProvince()).add("zipcode", userAddress.getZip())
-//					.add("street", userAddress.getStreet()).add("book",
-//							Json.createObjectBuilder().add("title", userbook.getTitle())
-//									.add("bookId", userbook.getBid()).add("category", userbook.getCategory())
-//									.add("quantity", order.getQuantity()).add("price", order.getPrice())));
 				
 		}
 		
