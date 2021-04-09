@@ -37,15 +37,15 @@ You can un the project acting as a user, business partner or as a dmin. You can 
 
 # Sample credentials you can use
 
-## User:
+#### User:
 qasim@gmail.com
 password: 12345678
 
-## Partner:
+#### Partner:
 jkrowling@gmail.com
 password: 12345678 
 
-## Administrator:
+#### Administrator:
 adminofbookstore@gmail.com
 password: spongebobsquarepants
 
