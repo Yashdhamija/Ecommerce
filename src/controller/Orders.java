@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.AddressBean;
 import bean.OrderBean;
-import model.BookStoreModel;
+import model.OrderService;
+import model.UserService;
 
 /**
  * Servlet implementation class Orders
@@ -20,7 +21,8 @@ import model.BookStoreModel;
 @WebServlet("/Orders")
 public class Orders extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private BookStoreModel model;
+	private OrderService orderService;
+	private UserService userService;
 
 	/**
 	 * @throws ClassNotFoundException
@@ -29,8 +31,8 @@ public class Orders extends HttpServlet {
 	 */
 	public Orders() throws ClassNotFoundException, SQLException {
 		super();
-		this.model = BookStoreModel.getInstance();
-		// TODO Auto-generated constructor stub
+		this.orderService = OrderService.getInstance();
+		this.userService = UserService.getInstance();
 	}
 
 	/**
@@ -47,19 +49,19 @@ public class Orders extends HttpServlet {
 				 
 				request.getSession().setAttribute("showaddress", "allowed");
 				
-				request.getSession().setAttribute("fulladdress", this.model.retrieveAddress((String) request.getSession().getAttribute("useremail")));	
+				request.getSession().setAttribute("fulladdress", this.userService.retrieveAddress((String) request.getSession().getAttribute("useremail")));	
 				
 				request.getRequestDispatcher("/Orders.jspx").forward(request, response);
 				
 			}
 			else if (request.getParameter("orderhistory") != null && request.getParameter("orderhistory").equals("true")
 					&& request.getParameter("date") != null
-					&& model.getAllUserOrderDates((String) request.getSession().getAttribute("useremail"))
+					&& this.orderService.getAllUserOrderDates((String) request.getSession().getAttribute("useremail"))
 							.contains(request.getParameter("date"))) {
 				
 				String date = request.getParameter("date");
 				String email = (String) request.getSession().getAttribute("useremail");
-				List<OrderBean> orderitems = model.getOrderByDate(date, email);
+				List<OrderBean> orderitems = this.orderService.getOrderByDate(date, email);
 				
 				
 				request.getSession().setAttribute("orderitems", orderitems);
@@ -75,7 +77,7 @@ public class Orders extends HttpServlet {
 					request.getSession().removeAttribute("orderview");
 					request.getSession().removeAttribute("showaddress");
 					request.getSession().setAttribute("dates",
-							model.getAllUserOrderDates((String) request.getSession().getAttribute("useremail")));
+							this.orderService.getAllUserOrderDates((String) request.getSession().getAttribute("useremail")));
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

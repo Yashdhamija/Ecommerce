@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.ReviewBean;
-import model.BookStoreModel;
+import model.AdminService;
 
 /**
  * Servlet implementation class EditReviews
@@ -19,7 +19,7 @@ import model.BookStoreModel;
 @WebServlet("/EditReviews")
 public class EditReviews extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private BookStoreModel model;
+	private AdminService adminService;
 
 	/**
 	 * @throws ClassNotFoundException
@@ -28,8 +28,7 @@ public class EditReviews extends HttpServlet {
 	 */
 	public EditReviews() throws ClassNotFoundException, SQLException {
 		super();
-		this.model = BookStoreModel.getInstance();
-		// TODO Auto-generated constructor stub
+		this.adminService = AdminService.getInstance();
 	}
 
 	/**
@@ -58,8 +57,8 @@ public class EditReviews extends HttpServlet {
 
 			List<ReviewBean> reviews;
 			try {
-				model.deleteAReview(bid, review);
-				reviews = model.retrieveAllReviews();
+				this.adminService.deleteAReview(bid, review);
+				reviews = this.adminService.retrieveAllReviews();
 
 				if (reviews.size() == 0) {
 					request.getSession().setAttribute("allreviews", "empty");

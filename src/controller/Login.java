@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import bean.UserBean;
-import model.BookStoreModel;
+import model.UserService;
 
 /**
  * Servlet implementation class Login
@@ -18,7 +18,7 @@ import model.BookStoreModel;
 @WebServlet({ "/Login","/Login/*"})
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private BookStoreModel model;
+	private UserService userService;
 
 	/**
 	 * @throws ClassNotFoundException
@@ -27,7 +27,7 @@ public class Login extends HttpServlet {
 	 */
 	public Login() throws ClassNotFoundException, SQLException {
 		super();
-		this.model = BookStoreModel.getInstance();
+		this.userService = UserService.getInstance();
 	}
 
 	public void LoginAndLogoutFromHomPage(HttpServletRequest request, HttpServletResponse response)
@@ -102,7 +102,7 @@ public class Login extends HttpServlet {
 
 
 		if (email != null && password != null) {
-			UserBean user = this.model.isUserExist(email, password);
+			UserBean user = this.userService.isUserExist(email, password);
 			if (user != null) {
 				// triggers for adding to cart	
 				request.getSession().setAttribute("name", user.getFirstname());
@@ -110,7 +110,7 @@ public class Login extends HttpServlet {
 				request.getSession().setAttribute("UserType", user.getUserType() == 0 ? "visitor" : "partner");
 				
 				if (user.getUserType() == 1) {
-					request.getSession().setAttribute("partnerKey", this.model.getpartnerKey(user.getEmail()));
+					request.getSession().setAttribute("partnerKey", this.userService.getpartnerKey(user.getEmail()));
 				}
 				
 				// remove adminValidated if signed in

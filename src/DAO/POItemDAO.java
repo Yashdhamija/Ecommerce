@@ -126,6 +126,7 @@ public class POItemDAO {
 		int unitPrice;
 
 		List<OrderBean> orderList = new ArrayList<>();
+		
 		this.purchaseOrderItem = DatabaseConnection.getInstance();
 		String query = "SELECT * FROM PO,POItem WHERE PO.orderid=POItem.orderid AND POItem.bid = ?";
 		PreparedStatement ps = this.purchaseOrderItem.getConnection().prepareStatement(query);

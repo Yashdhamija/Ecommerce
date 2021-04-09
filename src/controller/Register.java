@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.BookStoreModel;
+import model.UserService;
 
 /**
  * Servlet implementation class Registration
@@ -18,20 +18,16 @@ import model.BookStoreModel;
 @WebServlet({ "/Register", "/PartnerRegister" })
 public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private BookStoreModel model;
+	private UserService userService;
 
 	/**
 	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Register() throws SQLException {
+	public Register() throws SQLException, ClassNotFoundException {
 		super();
-		try {
-			this.model = BookStoreModel.getInstance();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		// TODO Auto-generated constructor stub
+		this.userService = UserService.getInstance();
 	}
 
 	public void displayRegisterPage(HttpServletRequest request, HttpServletResponse response)
@@ -79,7 +75,7 @@ public class Register extends HttpServlet {
 
 		if (request.getParameter("registerbtn") != null) {
 			
-			if (this.model.isEmailTaken(email)) {
+			if (this.userService.isEmailTaken(email)) {
 				// User exists
 				request.setAttribute("emailexists", true); 
 				request.getRequestDispatcher("/register.jspx").forward(request, response);
@@ -87,24 +83,25 @@ public class Register extends HttpServlet {
 
 			else {
 				// insert new user into User DB
-				this.model.insertUserLogin(fname, lname, email, password);																								// Registration
-				this.model.insertIntoAddress(email,street, province, country, zipCode, phone, city);
-				response.sendRedirect("/BookLand/Login?registerSuccess=true");       // made a chnage
+				this.userService.insertUserLogin(fname, lname, email, password);																								
+				// Registration
+				this.userService.insertIntoAddress(email,street, province, country, zipCode, phone, city);
+				response.sendRedirect("/BookLand/Login?registerSuccess=true");
 			}
 
 		}
 
 		if (request.getParameter("uidregister") != null) {
 			
-			if (this.model.isEmailTaken(email)) { 
+			if (this.userService.isEmailTaken(email)) { 
 				// Partner exists throw error message
 				request.setAttribute("partnerexists", true);
 				request.getRequestDispatcher("/partners.jspx").forward(request, response);
 			}
 
 			else {
-				this.model.insertPartnerLogin(email, password, fname, lname);
-				this.model.insertIntoAddress(email,street, province, country, zipCode, phone, city);
+				this.userService.insertPartnerLogin(email, password, fname, lname);
+				this.userService.insertIntoAddress(email,street, province, country, zipCode, phone, city);
                 response.sendRedirect("/BookLand/Login?registerSuccess=true");
 			}
 		}
@@ -122,11 +119,12 @@ public class Register extends HttpServlet {
 		try {
 			register = new Register();
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
+		
 		try {
-
 			register.displayRegisterPage(request, response);
 	
 		} catch (SQLException e) {

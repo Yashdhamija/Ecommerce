@@ -3,9 +3,7 @@ package controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,7 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.BookStoreModel;
+import model.AdminService;
+
 
 /**
  * Servlet implementation class Analytics
@@ -21,7 +20,7 @@ import model.BookStoreModel;
 @WebServlet("/Analytics")
 public class Analytics extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private BookStoreModel model;
+	private AdminService adminService;
     /**
      * @throws ClassNotFoundException 
      * @throws SQLException 
@@ -29,8 +28,7 @@ public class Analytics extends HttpServlet {
      */
     public Analytics() throws ClassNotFoundException, SQLException {
         super();
-        this.model = BookStoreModel.getInstance();
-        // TODO Auto-generated constructor stub
+        this.adminService = AdminService.getInstance();
     }
 
 	/**
@@ -43,14 +41,11 @@ public class Analytics extends HttpServlet {
 		//LinkedHashMap<String, LinkedHashMap<String, Integer>> result = null;
 		ArrayList<List<String>> result;
 		
-		
-		
-		
 		try {
 			//result = this.model.retrieveBooksSoldEachMonth();
 			//LinkedHashMap<String, Integer> newResult;
 
-			result = this.model.retrieveBooksSoldEachMonth(date);
+			result = this.adminService.retrieveBooksSoldEachMonth(date);
 			
 			
 			request.setAttribute("topMonthResult", result);
@@ -71,14 +66,11 @@ public class Analytics extends HttpServlet {
 		
 		if(request.getSession().getAttribute("adminValidated") != null && request.getSession().getAttribute("adminValidated").equals("validated")) {
 			try {
-				request.setAttribute("date", model.getAllDates());
+				request.setAttribute("date", this.adminService.getAllDates());
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			if (request.getParameter("topMonth") != null ) {
-				
-				
 				String date = request.getParameter("topMonth");
 				displayTopMonthlyBooks(request, response, date);
 	

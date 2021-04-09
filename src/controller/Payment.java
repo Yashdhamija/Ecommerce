@@ -12,8 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.UserBean;
+import model.OrderService;
+import model.UserService;
 import bean.CartBean;
-import model.BookStoreModel;
 
 /**
  * Servlet implementation class Payment
@@ -21,7 +22,8 @@ import model.BookStoreModel;
 @WebServlet("/Payment")
 public class Payment extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private BookStoreModel model;
+	private OrderService orderService;
+	private UserService userService;
 
 	/**
 	 * @throws ClassNotFoundException
@@ -30,8 +32,8 @@ public class Payment extends HttpServlet {
 	 */
 	public Payment() throws ClassNotFoundException, SQLException {
 		super();
-		this.model = BookStoreModel.getInstance();
-		// TODO Auto-generated constructor stub
+		this.orderService = OrderService.getInstance();
+		this.userService = UserService.getInstance();
 	}
 
 	/**
@@ -48,19 +50,19 @@ public class Payment extends HttpServlet {
 		if (request.getSession().getAttribute("UserType").equals("visitor")) {
 
 			request.getSession().setAttribute("fulladdress",
-					this.model.retrieveAddress((String) request.getSession().getAttribute("useremail")));
+					this.userService.retrieveAddress((String) request.getSession().getAttribute("useremail")));
 			request.getSession().setAttribute("userinfo",
-					this.model.retrieveUserInfo((String) request.getSession().getAttribute("useremail")));
+					this.userService.retrieveUserInfo((String) request.getSession().getAttribute("useremail")));
 
 		}
 		// Partner
 		else {
 
 			request.getSession().setAttribute("fulladdress",
-					this.model.retrieveAddress((String) request.getSession().getAttribute("useremail")));
+					this.userService.retrieveAddress((String) request.getSession().getAttribute("useremail")));
 
 			request.getSession().setAttribute("userinfo",
-					this.model.retrieveUserInfo((String) request.getSession().getAttribute("useremail")));
+					this.userService.retrieveUserInfo((String) request.getSession().getAttribute("useremail")));
 		}
 
 		request.getRequestDispatcher("/payment.jspx").forward(request, response);
@@ -74,16 +76,16 @@ public class Payment extends HttpServlet {
 
 		try {// Everything inside the try is used to insert into PO, this is successful case
 
-			int orderId = this.model.OrderNumberGenerator();
+			int orderId = this.orderService.OrderNumberGenerator();
 
-			this.model.insertPO(orderId, ((UserBean) request.getSession().getAttribute("userinfo")).getFirstname(),
+			this.orderService.insertPO(orderId, ((UserBean) request.getSession().getAttribute("userinfo")).getFirstname(),
 					((UserBean) request.getSession().getAttribute("userinfo")).getLastname(), "ORDERED",
 					(String) request.getSession().getAttribute("useremail"));
 
 			for (Map.Entry<String, CartBean> entry : cart.entrySet()) {
 
 				
-				this.model.insertPOItem(orderId, entry.getValue().getBookid(), entry.getValue().getPrice(),
+				this.orderService.insertPOItem(orderId, entry.getValue().getBookid(), entry.getValue().getPrice(),
 						entry.getValue().getQuantity());
 			}
 
@@ -105,7 +107,7 @@ public class Payment extends HttpServlet {
 		Map<String, CartBean> cart = (HashMap<String, CartBean>) request.getSession().getAttribute("shoppingcart");
 
 		try {// Everything inside the try is used to insert into PO, this is declined case
-			this.model.insertPO(this.model.OrderNumberGenerator(),
+			this.orderService.insertPO(this.orderService.OrderNumberGenerator(),
 					((UserBean) request.getSession().getAttribute("userinfo")).getFirstname(),
 					((UserBean) request.getSession().getAttribute("userinfo")).getLastname(), "DENIED",
 					(String) request.getSession().getAttribute("useremail"));

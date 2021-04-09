@@ -2,27 +2,8 @@ package DAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-
-import bean.AddressBean;
-import bean.BookBean;
-import bean.OrderBean;
-import bean.ReviewBean;
-import bean.UserBean;
-import model.BookStoreModel;
-
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 
 public class DatabaseConnection { // DB class
 

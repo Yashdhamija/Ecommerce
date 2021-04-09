@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import bean.BookBean;
 import bean.ReviewBean;
-import model.BookStoreModel;
+import model.BookService;
+import model.WebService;
 
 /**
  * Servlet implementation class Front
@@ -28,7 +29,8 @@ public class Home extends HttpServlet {
 	private static final String PARTNERREGISTERURL = "/PartnerRegister";
 	private static final String ORDERCONFIRMATION = "/OrderConfirmation";
 	private static final String ADMINSTRATORLOGIN = "/AdministratorLogin";
-	private BookStoreModel model;
+	private BookService bookService;
+	private WebService webService;
 
 	/**
 	 * @throws ClassNotFoundException
@@ -37,7 +39,8 @@ public class Home extends HttpServlet {
 	 */
 	public Home() throws ClassNotFoundException, SQLException {
 		super();
-		this.model = BookStoreModel.getInstance();
+		this.bookService = BookService.getInstance();
+		this.webService = WebService.getInstance();
 	}
 	
 	@Override
@@ -53,13 +56,13 @@ public class Home extends HttpServlet {
 		// bookinformation.jspx page
 
 		if (request.getParameter("reviewform") != null && 
-				!this.model.retrieveBookTitle(request.getParameter("reviewform")).equals("")) {
+				!this.bookService.retrieveBookTitle(request.getParameter("reviewform")).equals("")) {
 			 reviewForm(request, response);
 		}
 		
 		// This is triggered when the bookTitle is clicked in the bookstore.jspx
 		else if (request.getParameter("bookinfo") != null
-				&& !this.model.retrieveBookTitle(request.getParameter("bookinfo")).equals("")) {
+				&& !this.bookService.retrieveBookTitle(request.getParameter("bookinfo")).equals("")) {
 			String bid = request.getParameter("bookinfo");
 			request.getSession().setAttribute("bookid", bid);
 			openIndividualBook(request, response);
@@ -73,14 +76,14 @@ public class Home extends HttpServlet {
 		// This is all the correct URLs with \Home\*
 		else if ((request.getRequestURI().equals("/BookLand/Home") && request.getQueryString() == null)
 				|| (request.getRequestURI().equals("/BookLand/Home")
-						&& !this.model.retrieveBookTitle(request.getParameter("addtocart")).equals(""))) {
+						&& !this.bookService.retrieveBookTitle(request.getParameter("addtocart")).equals(""))) {
 
 			HomePage(request, response);
 
 		}
 		// This is for displaying the books based on category
 		else if (request.getParameter("category") != null
-				&& this.model.retrieveBooksUsingCategory(request.getParameter("category")).size() > 0) {
+				&& this.bookService.retrieveBooksUsingCategory(request.getParameter("category")).size() > 0) {
 
 			displayBooksInCategory(request, response);
 
@@ -107,14 +110,14 @@ public class Home extends HttpServlet {
 			String output = null;
 			String productId = request.getParameter("product_search");
 			
-			if (model.retrieveInfoOfBook(productId) != null) {
+			if (this.bookService.retrieveInfoOfBook(productId) != null) {
 				
 				if (request.getParameter("orderbutton") != null) {
-					output = this.model.getOrdersByPartNumber(productId);
+					output = this.webService.getOrdersByPartNumber(productId);
 					
 				} 
 				else {
-					output = this.model.getProductInfo(productId);
+					output = this.webService.getProductInfo(productId);
 					
 				}
 			} else {
@@ -161,7 +164,7 @@ public class Home extends HttpServlet {
 		// start the home page of the bookstore
 		try {
 			// TODO - save books in contextScope
-			request.setAttribute("books", this.model.retrieveBookRecords());
+			request.setAttribute("books", this.bookService.retrieveBookRecords());
 			request.getRequestDispatcher("/bookstore.jspx").forward(request, response);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -176,7 +179,7 @@ public class Home extends HttpServlet {
 			String category = request.getParameter("category");
 			List<BookBean> books = null;
 			try {
-				books = this.model.retrieveBooksUsingCategory(category);
+				books = this.bookService.retrieveBooksUsingCategory(category);
 				request.setAttribute("category", books);
 				request.getRequestDispatcher("/bookstore.jspx").forward(request, response);
 			} catch (SQLException e) {
@@ -191,7 +194,7 @@ public class Home extends HttpServlet {
 		String search = request.getParameter("search");
 		try {
 			// Improve this to add for more searches like category
-			List<BookBean> searchedBooks = this.model.getSearchedBook(search);
+			List<BookBean> searchedBooks = this.bookService.getSearchedBook(search);
 			request.setAttribute("bookfound", searchedBooks);
 			request.setAttribute("found", "true");
 			request.setAttribute("numberofresults", searchedBooks.size() + " search results found");
@@ -211,8 +214,8 @@ public class Home extends HttpServlet {
 		
 			try {
 				request.getSession().setAttribute("bookid", bid);
-				request.getSession().setAttribute("bookinfo", this.model.retrieveInfoOfBook(bid));
-				request.getSession().setAttribute("reviews", this.model.retrieveLastThreeReviews(bid)); // This
+				request.getSession().setAttribute("bookinfo", this.bookService.retrieveInfoOfBook(bid));
+				request.getSession().setAttribute("reviews", this.bookService.retrieveLastThreeReviews(bid)); // This
 	
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -235,8 +238,8 @@ public class Home extends HttpServlet {
 		
 
 		try {
-			this.model.insertAReview(fname, lname, bid, review, title, Integer.parseInt(rating));
-			request.getSession().setAttribute("reviews", this.model.retrieveLastThreeReviews(bid));
+			this.bookService.insertAReview(fname, lname, bid, review, title, Integer.parseInt(rating));
+			request.getSession().setAttribute("reviews", this.bookService.retrieveLastThreeReviews(bid));
 			
 			
 			response.sendRedirect("/BookLand/Home?bookinfo="+bid);
@@ -253,7 +256,7 @@ public class Home extends HttpServlet {
 		String category = request.getParameter("category");
 		List<BookBean> books = null;
 		try {
-			books = this.model.retrieveBooksUsingCategory(category);
+			books = this.bookService.retrieveBooksUsingCategory(category);
 			request.setAttribute("category", books);
 			request.getRequestDispatcher("/bookstore.jspx").forward(request, response);
 		} catch (SQLException e) {
