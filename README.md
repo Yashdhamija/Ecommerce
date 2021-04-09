@@ -20,6 +20,8 @@ A design report for the project can be found here - https://github.com/yabokar1/
 # How to run locally
 
 Clone the repository (refactored- default branch) using 'git clone https://github.com/yabokar1/Ecommerce.git'. You can use the IDE of your choice, and as mentioned the development setup for the project was Eclipse Java EE, Apache tomcat v8.5, JRE 9 or higher (required for jersey), Jersey for Restful-Api service.
+If the cloning is done using eclipse by using clone URI option then there might be errors in the project once the project is successfully imported. Simply right click on project > Maven > Update Project > Click Ok and errors should go away
+To run the project on eclipse, you can right click on Home.java servlet and run it on Tom Cat server and you will see the main page of book store.
 
 # Rest-Api calls for Partners
 
