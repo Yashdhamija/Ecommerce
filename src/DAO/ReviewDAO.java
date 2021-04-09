@@ -16,20 +16,19 @@ public class ReviewDAO {
 	}
 	
 	
-	public int insertReview(String fname, String lname, String bid, String review, String title) throws SQLException {
-
+	public int insertReview(String fname, String lname, String bid, String review, String title, int rating) throws SQLException {
 		String query = "INSERT INTO Review VALUES(?,?,?,?,?,?,?)";
+
 		this.review = DatabaseConnection.getInstance();
 		PreparedStatement ps = this.review.getConnection().prepareStatement(query);
-
+		
 		ps.setString(1, fname);
 		ps.setString(2, lname);
 		ps.setString(3, bid);
 		ps.setString(4, review);
 		ps.setString(5, null);
 		ps.setString(6, title);
-		ps.setInt(7, 0);
-		
+		ps.setInt(7, rating);
 		int result = ps.executeUpdate();
 		
 		ps.close();
@@ -42,6 +41,7 @@ public class ReviewDAO {
 				
 		List<ReviewBean> list = new ArrayList<ReviewBean>();
 
+		// TODO putting ? here
 		String query = "SELECT * FROM Review WHERE bid='" + bid + "' ORDER BY reviewid DESC limit 3";
 		
 		this.review = DatabaseConnection.getInstance();

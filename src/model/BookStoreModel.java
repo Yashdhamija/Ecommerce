@@ -3,7 +3,6 @@ package model;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -11,14 +10,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
-import DAO.DAO;
 import bean.AddressBean;
 import bean.BookBean;
 import bean.CartBean;
@@ -38,7 +35,7 @@ import DAO.UserDAO;
 public class BookStoreModel {
 
 	private static BookStoreModel instance;
-	private DAO dao;
+//	private DAO dao;
 	private ArrayList<Integer> orderNumber = null;
 	private int paymentCounter;
 	
@@ -53,17 +50,15 @@ public class BookStoreModel {
 
 	public BookStoreModel() throws SQLException {
 
-		this.dao = new DAO();
-		
-		// New DAO
+
 		this.book =  new BookDAO();
 		this.address = new AddressDAO();
 		this.admin = new AdminDAO();
 		this.po = new PODAO();
-		 this.poitem = new POItemDAO();
-		 this.review = new ReviewDAO();
+		this.poitem = new POItemDAO();
+		this.review = new ReviewDAO();
 		this.user =  new UserDAO();
-		////
+		
 		this.orderNumber = new ArrayList<Integer>();
 		this.paymentCounter = 0;
 	}
@@ -71,34 +66,32 @@ public class BookStoreModel {
 	public static BookStoreModel getInstance() throws ClassNotFoundException, SQLException {
 		if (instance == null) {
 			instance = new BookStoreModel();
-			instance.dao = new DAO();
 		}
 		return instance;
 	}
 
-	public int insertUserLogin(String fname, String lname, String email, String password) throws SQLException {
+	public int insertUserLogin(String fname, String lname, String email, String password) throws SQLException, NoSuchAlgorithmException {
 
-		//return this.dao.insertUserDB(fname, lname, email, password);
-        return this.user.insertUserDB(fname, lname, email, password);
+        return this.user.insertUserDB(fname, lname, email, this.encryptPassword(password));
 	}
 
 	public void insertPartnerLogin(String email, String password, String fname, String lname) throws SQLException, NoSuchAlgorithmException {
-		this.dao.insertPartnerDB(fname, lname, email, password);
-		this.dao.insertPartnerKey(email);
+		this.user.insertPartnerDB(fname, lname, email, this.encryptPassword(password));
+		this.user.insertPartnerKey(email);
 
 	}
 	
 	public String getpartnerKey(String email) {
-		return this.dao.getpartnerKey(email);
+		return this.user.getpartnerKey(email);
 	}
 	
 	public boolean isValidPartnerKey(String key) {
-		return this.dao.isValidPartnerKey(key);
+		return this.user.isValidPartnerKey(key);
 	}
 
 
 	public int insertAReview(String fname, String lname, String bid, String review, String title, int rating) throws SQLException {
-		return this.dao.insertReview(fname, lname, bid, review, title, rating);
+		return this.review.insertReview(fname, lname, bid, review, title, rating);
 	}
 
 	public int insertIntoAddress(String email, String street, String province, String country, String zip, String phone,
@@ -118,10 +111,9 @@ public class BookStoreModel {
 		return this.poitem.insertPurchaseOrderItem(orderId, bid, price, quantity);
 	}
 
-	public void insertAdmin(String email, String lname, String fname, String password) throws SQLException {
+	public void insertAdmin(String email, String lname, String fname, String password) throws SQLException, NoSuchAlgorithmException {
 
-		//this.dao.insertAdminIntoDB(email, fname, lname, password);
-		this.admin.insertAdminIntoDB(email, fname, lname, password);
+		this.admin.insertAdminIntoDB(email, fname, lname, this.encryptPassword(password));
 	}
 	
 	public boolean isEmailTaken(String email) {
@@ -130,13 +122,7 @@ public class BookStoreModel {
 	}
 	
 	public UserBean isUserExist(String email, String password) throws NoSuchAlgorithmException {
-		//return this.dao.isUserExist(email, this.encryptPassword(password));
 		 return this.user.isUserExist(email, this.encryptPassword(password));
-	}
-
-	public String getPassword(String password) {
-		//return this.dao.retrievePassword(password);
-		return this.user.retrievePassword(password);
 	}
 
 	public String getCustomerName(String email) {
@@ -278,7 +264,7 @@ public class BookStoreModel {
 	}
 
 	public String getProductInfo(String productId) throws SQLException {
-		BookBean book = this.instance.dao.getProductJSON(productId);
+		BookBean book = this.instance.book.getProductJSON(productId);
 		JsonObjectBuilder bookJSON = Json.createObjectBuilder();
 		bookJSON.add("BookId", book.getBid()).add("Title", book.getTitle()).add("Price", book.getPrice())
 				.add("Category", book.getCategory());
@@ -297,7 +283,6 @@ public class BookStoreModel {
 
 	public boolean isValidAdmin(String email, String password) throws NoSuchAlgorithmException {
 
-		//return this.dao.IsAdminValidated(email, this.encryptPassword(password));
 		 return this.admin.IsAdminValidated(email, this.encryptPassword(password));
 	}
 	
@@ -314,7 +299,7 @@ public class BookStoreModel {
 	}
 
 	public String getOrdersByPartNumber(String productId) throws SQLException {
-		List<OrderBean> orders = this.instance.dao.getOrdersByPartNumber(productId);
+		List<OrderBean> orders = this.instance.poitem.getOrdersByPartNumber(productId);
 
 		JsonObjectBuilder doc = Json.createObjectBuilder();
 		JsonArrayBuilder result = Json.createArrayBuilder();

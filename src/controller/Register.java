@@ -3,7 +3,6 @@ package controller;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,9 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.UserBean;
 import model.BookStoreModel;
-import services.RegisterService;
 
 /**
  * Servlet implementation class Registration
@@ -21,7 +18,6 @@ import services.RegisterService;
 @WebServlet({ "/Register", "/PartnerRegister" })
 public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private RegisterService register;
 	private BookStoreModel model;
 
 	/**
@@ -31,10 +27,8 @@ public class Register extends HttpServlet {
 	public Register() throws SQLException {
 		super();
 		try {
-			this.register = new RegisterService();
 			this.model = BookStoreModel.getInstance();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// TODO Auto-generated constructor stub
@@ -92,8 +86,9 @@ public class Register extends HttpServlet {
 			}
 
 			else {
-				this.register.UserRegister(fname, lname, email, password, street, city, province, zipCode, phone,
-						country); // inserted new user into User DB
+				// insert new user into User DB
+				this.model.insertUserLogin(fname, lname, email, password);																								// Registration
+				this.model.insertIntoAddress(email,street, province, country, zipCode, phone, city);
 				response.sendRedirect("/BookLand/Login?registerSuccess=true");       // made a chnage
 			}
 
@@ -108,8 +103,8 @@ public class Register extends HttpServlet {
 			}
 
 			else {
-				this.register.PartnerRegister(fname, lname, email, password, street, city, province, zipCode, phone,
-						country);
+				this.model.insertPartnerLogin(email, password, fname, lname);
+				this.model.insertIntoAddress(email,street, province, country, zipCode, phone, city);
                 response.sendRedirect("/BookLand/Login?registerSuccess=true");
 			}
 		}

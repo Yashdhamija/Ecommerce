@@ -9,15 +9,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import bean.UserBean;
-
-import javax.servlet.ServletConfig;
-
 import model.BookStoreModel;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import services.LoginService;
 
 /**
  * Servlet implementation class Login
@@ -25,7 +18,6 @@ import services.LoginService;
 @WebServlet({ "/Login","/Login/*"})
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private LoginService login;
 	private BookStoreModel model;
 
 	/**
@@ -35,7 +27,6 @@ public class Login extends HttpServlet {
 	 */
 	public Login() throws ClassNotFoundException, SQLException {
 		super();
-		this.login = new LoginService();
 		this.model = BookStoreModel.getInstance();
 	}
 
@@ -86,13 +77,14 @@ public class Login extends HttpServlet {
 		}
 		
 		else if(request.getServletPath() != null && request.getQueryString() !=null && request.getQueryString().equals("registerSuccess=true")) {
-			this.login.displayLoginPage(request, response);
+			request.getRequestDispatcher("/login.jspx").forward(request, response);
+			
 		}
 		
 		else if (request.getServletPath() != null && request.getServletPath().equals("/Login")
 				&& request.getQueryString() == null) { //
 			
-			this.login.displayLoginPage(request, response);
+			request.getRequestDispatcher("/login.jspx").forward(request, response);
 		} 
 		
 		else {
