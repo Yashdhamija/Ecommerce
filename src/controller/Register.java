@@ -33,9 +33,19 @@ public class Register extends HttpServlet {
 	public void displayRegisterPage(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, NoSuchAlgorithmException, SQLException {
 
-		System.out.println(request.getServletPath());
+		
+		
+		
 
-		if (request.getParameter("registerbtn") != null || request.getParameter("uidregister") != null) {
+		if(request.getServletPath() != null && request.getServletPath().equals("/Register")
+					&& request.getQueryString() == null && request.getSession().getAttribute("UserType") != null) {
+				
+				
+				response.sendRedirect("/BookLand/Home");
+				
+			}
+
+		else if (request.getParameter("registerbtn") != null || request.getParameter("uidregister") != null) {
 
 			insertUserRegistration(request, response);
 
