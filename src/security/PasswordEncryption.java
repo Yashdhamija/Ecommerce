@@ -6,6 +6,18 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 public class PasswordEncryption {
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public static String encryptPassword(String password) throws NoSuchAlgorithmException {
 
